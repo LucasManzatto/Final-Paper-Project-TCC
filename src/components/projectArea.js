@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import { CardActions, CardHeader, CardText} from 'material-ui/Card';
 import {Tabs, Tab} from 'material-ui/Tabs';
+
+import DragDrop from './DragDrop';
+
+
 
 const style={
     height: 680
@@ -8,16 +12,12 @@ const style={
 const ProjectArea = () =>(
     <Tabs>
         <Tab label="Projeto 1" >
-            <Card style={style}>
-            </Card>
+            <DragDrop>
+            </DragDrop>
         </Tab>
         <Tab label="Projeto 2" >
-            <Card style={style}>
-            </Card>
         </Tab>
         <Tab label="Projeto 3" >
-            <Card style={style}>
-            </Card>
         </Tab>
     </Tabs>
 

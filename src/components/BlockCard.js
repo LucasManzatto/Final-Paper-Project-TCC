@@ -5,10 +5,12 @@ const style={
     textAlign : 'center'
 }
 
-const CardBlock = props =>(
+const CardBlock = props =>{
+    return(
     <Card>
         <CardHeader title={props.title}/>
         <CardText> Gráfico </CardText>
     </Card>
-);
+    );
+}
 export default CardBlock;

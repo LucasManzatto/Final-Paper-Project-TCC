@@ -4,6 +4,9 @@ import {grey900,blue500} from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import './App.css';
 
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContextProvider } from 'react-dnd';
+
 //Imports dos components do projeto
 import Menu from './menu';
 import SideBar from './sideBar';
@@ -13,6 +16,10 @@ import BottomArea from './bottomArea';
 
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import Paper from 'material-ui/Paper';
+
+//Redux
+import {connect} from 'react-redux';
+import {initialState} from '../actions/index';
 
 const style={
     paddingTop: 10
@@ -37,13 +44,13 @@ const muiTheme = getMuiTheme({
 });
 
 
-const App = () =>(
+const App = props =>(
     <MuiThemeProvider muiTheme={muiTheme}>
         <Grid fluid>
             <Menu />
             <Row between="xs" style={style}>
                 <Col xs={2}>
-                    <SideBar />
+                    <SideBar/>
                 </Col>
                 <Col xs={7} className="text-center">
                     <ProjectArea />
@@ -52,12 +59,14 @@ const App = () =>(
                     <SideBarBlock />
                 </Col>
             </Row>
+
             <Row middle="xs" style={styleBottomArea}>
                 <Col xs="12">
                     <BottomArea />
                 </Col>
             </Row>
+
         </Grid>
-    </MuiThemeProvider>
-    );
+    </MuiThemeProvider>);
+
 export default App;
