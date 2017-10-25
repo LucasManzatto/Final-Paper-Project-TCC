@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {grey900,blue500} from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import './App.css';
 
-import HTML5Backend from 'react-dnd-html5-backend';
-import { DragDropContextProvider } from 'react-dnd';
 
 //Imports dos components do projeto
 import Menu from './menu';
@@ -15,11 +13,6 @@ import ProjectArea from './projectArea';
 import BottomArea from './bottomArea';
 
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import Paper from 'material-ui/Paper';
-
-//Redux
-import {connect} from 'react-redux';
-import {initialState} from '../actions/index';
 
 const style={
     paddingTop: 10
@@ -61,7 +54,7 @@ const App = props =>(
             </Row>
 
             <Row middle="xs" style={styleBottomArea}>
-                <Col xs="12">
+                <Col xs={12}>
                     <BottomArea />
                 </Col>
             </Row>

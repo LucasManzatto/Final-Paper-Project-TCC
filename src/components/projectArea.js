@@ -2,24 +2,28 @@ import React, { Component } from 'react';
 import { CardActions, CardHeader, CardText} from 'material-ui/Card';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
-import DragDrop from './DragDrop';
+import ProjectTab from './ProjectTab';
+import _ from 'lodash';
 
+//redux
+import {connect} from 'react-redux';
 
+const createTab = project =>(
+    <Tab label={project.name} key={project.id}>
+        <ProjectTab blocks={project.blocks}>
+        </ProjectTab>
+    </Tab>
+)
 
-const style={
-    height: 680
-}
-const ProjectArea = () =>(
+const ProjectArea = props =>(
     <Tabs>
-        <Tab label="Projeto 1" >
-            <DragDrop>
-            </DragDrop>
-        </Tab>
-        <Tab label="Projeto 2" >
-        </Tab>
-        <Tab label="Projeto 3" >
-        </Tab>
+        {_.map(props.projects.byId,createTab)}
     </Tabs>
 
 );
-export default ProjectArea;
+const mapStateToProps = state =>{
+    return{
+        projects : state.app.projects
+    }
+}
+export default connect(mapStateToProps)(ProjectArea);

@@ -1,8 +1,12 @@
 import React from 'react';
+
+//Material
 import {List, ListItem, makeSelectable} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import {grey900,grey50,blue500} from 'material-ui/styles/colors';
 import Paper from 'material-ui/Paper';
+import FlatButton from 'material-ui/FlatButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import _ from 'lodash';
 
@@ -19,19 +23,15 @@ const subHeaderStyle={
 const style={
     height:730
 }
-const lista = bloco =>{
-    return(
-        <ListItem
-          value={1}
-          primaryText={bloco}
-        />
-    )
-}
+const buttonStyle={
+    paddingTop:"6px",
+};
 
 const SideBar = props =>{
     const component = new React.Component(props);
 
-    const lista = bloco =>{
+    //Retorna a lista dos blocos e coloca um onClick em cada
+    const createListItem = bloco =>{
         const onClickHandler = () =>{
             component.props.blockClicked(bloco);
         }
@@ -41,6 +41,12 @@ const SideBar = props =>{
                 key={bloco.id}
                 value={bloco.id}
                 primaryText={bloco.name}
+                rightIconButton={
+                    <FlatButton
+                            icon={<ContentAdd />}
+                            style={buttonStyle}
+                    />
+                }
             />
         )
     }
@@ -50,7 +56,7 @@ const SideBar = props =>{
             <Paper zDepth={1} style={style}>
                 <SelectableList defaultValue={3}>
                   <Subheader style={subHeaderStyle}>Blocos</Subheader>
-                  {_.map(component.props.blocos,lista)}
+                  {_.map(component.props.blocks.byId,createListItem)}
                 </SelectableList>
             </Paper>
         );
@@ -60,7 +66,7 @@ const SideBar = props =>{
 
 const mapStateToProps = state =>{
     return{
-        blocos : state.app.blocos
+        blocks : state.app.blocks
     }
 }
 export default connect(mapStateToProps,{blockClicked})(SideBar);
