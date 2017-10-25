@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Paper from 'material-ui/Paper';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import { Row, Col } from 'react-flexbox-grid';
 
 import BlockCard from './BlockCard';
 

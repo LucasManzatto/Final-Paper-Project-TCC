@@ -3,7 +3,7 @@ import React from 'react';
 //Material
 import {List, ListItem, makeSelectable} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import {grey900,grey50,blue500} from 'material-ui/styles/colors';
+import {grey50,blue500} from 'material-ui/styles/colors';
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -29,7 +29,6 @@ const buttonStyle={
 
 const SideBar = props =>{
     const component = new React.Component(props);
-
     //Retorna a lista dos blocos e coloca um onClick em cada
     const createListItem = bloco =>{
         const onClickHandler = () =>{

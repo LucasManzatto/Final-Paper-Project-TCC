@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React from 'react';
 import Paper from 'material-ui/Paper';
 import _ from 'lodash';
 

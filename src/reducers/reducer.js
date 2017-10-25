@@ -1,13 +1,13 @@
-import {TRACK_LOCATION,BLOCK_LIST,BLOCK_CLICKED,ADD_TO_PROJECT,GET_PROJECT_BLOCKS} from '../actions/index';
+import {TRACK_LOCATION,BLOCK_LIST,BLOCK_CLICKED,ADD_TO_PROJECT} from '../actions/index';
 
 import _ from 'lodash';
 
 const initialState = {
     clickedBlock : {
         name: 'Bloco 1',
-        id : 1,
-        freq :10,
-        amp :5
+        id:'block1',
+        Frequency :10,
+        Amplitude :5,
     },
     projects : {
         byId : {
@@ -29,26 +29,26 @@ const initialState = {
             block1: {
                 name: 'Bloco 1',
                 id:'block1',
-                freq :10,
-                amp :5
+                Frequency :10,
+                Amplitude :5,
             },
             block2: {
                 name: 'Bloco 2',
                 id:'block2',
-                freq :8,
-                amp :4
+                Frequency :8,
+                Amplitude :4,
             },
             block3: {
                 name: 'Bloco 3',
                 id:'block3',
-                freq :8,
-                amp :4
+                Frequency :5,
+                Amplitude :10,
             },
             block4: {
                 name: 'Bloco 4',
                 id:'block4',
-                freq :8,
-                amp :4
+                Frequency :3,
+                Amplitude :8,
             },
         },
         allIds : ["block1","block2","block3","block4"]
@@ -57,6 +57,8 @@ const initialState = {
 
 export default function(state = initialState,action){
     switch(action.type){
+        default:
+            return state;
         case BLOCK_LIST:
             return initialState;
         case BLOCK_CLICKED:
@@ -68,7 +70,6 @@ export default function(state = initialState,action){
         case TRACK_LOCATION:
             return state;
     }
-    return state;
 }
 
 const getBlockById = (id,state) =>{

@@ -1,9 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-
-const style={
-    textAlign : 'center'
-}
 
 const CardBlock = props =>{
     return(

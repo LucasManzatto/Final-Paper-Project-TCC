@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Draggable, {DraggableCore} from 'react-draggable'; // Both at the same time
+import React from 'react';
+import Draggable from 'react-draggable'; // Both at the same time
 import _ from 'lodash';
 //redux
 import {connect} from 'react-redux';
@@ -14,7 +14,6 @@ const blockStyle={
 
 const Block = props =>{
     const block = _.find(props.blocks,{'id' : props.block});
-    console.log(block);
     /*const handleDrag = (e,ui) => {
        const deltaPosition ={
             x: x + ui.deltaX,

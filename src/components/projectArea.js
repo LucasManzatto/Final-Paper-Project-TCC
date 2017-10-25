@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { CardActions, CardHeader, CardText} from 'material-ui/Card';
+import React from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
 import ProjectTab from './ProjectTab';

@@ -1,8 +1,7 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {grey900,blue500} from 'material-ui/styles/colors';
+import {blue500} from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import './App.css';
 
 
 //Imports dos components do projeto
