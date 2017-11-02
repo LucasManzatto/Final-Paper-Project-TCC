@@ -31,7 +31,7 @@ const initialState = {
                 blocks : {
                     "block3" :{
                         id : "block3",
-                        position : {x:0 , y: 582},
+                        position : {x:0 , y: 510},
                     },
                     "block4" :{
                         id : "block4",
