@@ -7,10 +7,13 @@ export const blockList = () => ({
   type: BLOCK_LIST
 });
 
-export const blockClicked = payload => ({
-    type:BLOCK_CLICKED,
-    payload
-})
+export const blockClicked = payload => {
+    delete payload.id;
+    return{
+        type:BLOCK_CLICKED,
+        payload
+        }
+};
 export const addBlockToProject = payload => ({
     type:ADD_TO_PROJECT,
     payload

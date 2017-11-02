@@ -10,17 +10,22 @@ import {connect} from 'react-redux';
 const SideBarBlock = props =>{
     console.log(props);
     const showProperties = (value,key)=>{
-        return(
-            <TextField
-                value={value}
-                floatingLabelText={key}
-            />
-        )
+        if(key == "name"){
+            return(
+                <Subheader>{value}</Subheader>
+            )
+        }
+        else{
+            return(
+                <TextField
+                    value={value}
+                    floatingLabelText={key}
+                />
+            )
+        }
     }
-
     return(
         <List>
-            <Subheader>{props.clickedBlock.name}</Subheader>
             {_.map(props.clickedBlock,showProperties)}
         </List>
     );

@@ -13,18 +13,19 @@ const blockStyle={
 
 
 const Block = props =>{
-    const block = _.find(props.blocks,{'id' : props.block});
-    /*const handleDrag = (e,ui) => {
+    const block = _.find(props.blocks,{'id' : props.block.id});
+    console.log(block);
+    const handleDrag = (e,ui) => {
        const deltaPosition ={
             x: x + ui.deltaX,
             y: y + ui.deltaY
         };
         props.trackLocation(deltaPosition);
     }
-    */
-    //const {x, y} = props.block.position;
+
+    const {x, y} = props.block.position;
     return(
-        <Draggable bounds="parent" defaultPosition={{x: 0, y: 0}}>
+        <Draggable bounds="parent" onDrag={handleDrag} defaultPosition={{x, y}}>
             <div style={blockStyle}>
                 {block.name}
             </div>
@@ -33,6 +34,7 @@ const Block = props =>{
 }
 
 const mapStateToProps = state =>{
+    console.log(state.app.projects.byId);
     return{
         blocks : state.app.blocks.byId
     }

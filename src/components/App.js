@@ -51,7 +51,6 @@ const App = props =>(
                     <SideBarBlock />
                 </Col>
             </Row>
-
             <Row middle="xs" style={styleBottomArea}>
                 <Col xs={12}>
                     <BottomArea />

@@ -5,7 +5,6 @@ import _ from 'lodash';
 const initialState = {
     clickedBlock : {
         name: 'Bloco 1',
-        id:'block1',
         Frequency :10,
         Amplitude :5,
     },
@@ -14,12 +13,31 @@ const initialState = {
             "project1" :{
                 id: 1,
                 name: "Project 1",
-                blocks : ["block1","block2"]
+                blocks : ["block1","block2"],
+                blocks : {
+                    "block1" :{
+                        id : "block1",
+                        position : {x:0 , y: 530},
+                    },
+                    "block2" :{
+                        id : "block2",
+                        position : {x:0 , y: 300},
+                    }
+                }
             },
             "project2" :{
                 id: 2,
                 name: "Project 2",
-                blocks : ["block3","block4"]
+                blocks : {
+                    "block3" :{
+                        id : "block3",
+                        position : {x:0 , y: 582},
+                    },
+                    "block4" :{
+                        id : "block4",
+                        position : {x:0 , y: 300},
+                    }
+                }
             }
         },
         allIds: ["project1","project2"]
@@ -62,16 +80,22 @@ export default function(state = initialState,action){
         case BLOCK_LIST:
             return initialState;
         case BLOCK_CLICKED:
-            console.log(action.payload);
             return {...state,clickedBlock:action.payload};
         case ADD_TO_PROJECT:
             const block = getBlockById(action.payload,state);
             return {...state,projectBlocks:block}
         case TRACK_LOCATION:
-            return state;
+            let newState = state;
+            newState.projects.byId.project1.blocks.block1.position = action.payload;
+            return {...state,newState};
     }
 }
 
+const updateBlockPosition = (position,block,newState) => {
+    newState.projects.byId.project1.blocks.block.position = position;
+    return newState;
+}
+
 const getBlockById = (id,state) =>{
-    _.find(state.blocos , {id})
+    return _.find(state.blocks.byId , {id})
 }
