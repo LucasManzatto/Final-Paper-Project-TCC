@@ -6,9 +6,10 @@ import _ from 'lodash';
 
 //redux
 import {connect} from 'react-redux';
+import {updateBlockValue} from '../actions';
 
 const SideBarBlock = props =>{
-    console.log(props);
+    const component = new React.Component(props);
     const showProperties = (value,key)=>{
         if(key == "name"){
             return(
@@ -18,21 +19,40 @@ const SideBarBlock = props =>{
         else{
             return(
                 <TextField
+                    onChange={handleInputChange}
                     value={value}
                     floatingLabelText={key}
                 />
             )
         }
     }
-    return(
-        <List>
-            {_.map(props.clickedBlock,showProperties)}
-        </List>
-    );
+    const handleInputChange = event =>{
+        component.props.updateBlockValue(event.target.value);
+    }
+    //{_.map(props.clickedBlock,showProperties)}
+    component.render = () =>{
+        return(
+            <List>
+                <Subheader>{component.props.clickedBlock.name}</Subheader>
+                <TextField
+                    onChange={handleInputChange}
+                    value={component.props.clickedBlock.Frequency}
+                    floatingLabelText="Frequency"
+                />
+                <TextField
+                    onChange={handleInputChange}
+                    value={component.props.clickedBlock.Amplitude}
+                    floatingLabelText="Amplitude"
+                />
+            </List>
+        );
+    }
+    return component;
 }
 const mapStateToProps = state =>{
+    console.log(state.app.clickedBlock);
     return{
         clickedBlock : state.app.clickedBlock
     }
 }
-export default connect(mapStateToProps)(SideBarBlock);
+export default connect(mapStateToProps,{updateBlockValue})(SideBarBlock);

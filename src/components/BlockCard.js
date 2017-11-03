@@ -13,23 +13,6 @@ const style = {
 }
 
 const CardBlock = props =>{
-    const data = {
-      labels: ['1', '2', '3', '4', '5', '6', '7'],
-      datasets: [
-        {
-            cubicInterpolationMode : 'monotone',
-            //steppedLine : true,
-            label: props.title,
-            backgroundColor : 'white',
-            borderColor: blue500,
-            borderWidth: 1,
-            hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-            hoverBorderColor: 'rgba(255,99,132,1)',
-            data: [0, 3.14, 0, 3.14, 0, 3.14, 0]
-        }
-      ]
-    };
-
     return(
     <Card>
         <CardMedia >

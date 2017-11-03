@@ -34,7 +34,6 @@ const Block = props =>{
 }
 
 const mapStateToProps = state =>{
-    console.log(state.app.projects.byId);
     return{
         blocks : state.app.blocks.byId
     }
