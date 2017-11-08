@@ -14,7 +14,6 @@ const blockStyle={
 
 const Block = props =>{
     const block = _.find(props.blocks,{'id' : props.block.id});
-    console.log(block);
     const handleDrag = (e,ui) => {
        const deltaPosition ={
             x: x + ui.deltaX,

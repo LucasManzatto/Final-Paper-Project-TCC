@@ -50,7 +50,6 @@ const SideBarBlock = props =>{
     return component;
 }
 const mapStateToProps = state =>{
-    console.log(state.app.clickedBlock);
     return{
         clickedBlock : state.app.clickedBlock
     }

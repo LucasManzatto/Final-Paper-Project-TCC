@@ -17,7 +17,7 @@ const data1 = {
     {
         //cubicInterpolationMode : 'monotone',
         steppedLine : true,
-        label: "Bloco 2",
+        label: "Random Number Generator",
         backgroundColor : 'white',
         borderColor: blue500,
         borderWidth: 1,
@@ -31,9 +31,9 @@ let data2 = {
   labels: [],
   datasets: [
     {
-        //steppedLine : true,
+        cubicInterpolationMode : 'monotone',
         pointRadius : 0,
-        label: "Bloco 1",
+        label: "Carrier Wave",
         backgroundColor : 'white',
         borderColor: blue500,
         borderWidth: 1,
@@ -43,26 +43,26 @@ let data2 = {
     }
   ]
 };
-const data3 = {
-  labels: ['0', '', '2π', '', '4π', '', '6π'],
+let data3 = {
+  labels: [],
   datasets: [
     {
         cubicInterpolationMode : 'monotone',
-        //steppedLine : true,
-        label: "Bloco 2",
+        pointRadius : 0,
+        label: "BPSK",
         backgroundColor : 'white',
         borderColor: blue500,
         borderWidth: 1,
         hoverBackgroundColor: 'rgba(255,99,132,0.4)',
         hoverBorderColor: 'rgba(255,99,132,1)',
-        data: [0, 3.14,0, 3.14, 0, 3.14, 0]
+        data: []
     }
   ]
 };
 
-const sinWave = freq =>{
-    data2.datasets[0].data = [];
-    data2.labels = [];
+const sinWave = (freq,data) =>{
+    data.datasets[0].data = [];
+    data.labels = [];
     let counter = 0;
     // 100 iterations
     let increase = Math.PI * 2 / 100;
@@ -71,22 +71,24 @@ const sinWave = freq =>{
       let x = i;
       let y = Math.sin( counter );
       let position = {x,y};
-      data2.datasets[0].data.push(position);
-      data2.labels.push('');
+      data.datasets[0].data.push(position);
+      data.labels.push('');
       counter += increase;
     }
 }
 
-const squareWave = () =>{
-    for (let i = 0; i <= 10; i += 1 ) {
-        let x = i;
-        let y = 5;
-    }
+const drawChart = block =>{
+    return (
+        <Col xs={3}>
+            <BlockCard data={data2}/>
+        </Col>
+    );
 }
 
-
 const BottomArea = props =>{
-    sinWave(props.clickedBlock.Frequency);
+    console.log(props);
+    sinWave(props.blocks.block1.Frequency,data2);
+    sinWave(props.blocks.block2.Frequency,data3);
     return(
         <Paper zDepth={1} style={style}>
             <Row around="xs" middle="xs" style={style}>
@@ -105,8 +107,11 @@ const BottomArea = props =>{
 }
 
 const mapStateToProps = state =>{
+    const project = state.app.projects.byId.project1;
+    console.log(state);
     return{
-        clickedBlock : state.app.clickedBlock
+        project,
+        blocks : state.app.blocks.byId
     }
 }
 
