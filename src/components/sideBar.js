@@ -31,6 +31,7 @@ const SideBar = props =>{
     const component = new React.Component(props);
     //Retorna a lista dos blocos e coloca um onClick em cada
     const createListItem = bloco =>{
+        //Quando o item da lista é clicado o clickedBlock é atualizado
         const onClickHandler = () =>{
             component.props.blockClicked(bloco);
         }

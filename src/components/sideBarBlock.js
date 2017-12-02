@@ -6,52 +6,42 @@ import _ from 'lodash';
 
 //redux
 import {connect} from 'react-redux';
-import {updateBlockValue} from '../actions';
+
+//Selector
+import clickedBlockSelector from '../selectors/selected_block';
+
 
 const SideBarBlock = props =>{
-    const component = new React.Component(props);
     const showProperties = (value,key)=>{
-        if(key == "name"){
-            return(
-                <Subheader>{value}</Subheader>
-            )
-        }
-        else{
-            return(
-                <TextField
-                    onChange={handleInputChange}
-                    value={value}
-                    floatingLabelText={key}
-                />
-            )
-        }
+            //Mostrar o nome em um Sub-Header
+            if(key == "name"){
+                return(<Subheader key={key}>{value}</Subheader>)
+            }
+            //Esconde o id do block , precisa mudar pra nao retornar o ID
+            if(key != "id"){
+                return(
+                    <TextField
+                        onChange={handleInputChange}
+                        value={value}
+                        key={key}
+                        floatingLabelText={key}
+                    />
+                )
+            }
     }
+    //como saber qual campo mudou a variavel
     const handleInputChange = event =>{
-        component.props.updateBlockValue(event.target.value);
     }
-    //{_.map(props.clickedBlock,showProperties)}
-    component.render = () =>{
-        return(
-            <List>
-                <Subheader>{component.props.clickedBlock.name}</Subheader>
-                <TextField
-                    onChange={handleInputChange}
-                    value={component.props.clickedBlock.Frequency}
-                    floatingLabelText="Frequency"
-                />
-                <TextField
-                    onChange={handleInputChange}
-                    value={component.props.clickedBlock.Amplitude}
-                    floatingLabelText="Amplitude"
-                />
-            </List>
-        );
-    }
-    return component;
+
+    return(
+        <List>
+            {_.map(props.clickedBlock,showProperties)}
+        </List>
+    );
 }
 const mapStateToProps = state =>{
     return{
-        clickedBlock : state.app.clickedBlock
+        clickedBlock : clickedBlockSelector(state)
     }
 }
-export default connect(mapStateToProps,{updateBlockValue})(SideBarBlock);
+export default connect(mapStateToProps)(SideBarBlock);

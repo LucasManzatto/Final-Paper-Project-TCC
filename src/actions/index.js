@@ -10,7 +10,6 @@ export const blockList = () => ({
 });
 
 export const blockClicked = payload => {
-    delete payload.id;
     return{
         type:BLOCK_CLICKED,
         payload
@@ -24,11 +23,14 @@ export const trackLocation = payload => ({
     type:TRACK_LOCATION,
     payload
 });
-export const updateBlockValue = payload =>({
-    type:UPDATE_BLOCK,
-    payload
-})
 export const updateCurrentProject =payload =>({
     type:UPDATE_CURRENT_PROJECT,
     payload
 })
+
+export const updateBlockValue = (payload) =>{
+    return({
+    type: UPDATE_BLOCK,
+    payload
+})
+}

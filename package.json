@@ -25,6 +25,7 @@
     "recharts": "^1.0.0-beta.0",
     "redux": "^3.7.2",
     "redux-promise": "^0.5.3",
+    "reselect": "^3.0.1",
     "zingchart": "^2.6.1",
     "zingchart-react": "^1.0.6"
   },

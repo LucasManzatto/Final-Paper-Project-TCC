@@ -108,7 +108,6 @@ const BottomArea = props =>{
 
 const mapStateToProps = state =>{
     const project = state.app.projects.byId.project1;
-    console.log(state);
     return{
         project,
         blocks : state.app.blocks.byId
