@@ -21,7 +21,7 @@ const subHeaderStyle={
     color : grey50
 }
 const style={
-    height:680
+    height:670
 }
 const buttonStyle={
     paddingTop:"6px",

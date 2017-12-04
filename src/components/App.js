@@ -56,7 +56,6 @@ const App = props =>(
                     <BottomArea />
                 </Col>
             </Row>
-
         </Grid>
     </MuiThemeProvider>);
 

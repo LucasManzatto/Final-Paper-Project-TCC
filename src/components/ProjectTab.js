@@ -5,12 +5,12 @@ import _ from 'lodash';
 import Block from './Block';
 
 const style={
-    height: 630
+    height: 620
 }
 
 const createProjectBlocks = block =>{
     return(
-    <Block block={block}/>
+    <Block key={block.id} block={block}/>
     )
 }
 

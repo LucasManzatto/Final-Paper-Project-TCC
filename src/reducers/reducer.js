@@ -3,31 +3,41 @@ import {TRACK_LOCATION,
         BLOCK_CLICKED,
         ADD_TO_PROJECT,
         UPDATE_BLOCK,
-        UPDATE_CURRENT_PROJECT
+        UPDATE_CURRENT_PROJECT,
+        CHANGE_SLIDER
     } from '../actions/index';
 
 import _ from 'lodash';
 
 const initialState = {
-    currentProject : "project2",
+    currentProject : "project1",
     clickedBlock : "block1",
+    slider: 2,
     projects : {
         byId : {
             "project1" :{
                 id: 'project1',
                 name: "Project 1",
-                blocks : ["block1","block2","block3"],
+                blocksIds : ["block1","block2","block3"],
                 blocks : {
                     "block1" :{
                         id : "block1",
+                        name: 'Random Number Generator',
+                        steppedLine: true,
                         position : {x:0 , y: 530},
                     },
                     "block2" :{
                         id : "block2",
+                        name: 'Carrier Wave',
+                        Frequency :2,
+                        Amplitude :4,
                         position : {x:0 , y: 300},
                     },
                     "block3" :{
                         id : "block3",
+                        name: 'BPSK',
+                        Frequency :5,
+                        Amplitude :10,
                         position : {x:200, y: 100},
                     }
                 }
@@ -50,13 +60,12 @@ const initialState = {
             block1: {
                 name: 'Random Number Generator',
                 id:'block1',
-                Frequency :2,
-                Amplitude :5,
+                steppedLine: true
             },
             block2: {
                 name: 'Carrier Wave',
                 id:'block2',
-                Frequency :8,
+                Frequency :2,
                 Amplitude :4,
             },
             block3: {
@@ -87,6 +96,8 @@ export default function(state = initialState,action){
             return {...state,newState};
         case UPDATE_CURRENT_PROJECT:
             return {...state,currentProject : action.payload};
+        case CHANGE_SLIDER:
+            return {...state,slider:action.payload};
     }
 }
 

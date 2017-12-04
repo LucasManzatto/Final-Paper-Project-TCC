@@ -1,4 +1,5 @@
 export const BLOCK_LIST = 'BLOCK_LIST';
+export const CHANGE_SLIDER = 'CHANGE_SLIDER';
 export const BLOCK_CLICKED = 'BLOCK_CLICKED';
 export const ADD_TO_PROJECT = 'ADD_TO_PROJECT';
 export const TRACK_LOCATION ='TRACK_LOCATION';
@@ -34,3 +35,8 @@ export const updateBlockValue = (payload) =>{
     payload
 })
 }
+
+export const changeSlider =payload =>({
+    type:CHANGE_SLIDER,
+    payload
+})
