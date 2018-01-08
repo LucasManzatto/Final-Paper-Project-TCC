@@ -14,7 +14,7 @@ const ProjectArea = props =>{
     const handleOnClick = (event,projectId) =>{
         props.updateCurrentProject(projectId);
     }
-
+//Cria uma aba com todos os blocks no projects.byId.project.blocks
     const createTab = project =>(
         <Tab label={project.name} key={project.id} onActive={event => handleOnClick(event,project.id)}>
             <ProjectTab key={project.id} blocks={project.blocks} />

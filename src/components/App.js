@@ -6,8 +6,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 //Imports dos components do projeto
 import Menu from './menu';
-import SideBar from './sideBar';
-import SideBarBlock from './sideBarBlock';
+import SideBar from './SideBar/sideBar';
+import SideBarBlock from './SideBar/sideBarBlock';
 import ProjectArea from './projectArea';
 import BottomArea from './bottomArea';
 
@@ -41,7 +41,7 @@ const App = props =>(
         <Grid fluid>
             <Menu />
             <Row between="xs" style={style}>
-                <Col xs={2}>
+                <Col     xs={2}>
                     <SideBar/>
                 </Col>
                 <Col xs={7} className="text-center">

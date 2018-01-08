@@ -32,7 +32,7 @@ const CardBlock = props =>{
         }
         else{
             data.datasets[0].pointRadius =0;
-            sinWave(2,data);
+            sinWave(component.props.block.Frequency,data);
         }
         return(
         <Card>

@@ -8,7 +8,7 @@ import Slider from 'material-ui/Slider';
 
 //redux
 import {connect} from 'react-redux';
-import {changeSlider} from '../actions';
+import {updateBlockValue} from 'sideBar';
 
 //Selector
 import clickedBlockSelector from '../selectors/selected_block';
@@ -23,17 +23,23 @@ const SideBarBlock = props =>{
             //Esconde o id do block , precisa mudar pra nao retornar o ID
             if(key !== "id"){
                 return(
-                    <TextField
-                        onChange={handleInputChange}
-                        value={value}
-                        key={key}
-                        floatingLabelText={key}
-                    />
+                    <div key={key}>
+                        <p>{key}</p>
+                        <Slider
+                            min={0} step={0.1} max={5}
+                            value={value}
+                            onChange={event => handleFirstSlider(value,key)}
+                         />
+                    </div>
                 )
             }
     }
-    const handleFirstSlider = (event, value) => {
-        props.changeSlider(value);
+    const handleFirstSlider = (value,key) => {
+        const payload ={
+            value,
+            key
+        }
+        props.updateBlockValue(payload);
     };
     //como saber qual campo mudou a variavel
     const handleInputChange = event =>{
@@ -43,7 +49,7 @@ const SideBarBlock = props =>{
     return(
         <List>
             {_.map(props.clickedBlock,showProperties)}
-            <Slider min={0} step={0.01} max={3} value={props.slider} onChange={handleFirstSlider} />
+
         </List>
     );
 }
@@ -53,4 +59,4 @@ const mapStateToProps = state =>{
         slider: state.app.slider
     }
 }
-export default connect(mapStateToProps,{changeSlider})(SideBarBlock);
+export default connect(mapStateToProps,{updateBlockValue})(SideBarBlock);

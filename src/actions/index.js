@@ -1,42 +1,31 @@
-export const BLOCK_LIST = 'BLOCK_LIST';
-export const CHANGE_SLIDER = 'CHANGE_SLIDER';
-export const BLOCK_CLICKED = 'BLOCK_CLICKED';
-export const ADD_TO_PROJECT = 'ADD_TO_PROJECT';
-export const TRACK_LOCATION ='TRACK_LOCATION';
-export const UPDATE_BLOCK = 'UPDATE_BLOCK';
-export const UPDATE_CURRENT_PROJECT = 'UPDATE_CURRENT_PROJECT';
+import * as consts from 'constants';
 
 export const blockList = () => ({
-  type: BLOCK_LIST
+  type: consts.BLOCK_LIST
 });
 
 export const blockClicked = payload => {
     return{
-        type:BLOCK_CLICKED,
+        type:consts.BLOCK_CLICKED,
         payload
         }
 };
 export const addBlockToProject = payload => ({
-    type:ADD_TO_PROJECT,
+    type:consts.ADD_TO_PROJECT,
     payload
 });
 export const trackLocation = payload => ({
-    type:TRACK_LOCATION,
+    type:consts.TRACK_LOCATION,
     payload
 });
 export const updateCurrentProject =payload =>({
-    type:UPDATE_CURRENT_PROJECT,
+    type:consts.UPDATE_CURRENT_PROJECT,
     payload
 })
 
-export const updateBlockValue = (payload) =>{
+export const updateBlockValue = payload =>{
     return({
-    type: UPDATE_BLOCK,
+    type: consts.UPDATE_BLOCK,
     payload
 })
 }
-
-export const changeSlider =payload =>({
-    type:CHANGE_SLIDER,
-    payload
-})

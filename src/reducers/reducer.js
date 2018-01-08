@@ -1,12 +1,4 @@
-import {TRACK_LOCATION,
-        BLOCK_LIST,
-        BLOCK_CLICKED,
-        ADD_TO_PROJECT,
-        UPDATE_BLOCK,
-        UPDATE_CURRENT_PROJECT,
-        CHANGE_SLIDER
-    } from '../actions/index';
-
+import * as consts from 'constants';
 import _ from 'lodash';
 
 const initialState = {
@@ -22,22 +14,14 @@ const initialState = {
                 blocks : {
                     "block1" :{
                         id : "block1",
-                        name: 'Random Number Generator',
-                        steppedLine: true,
                         position : {x:0 , y: 530},
                     },
                     "block2" :{
                         id : "block2",
-                        name: 'Carrier Wave',
-                        Frequency :2,
-                        Amplitude :4,
                         position : {x:0 , y: 300},
                     },
                     "block3" :{
                         id : "block3",
-                        name: 'BPSK',
-                        Frequency :5,
-                        Amplitude :10,
                         position : {x:200, y: 100},
                     }
                 }
@@ -72,7 +56,7 @@ const initialState = {
                 name: 'BPSK',
                 id:'block3',
                 Frequency :5,
-                Amplitude :10,
+                Amplitude :5,
             },
         },
         allIds : ["block1","block2","block3"]
@@ -80,29 +64,36 @@ const initialState = {
 }
 
 export default function(state = initialState,action){
-    let newState = state;
+    let newState;
+    let block;
     switch(action.type){
         default:
             return state;
-        case BLOCK_LIST:
+        case consts.BLOCK_LIST:
             return initialState;
-        case BLOCK_CLICKED:
+        case consts.BLOCK_CLICKED:
             return {...state,clickedBlock:action.payload};
-        case ADD_TO_PROJECT:
-            const block = getBlockById(action.payload,state);
+        case consts.ADD_TO_PROJECT:
+            block = getBlockById(action.payload,state);
             return {...state,projectBlocks:block}
-        case TRACK_LOCATION:
-            newState.projects.byId.project1.blocks.block1.position = action.payload;
+        case consts.TRACK_LOCATION:
+            newState = state;
+            block = action.payload.block.id;
+            newState.projects.byId.project1.blocks[block].position = action.payload.deltaPosition;
+
             return {...state,newState};
-        case UPDATE_CURRENT_PROJECT:
+        case consts.UPDATE_CURRENT_PROJECT:
             return {...state,currentProject : action.payload};
-        case CHANGE_SLIDER:
-            return {...state,slider:action.payload};
+        case consts.UPDATE_BLOCK:
+        //update
+            newState = state;
+            newState.blocks.byId[state.clickedBlock.id].Frequency = 2;
+            return newState;
     }
 }
 
 const updateBlockPosition = (position,block,newState) => {
-    newState.projects.byId.project1.blocks.block.position = position;
+    newState.projects.byId.project1.blocks[block].position = position;
     return newState;
 }
 const getBlockById = (id,state) =>{

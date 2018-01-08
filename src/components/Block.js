@@ -13,13 +13,18 @@ const blockStyle={
 
 
 const Block = props =>{
+    //Procura o block na lista de blocks de acordo com o ID do block no projeto
+    //Para não haver duplicação
     const block = _.find(props.blocks,{'id' : props.block.id});
     const handleDrag = (e,ui) => {
        const deltaPosition ={
             x: x + ui.deltaX,
             y: y + ui.deltaY
         };
-        props.trackLocation(deltaPosition);
+        const payload = {
+            block,deltaPosition
+        };
+        props.trackLocation(payload);
     }
 
     const {x, y} = props.block.position;
@@ -33,6 +38,7 @@ const Block = props =>{
 }
 
 const mapStateToProps = state =>{
+    console.log(state.app.projects);
     return{
         blocks : state.app.blocks.byId
     }

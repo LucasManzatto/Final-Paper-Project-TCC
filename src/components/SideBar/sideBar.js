@@ -12,7 +12,7 @@ import _ from 'lodash';
 
 //Redux
 import {connect} from 'react-redux';
-import {blockClicked} from '../actions/index';
+import {blockClicked} from './SideBar/actions';
 
 let SelectableList = makeSelectable(List);
 
@@ -36,17 +36,11 @@ const SideBar = props =>{
             component.props.blockClicked(bloco);
         }
         return(
-            <ListItem
+                <ListItem
                 onClick={onClickHandler}
                 key={bloco.id}
                 value={bloco.id}
                 primaryText={bloco.name}
-                rightIconButton={
-                    <FlatButton
-                            icon={<ContentAdd />}
-                            style={buttonStyle}
-                    />
-                }
             />
         )
     }
