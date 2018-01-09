@@ -24,6 +24,7 @@ const Block = props =>{
         const payload = {
             block,deltaPosition
         };
+        console.log(payload);
         props.trackLocation(payload);
     }
 
@@ -38,7 +39,6 @@ const Block = props =>{
 }
 
 const mapStateToProps = state =>{
-    console.log(state.app.projects);
     return{
         blocks : state.app.blocks.byId
     }

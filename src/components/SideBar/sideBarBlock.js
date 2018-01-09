@@ -8,10 +8,11 @@ import Slider from 'material-ui/Slider';
 
 //redux
 import {connect} from 'react-redux';
-import {updateBlockValue} from 'sideBar';
+import {updateBlockValue} from './actions';
+//import {updateBlockValue} from '../SideBar/actions';
 
 //Selector
-import clickedBlockSelector from '../selectors/selected_block';
+import clickedBlockSelector from '../../selectors/selected_block.js';
 
 
 const SideBarBlock = props =>{

@@ -12,7 +12,7 @@ import _ from 'lodash';
 
 //Redux
 import {connect} from 'react-redux';
-import {blockClicked} from './SideBar/actions';
+import {blockClicked} from './actions';
 
 let SelectableList = makeSelectable(List);
 
@@ -60,7 +60,7 @@ const SideBar = props =>{
 
 const mapStateToProps = state =>{
     return{
-        blocks : state.app.blocks
+        blocks : state.sideBar.blocks
     }
 }
 export default connect(mapStateToProps,{blockClicked})(SideBar);
