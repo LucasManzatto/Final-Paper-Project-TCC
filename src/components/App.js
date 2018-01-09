@@ -8,8 +8,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Menu from './menu';
 import SideBar from './SideBar/sideBar';
 import SideBarBlock from './SideBar/sideBarBlock';
-import ProjectArea from './projectArea';
-import BottomArea from './bottomArea';
+import ProjectArea from './ProjectArea/projectArea';
+import BottomArea from './BottomArea/bottomArea';
 
 import { Grid, Row, Col } from 'react-flexbox-grid';
 

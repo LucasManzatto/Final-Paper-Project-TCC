@@ -12,7 +12,7 @@ import {updateBlockValue} from './actions';
 //import {updateBlockValue} from '../SideBar/actions';
 
 //Selector
-import clickedBlockSelector from '../../selectors/selected_block.js';
+import clickedBlockSelector from './selectors';
 
 
 const SideBarBlock = props =>{
@@ -57,7 +57,7 @@ const SideBarBlock = props =>{
 const mapStateToProps = state =>{
     return{
         clickedBlock : clickedBlockSelector(state),
-        slider: state.app.slider
+        slider: state.sideBar.slider
     }
 }
 export default connect(mapStateToProps,{updateBlockValue})(SideBarBlock);
