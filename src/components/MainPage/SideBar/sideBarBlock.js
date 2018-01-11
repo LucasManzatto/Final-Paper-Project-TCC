@@ -8,11 +8,11 @@ import Slider from 'material-ui/Slider';
 
 //redux
 import {connect} from 'react-redux';
-import {updateBlockValue} from './actions';
+import {updateBlockValue} from '../actions';
 //import {updateBlockValue} from '../SideBar/actions';
 
 //Selector
-import clickedBlockSelector from './selectors';
+import clickedBlockSelector from '../selectors';
 
 
 const SideBarBlock = props =>{
@@ -57,7 +57,7 @@ const SideBarBlock = props =>{
 const mapStateToProps = state =>{
     return{
         clickedBlock : clickedBlockSelector(state),
-        slider: state.sideBar.slider
+        slider: state.mainPage.slider
     }
 }
 export default connect(mapStateToProps,{updateBlockValue})(SideBarBlock);

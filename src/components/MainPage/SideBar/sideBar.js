@@ -7,12 +7,13 @@ import {grey50,blue500} from 'material-ui/styles/colors';
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 
 import _ from 'lodash';
 
 //Redux
 import {connect} from 'react-redux';
-import {blockClicked} from './actions';
+import {addBlockToProject} from '../actions';
 
 let SelectableList = makeSelectable(List);
 
@@ -33,7 +34,7 @@ const SideBar = props =>{
     const createListItem = bloco =>{
         //Quando o item da lista é clicado o clickedBlock é atualizado
         const onClickHandler = () =>{
-            component.props.blockClicked(bloco);
+            component.props.addBlockToProject(bloco.id);
         }
         return(
                 <ListItem
@@ -41,6 +42,7 @@ const SideBar = props =>{
                 key={bloco.id}
                 value={bloco.id}
                 primaryText={bloco.name}
+                rightIcon={<CommunicationChatBubble />}
             />
         )
     }
@@ -60,7 +62,7 @@ const SideBar = props =>{
 
 const mapStateToProps = state =>{
     return{
-        blocks : state.sideBar.blocks
+        blocks : state.mainPage.blocks
     }
 }
-export default connect(mapStateToProps,{blockClicked})(SideBar);
+export default connect(mapStateToProps,{addBlockToProject})(SideBar);

@@ -29,9 +29,9 @@ const BottomArea = props =>{
 }
 
 const mapStateToProps = state =>{
-    const currentProject = state.projectArea.currentProject;
+    const currentProject = state.mainPage.currentProject;
     return{
-        blocks : state.projectArea.projects.byId[currentProject].blocks,
+        blocks : state.mainPage.projects.byId[currentProject].blocks,
     }
 }
 

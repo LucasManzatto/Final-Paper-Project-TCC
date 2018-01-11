@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 //redux
 import {connect} from 'react-redux';
-import {updateCurrentProject} from './actions';
+import {updateCurrentProject} from '../actions';
 
 
 
@@ -30,7 +30,7 @@ const ProjectArea = props =>{
 
 const mapStateToProps = state =>{
     return{
-        projects : state.projectArea.projects
+        projects : state.mainPage.projects
     }
 }
 export default connect(mapStateToProps,{updateCurrentProject})(ProjectArea);

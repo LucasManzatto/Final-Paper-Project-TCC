@@ -1,10 +1,8 @@
 import {combineReducers} from 'redux';
-import sideBar from '../src/components/SideBar/reducer';
-import projectArea from '../src/components/ProjectArea/reducer';
+import mainPage from '../src/components/MainPage/reducer';
 
 const rootReducer = combineReducers({
-  sideBar,
-  projectArea
+  mainPage
 });
 
 export default rootReducer;

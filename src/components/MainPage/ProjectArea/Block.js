@@ -3,12 +3,13 @@ import Draggable from 'react-draggable'; // Both at the same time
 import _ from 'lodash';
 //redux
 import {connect} from 'react-redux';
-import {trackLocation} from './actions';
+import {trackLocation} from '../actions';
 
 const blockStyle={
     height: 80,
     width: 120,
-    border: '1px solid black'
+    border: '1px solid black',
+    backgroundColor : 'white'
 }
 
 
@@ -17,17 +18,16 @@ const Block = props =>{
     //Para não haver duplicação
     const block = _.find(props.blocks,{'id' : props.block.id});
     const handleDrag = (e,ui) => {
-       const deltaPosition ={
+        const {x, y} = props.block.position;
+        const deltaPosition ={
             x: x + ui.deltaX,
             y: y + ui.deltaY
         };
         const payload = {
             block,deltaPosition
         };
-        console.log(payload);
         props.trackLocation(payload);
     }
-
     const {x, y} = props.block.position;
     return(
         <Draggable bounds="parent" onDrag={handleDrag} defaultPosition={{x, y}}>
@@ -40,7 +40,7 @@ const Block = props =>{
 
 const mapStateToProps = state =>{
     return{
-        blocks : state.sideBar.blocks.byId
+        blocks : state.mainPage.blocks.byId
     }
 }
 
