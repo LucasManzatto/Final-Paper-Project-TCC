@@ -50,7 +50,6 @@ const SideBarBlock = props =>{
     return(
         <List>
             {_.map(props.clickedBlock,showProperties)}
-
         </List>
     );
 }

@@ -15,6 +15,7 @@ const createProjectBlocks = block =>{
 }
 
 const ProjectTab = props =>{
+    console.log(Object.keys(props.blocks));
     return(
         <Paper zDepth={1} style={style}>
             {_.map(props.blocks,createProjectBlocks)}

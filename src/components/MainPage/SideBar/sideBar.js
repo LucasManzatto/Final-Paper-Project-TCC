@@ -34,7 +34,7 @@ const SideBar = props =>{
     const createListItem = bloco =>{
         //Quando o item da lista é clicado o clickedBlock é atualizado
         const onClickHandler = () =>{
-            component.props.addBlockToProject(bloco.id);
+            component.props.addBlockToProject(bloco);
         }
         return(
                 <ListItem

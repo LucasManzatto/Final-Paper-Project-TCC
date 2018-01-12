@@ -27,6 +27,7 @@
     "react-transition-group": "^2.2.1",
     "recharts": "^1.0.0-beta.0",
     "redux": "^3.7.2",
+    "redux-orm": "^0.9.4",
     "redux-promise": "^0.5.3",
     "reselect": "^3.0.1",
     "zingchart": "^2.6.1",
