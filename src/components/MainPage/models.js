@@ -25,13 +25,10 @@ class Project extends Model {
                 return null;
             case consts.ADD_TO_PROJECT:
                 const testProject= {
-                    id: "project1",
                     name : "Projeto 1",
-                    books : {}
                 }
                 Project.create(testProject);
-                Project.withId("project1").blocks.add(action.payload);
-                console.log(Project.withId("project1"));
+                //Project.withId("project1").blocks.add(block);
         }
     }
 }
@@ -39,15 +36,30 @@ Project.modelName = 'Project';
 Project.fields = {
     id: attr(), // non-relational field for any value; optional but highly recommended
     name: attr(),
-    blocks: many('Block', 'project')
+    blocks: many('Block')
     //authors: many('Author', 'books'),
     //publisher: fk('Publisher', 'books'),
 };
 
 export const orm = new ORM();
 orm.register(Block,Project);
+
 const initialState = orm.getEmptyState(); // getDefaultState -> getEmptyState
 export const session = orm.session(initialState); // .session instead of .from
 
-
-export default orm;
+const block = session.Block.create({
+    name : 'Block 1',
+    frequency: 1,
+    amplitude: 2
+});
+const block2 = session.Block.create({
+    name : 'Block 2',
+    frequency: 1,
+    amplitude: 2
+});
+const projeto = session.Project.create({
+    name: "Project 1"
+})
+projeto.blocks.add(block);
+projeto.blocks.add(block2);
+console.log(projeto.blocks.toModelArray());

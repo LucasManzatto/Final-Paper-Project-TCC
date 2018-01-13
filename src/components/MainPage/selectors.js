@@ -1,4 +1,5 @@
 import {createSelector} from 'reselect';
+import orm from './orm';
 import _ from 'lodash';
 
 const blocksSelector = state => state.mainPage.blocks.byId
