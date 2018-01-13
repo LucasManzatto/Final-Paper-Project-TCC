@@ -11,6 +11,8 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 
 import _ from 'lodash';
 
+import {blocksSelector} from '../selectors';
+
 //Redux
 import {connect} from 'react-redux';
 import {addBlockToProject} from '../actions';
@@ -61,6 +63,8 @@ const SideBar = props =>{
 }
 
 const mapStateToProps = state =>{
+    console.log(state);
+    //onst block = blocksSelector(state);
     return{
         blocks : state.mainPage.blocks
     }

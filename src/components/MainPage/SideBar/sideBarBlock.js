@@ -55,7 +55,7 @@ const SideBarBlock = props =>{
 }
 const mapStateToProps = state =>{
     return{
-        clickedBlock : clickedBlockSelector(state),
+        clickedBlock : state,
         slider: state.mainPage.slider
     }
 }

@@ -80,16 +80,16 @@ export default function sideBar(state = initialState,action){
     switch(action.type){
         default:
             return state;
-        case consts.ADD_TO_PROJECT:
-            const newBlockId = state.projects.byId[state.currentProject].blocksIds.length + 1;
-            const newBlock ={
-                id: action.payload,
-                position : {x:0, y:0}
-            }
-            newState = state;
-            newState.projects.byId[state.currentProject].blocksIds.push(newBlockId);
-            newState.projects.byId[state.currentProject].blocks[newBlockId] = newBlock;
-            return {...state,newState}
+        // case consts.ADD_TO_PROJECT:
+        //     const newBlockId = state.projects.byId[state.currentProject].blocksIds.length + 1;
+        //     const newBlock ={
+        //         id: action.payload,
+        //         position : {x:0, y:0}
+        //     }
+        //     newState = state;
+        //     newState.projects.byId[state.currentProject].blocksIds.push(newBlockId);
+        //     newState.projects.byId[state.currentProject].blocks[newBlockId] = newBlock;
+        //     return {...state,newState}
         case consts.BLOCK_LIST:
             return initialState;
         case consts.BLOCK_CLICKED:

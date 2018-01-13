@@ -1,7 +1,7 @@
 import {ORM, fk, many, attr, Model} from 'redux-orm';
 import * as consts from '../../constants';
 
-class Block extends Model {
+export class Block extends Model {
     static reducer(action,Block,session) {
         switch(action.type){
             default:
@@ -18,7 +18,7 @@ Block.fields = {
     //authors: many('Author', 'books'),
     //publisher: fk('Publisher', 'books'),
 };
-class Project extends Model {
+export class Project extends Model {
     static reducer(action,Project,session) {
         switch(action.type){
             default:
@@ -27,7 +27,8 @@ class Project extends Model {
                 const testProject= {
                     name : "Projeto 1",
                 }
-                Project.create(testProject);
+                Project.withId(0).blocks.add(action.payload);
+                break;
                 //Project.withId("project1").blocks.add(block);
         }
     }
@@ -44,22 +45,7 @@ Project.fields = {
 export const orm = new ORM();
 orm.register(Block,Project);
 
-const initialState = orm.getEmptyState(); // getDefaultState -> getEmptyState
-export const session = orm.session(initialState); // .session instead of .from
+// const initialState = orm.getEmptyState(); // getDefaultState -> getEmptyState
+// const session = orm.session(initialState); // .session instead of .from
 
-const block = session.Block.create({
-    name : 'Block 1',
-    frequency: 1,
-    amplitude: 2
-});
-const block2 = session.Block.create({
-    name : 'Block 2',
-    frequency: 1,
-    amplitude: 2
-});
-const projeto = session.Project.create({
-    name: "Project 1"
-})
-projeto.blocks.add(block);
-projeto.blocks.add(block2);
-console.log(projeto.blocks.toModelArray());
+export default orm;
