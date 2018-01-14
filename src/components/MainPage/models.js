@@ -25,7 +25,7 @@ export class Project extends Model {
                 return null;
             case consts.ADD_TO_PROJECT:
                 const testProject= {
-                    name : "Projeto 1",
+                    name : "Projeto 2",
                 }
                 Project.withId(0).blocks.add(action.payload);
                 break;

@@ -8,17 +8,15 @@ const style={
     height: 620
 }
 
-const createProjectBlocks = block =>{
-    return(
-    <Block key={block.id} block={block}/>
-    )
-}
-
 const ProjectTab = props =>{
-    console.log(Object.keys(props.blocks));
+
+    const blocks = _.map(props.blocks, block =>{
+        return <Block key={block.id} block={block}/>
+    });
+
     return(
         <Paper zDepth={1} style={style}>
-            {_.map(props.blocks,createProjectBlocks)}
+            {blocks}
         </Paper>
     )
 };

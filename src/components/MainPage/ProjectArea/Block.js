@@ -14,9 +14,6 @@ const blockStyle={
 
 
 const Block = props =>{
-    //Procura o block na lista de blocks de acordo com o ID do block no projeto
-    //Para não haver duplicação
-    const block = _.find(props.blocks,{'id' : props.block.id});
     const handleDrag = (e,ui) => {
         const {x, y} = props.block.position;
         const deltaPosition ={
@@ -24,24 +21,19 @@ const Block = props =>{
             y: y + ui.deltaY
         };
         const payload = {
-            block,deltaPosition
+            deltaPosition
         };
         props.trackLocation(payload);
     }
+    
     const {x, y} = props.block.position;
     return(
         <Draggable bounds="parent" onDrag={handleDrag} defaultPosition={{x, y}}>
             <div style={blockStyle}>
-                {block.name}
+                {props.block.name}
             </div>
         </Draggable>
     );
 }
 
-const mapStateToProps = state =>{
-    return{
-        blocks : state.mainPage.blocks.byId
-    }
-}
-
-export default connect(mapStateToProps,{trackLocation})(Block);
+export default Block;

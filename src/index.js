@@ -10,7 +10,7 @@ import reducers from './rootReducer';
 import  orm  from '../src/components/MainPage/models';
 
 function bootstrapState() {
-    const initialState = orm.getDefaultState();
+    const initialState = orm.getEmptyState();
     const session = orm.withMutations(initialState);
     const {
         Block,
@@ -22,18 +22,28 @@ function bootstrapState() {
     })
 
     const block = Block.create({
-        name : 'Block 1',
+        name: 'Random Number Generator',
         frequency: 1,
-        amplitude: 2
+        amplitude: 2,
+        steppedLine: true,
+        position : {x:0 , y: 530}
     });
     const block2 = Block.create({
-        name : 'Block 2',
-        frequency: 1,
-        amplitude: 2
+        name: 'Carrier Wave',
+        frequency: 3,
+        amplitude: 4,
+        position : {x:0 , y: 300}
+    });
+    const block3 = Block.create({
+        name: 'BPSK',
+        frequency :5,
+        amplitude :5,
+        position : {x:200, y: 100}
     });
 
-     projeto.blocks.add(block);
-     projeto.blocks.add(block2);
+    projeto.blocks.add(block);
+    projeto.blocks.add(block2);
+    projeto.blocks.add(block3);
     return initialState;
 }
 const initialState = bootstrapState();

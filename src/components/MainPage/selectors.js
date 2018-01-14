@@ -7,18 +7,17 @@ import  orm  from '../MainPage/models';
 import _ from 'lodash';
 
 const dbStateSelector = state => state.db;
-export const blocksSelector = createSelector(
-    orm,
-    // The first input selector should always select the db-state.
-    // Behind the scenes, `createSelector` begins a Redux-ORM session
-    // with the value returned by `dbStateSelector` and passes
-    // that Session instance as an argument instead.
-    dbStateSelector,
-    session => {
-        console.log(session.Project.all().toModelArray());
-        return session.Block.toModelArray();
-        }
-);
+
+export const blocksSelector = createSelector(orm, state =>
+    state.orm, session => {
+    return session.Block.all().toRefArray();
+});
+export const projectsSelector = createSelector(orm, state =>
+    state.orm, session => {
+    return session.Project.all().toModelArray().map(project =>{
+        return {...project, blocks : project.blocks.all().toRefArray()}
+    });
+});
 //
 // const blocksSelector = state => state.mainPage.blocks.byId
 // const clickedBlockSelector = state => state.mainPage.clickedBlock

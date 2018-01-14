@@ -54,7 +54,7 @@ const SideBar = props =>{
             <Paper zDepth={1} style={style}>
                 <SelectableList defaultValue={3}>
                   <Subheader style={subHeaderStyle}>Blocos</Subheader>
-                  {_.map(component.props.blocks.byId,createListItem)}
+                  {_.map(component.props.blocks,createListItem)}
                 </SelectableList>
             </Paper>
         );
@@ -63,10 +63,8 @@ const SideBar = props =>{
 }
 
 const mapStateToProps = state =>{
-    console.log(state);
-    //onst block = blocksSelector(state);
     return{
-        blocks : state.mainPage.blocks
+        blocks : blocksSelector(state)
     }
 }
 export default connect(mapStateToProps,{addBlockToProject})(SideBar);
