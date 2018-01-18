@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 const initialState = {
     clickedBlock : "block1",
-    currentProject : "project1",
+    currentProject : 0,
     slider: 2,
     projects : {
         byId : {

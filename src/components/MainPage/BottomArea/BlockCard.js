@@ -42,7 +42,11 @@ const CardBlock = props =>{
                     width={100}
                     height={150}
                     options={{
-                    maintainAspectRatio: false,
+                        animation: {
+                            easing: 'easeInOutElastic',
+                            duration: 1000
+                        },
+                        maintainAspectRatio: false,
                  }}
                 />
             </CardMedia>

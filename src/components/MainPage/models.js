@@ -24,12 +24,8 @@ export class Project extends Model {
             default:
                 return null;
             case consts.ADD_TO_PROJECT:
-                const testProject= {
-                    name : "Projeto 2",
-                }
                 Project.withId(0).blocks.add(action.payload);
                 break;
-                //Project.withId("project1").blocks.add(block);
         }
     }
 }
