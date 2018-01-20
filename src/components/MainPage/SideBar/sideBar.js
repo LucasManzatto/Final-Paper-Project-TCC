@@ -50,7 +50,6 @@ const SideBar = props =>{
     }
 
     component.render = () =>{
-        console.log(component.props.blocks);
         return(
             <Paper zDepth={1} style={style}>
                 <SelectableList defaultValue={3}>

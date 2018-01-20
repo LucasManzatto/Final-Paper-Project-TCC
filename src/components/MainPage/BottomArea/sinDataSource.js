@@ -3,20 +3,39 @@ import _ from 'lodash';
 
 const updateInterval = 1000 / 60
 
-export const generateData = (resolution, offset = 1) => {
-  const data = new Array(resolution);
+export const generateData = (totalTime, offset = 1,type) => {
+  const data = new Array(totalTime);
+  const binary = [1,1,1,1,1,1,-1,1];
   let index = 0;
   let x =0;
-  for (let i=offset; i<resolution + offset; i++) {
-    x = (8 * Math.PI) * (i / resolution);
+  let frequency =2*Math.PI;
+  let period = 2;
+  let currentTime =0;
+  let y;
+
+  //Rodar essa funcao para cada elemento do binario?
+  for (let i=offset; i<totalTime + offset; i++) {
+    currentTime = (i / totalTime);
+    x =  frequency * currentTime;
+    if(type === 'sine'){
+        y = Math.sin(x);
+    }
+    else {
+        //Square wave
+        y = Math.sign(Math.sin(x));
+        //y = -Math.cos(2*Math.PI*x);
+        //y = Math.cos(2*Math.PI*x);
+        //BPSK
+        // y = Math.cos(2*Math.PI*x);
+    }
+
     data[index] = {
       x,
-      y : Math.sin(x),
+      y
     }
     index++;
-  }
-
-  return data
+}
+  return data;
 }
 
 export class SinDataSource extends React.Component {
@@ -30,13 +49,13 @@ export class SinDataSource extends React.Component {
   }
 
   updateData() {
-    const { resolution } = this.props
+    const { resolution ,type} = this.props
     const duration = 5000
     const totalNumberOfUpdates = duration / updateInterval
     const offsetIncrement = resolution / totalNumberOfUpdates
     const { offset } = this.state
     const newOffset = offset + offsetIncrement
-    const data = generateData(resolution, newOffset)
+    const data = generateData(resolution, newOffset,type)
     this.setState({
       data,
       offset: newOffset,

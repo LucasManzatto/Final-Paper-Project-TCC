@@ -14,7 +14,6 @@ const ProjectArea = props =>{
     const component = new React.Component(props);
     component.componentWillReceiveProps = props =>{
         component.props = props;
-        console.log(component.props);
 
     }
     const handleOnClick = (event,projectId) =>{

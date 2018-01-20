@@ -1,74 +1,44 @@
 import React from 'react';
 import {Card,CardMedia} from 'material-ui/Card';
-import {Line} from 'react-chartjs-2';
 import {blue500} from 'material-ui/styles/colors';
 
+import { scaleLinear } from 'd3-scale'
+import { axisBottom, axisLeft } from 'd3-axis'
+import { SinDataSource } from './sinDataSource';
+import { Line } from './line'
+import { findMinMax } from './find-min-max'
+import { Axis } from './axis'
+
+const width = 500;
+const height = 170;
+const padding = 10;
 
 const CardBlock = props =>{
-    const component = new React.Component(props);
+    return(
+        <svg width={width} height={height}>
+            <SinDataSource resolution={200} type={props.type}>{
+                (data) => {
+                    const { minX, maxX, minY, maxY } = findMinMax(data)
 
-    const data = {
-      labels: [],
-      datasets: [
-        {
-            //cubicInterpolationMode : 'monotone',
-            steppedLine : component.props.block.steppedLine,
-            label: component.props.block.name,
-            backgroundColor : 'white',
-            borderColor: blue500,
-            borderWidth: 1,
-            data: []
-        }
-      ]
-    };
+                    const xScale = scaleLinear()
+                    .domain([minX.toFixed(2), maxX.toFixed(2)])
+                    .range([padding, width - padding])
 
+                    const yScale = scaleLinear()
+                    .domain([minY.toFixed(2), maxY.toFixed(2)])
+                    .range([height - padding, padding])
 
-    component.componentDidMount = () =>{
-    }
-    component.render = () =>{
-        if(component.props.block.steppedLine){
-            data.labels = [1,2,3,4,5,6,7];
-            data.datasets[0].data= [0,1,0,0,1,1,0];
-        }
-        else{
-            data.datasets[0].pointRadius =0;
-            sinWave(component.props.block.Frequency,data);
-        }
-        return(
-        <Card>
-            <CardMedia >
-                <Line
-                    data={data}
-                    width={100}
-                    height={150}
-                    options={{
-                        animation: {
-                            easing: 'easeInOutElastic',
-                            duration: 1000
-                        },
-                        maintainAspectRatio: false,
-                 }}
-                />
-            </CardMedia>
-        </Card>
-        );
-    }
-    return component;
-}
-const sinWave = (freq,data) =>{
-    data.datasets[0].data = [];
-    data.labels = [];
-    let counter = 0;
-
-    let increase = Math.PI * 2 / 100;
-
-    for(let i = 0; i <= freq; i += 0.01 ) {
-        let x = i;
-        let y = Math.sin(counter) /2 + 0.5;
-        let position = {x,y};
-        data.datasets[0].data.push(position);
-        data.labels.push('');
-        counter += increase;
-    }
+                    return (
+                        <Line
+                          xScale={xScale}
+                          yScale={yScale}
+                          data={data}
+                        />
+                    )
+                }
+            }
+            </SinDataSource>
+        </svg>
+    );
 }
 export default CardBlock;

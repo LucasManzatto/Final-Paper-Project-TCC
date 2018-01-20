@@ -26,6 +26,11 @@ export class Project extends Model {
             case consts.ADD_TO_PROJECT:
                 Project.withId(0).blocks.add(action.payload);
                 break;
+            case consts.TRACK_LOCATION:
+                const block = action.payload.block;
+                block.position = action.payload.deltaPosition;
+                Project.withId(0).blocks.update(block);
+                break;
         }
     }
 }

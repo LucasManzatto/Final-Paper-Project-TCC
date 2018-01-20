@@ -21,11 +21,12 @@ const Block = props =>{
             y: y + ui.deltaY
         };
         const payload = {
+            block: props.block,
             deltaPosition
         };
         props.trackLocation(payload);
     }
-    
+
     const {x, y} = props.block.position;
     return(
         <Draggable bounds="parent" onDrag={handleDrag} defaultPosition={{x, y}}>
@@ -35,5 +36,8 @@ const Block = props =>{
         </Draggable>
     );
 }
+const mapStateToProps = state =>{
+    return state;
+}
 
-export default Block;
+export default connect(mapStateToProps,{trackLocation})(Block);

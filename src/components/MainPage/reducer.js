@@ -99,10 +99,6 @@ export default function sideBar(state = initialState,action){
         //    newState = state;
         //    newState.blocks.byId[state.clickedBlock.id].Frequency = 2;
         //    return newState;
-        case consts.TRACK_LOCATION:
-            let newState2 = state;
-            console.log(state);
-            return updateBlockPosition(action.payload,state);
         case consts.UPDATE_CURRENT_PROJECT:
             return {...state,currentProject : action.payload};
         }
