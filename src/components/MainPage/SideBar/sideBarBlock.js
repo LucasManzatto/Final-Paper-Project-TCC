@@ -9,10 +9,8 @@ import Slider from 'material-ui/Slider';
 //redux
 import {connect} from 'react-redux';
 import {updateBlockValue} from '../actions';
+import {clickedBlockSelector} from '../selectors';
 //import {updateBlockValue} from '../SideBar/actions';
-
-//Selector
-import clickedBlockSelector from '../selectors';
 
 
 const SideBarBlock = props =>{
@@ -22,7 +20,7 @@ const SideBarBlock = props =>{
                 return(<Subheader key={key}>{value}</Subheader>)
             }
             //Esconde o id do block , precisa mudar pra nao retornar o ID
-            if(key !== "id"){
+            if(key !== "id" && key !== "position"){
                 return(
                     <div key={key}>
                         <p>{key}</p>
@@ -38,7 +36,8 @@ const SideBarBlock = props =>{
     const handleFirstSlider = (value,key) => {
         const payload ={
             value,
-            key
+            key,
+            id: props.clickedBlock.id
         }
         props.updateBlockValue(payload);
     };
@@ -46,7 +45,6 @@ const SideBarBlock = props =>{
     const handleInputChange = event =>{
 
     }
-
     return(
         <List>
             {_.map(props.clickedBlock,showProperties)}
@@ -55,7 +53,7 @@ const SideBarBlock = props =>{
 }
 const mapStateToProps = state =>{
     return{
-        clickedBlock : state,
+        clickedBlock : clickedBlockSelector(state),
         slider: state.mainPage.slider
     }
 }

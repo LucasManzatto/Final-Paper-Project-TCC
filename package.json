@@ -34,6 +34,7 @@
     "redux": "^3.7.2",
     "redux-orm": "^0.9.4",
     "redux-promise": "^0.5.3",
+    "redux-ui": "^0.1.1",
     "reselect": "^3.0.1",
     "simplify-js": "^1.2.3",
     "zingchart": "^2.6.1",

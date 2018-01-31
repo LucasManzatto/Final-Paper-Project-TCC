@@ -1,6 +1,24 @@
 import {ORM, fk, many, attr, Model} from 'redux-orm';
 import * as consts from '../../constants';
 
+export class UI extends Model {
+    static reducer(action,UI,session) {
+        switch(action.type){
+            default:
+                return null;
+            case consts.BLOCK_CLICKED:
+                UI.withId(0).clickedBlock = action.payload;
+        }
+    }
+}
+UI.modelName = 'UI';
+UI.fields = {
+    id: attr(), // non-relational field for any value; optional but highly recommended
+    clickedBlock : attr(),
+    currentProject : attr(),
+};
+
+
 export class Block extends Model {
     static reducer(action,Block,session) {
         switch(action.type){
@@ -44,7 +62,7 @@ Project.fields = {
 };
 
 export const orm = new ORM();
-orm.register(Block,Project);
+orm.register(Block,Project,UI);
 
 // const initialState = orm.getEmptyState(); // getDefaultState -> getEmptyState
 // const session = orm.session(initialState); // .session instead of .from

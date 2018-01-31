@@ -15,10 +15,14 @@ function bootstrapState() {
     const {
         Block,
         Project,
+        UI
     } = session;
 
     const projeto = Project.create({
         name: "Project 1"
+    })
+    const projeto2 = Project.create({
+        name: "Project 2"
     })
 
     const block = Block.create({
@@ -26,8 +30,14 @@ function bootstrapState() {
         frequency: 1,
         amplitude: 2,
         steppedLine: true,
-        position : {x:0 , y: 530}
+        position : {x:200 , y: 530}
     });
+
+    const ui = UI.create({
+        clickedBlock : block,
+        currentProject : 0
+    })
+
     const block2 = Block.create({
         name: 'Carrier Wave',
         frequency: 3,
@@ -38,7 +48,7 @@ function bootstrapState() {
         name: 'BPSK',
         frequency :5,
         amplitude :5,
-        position : {x:200, y: 100}
+        position : {x:200, y: 120}
     });
 
     projeto.blocks.add(block);
