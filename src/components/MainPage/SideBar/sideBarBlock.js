@@ -1,7 +1,6 @@
 import React from 'react';
 import {List} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import TextField from 'material-ui/TextField';
 import _ from 'lodash';
 import Slider from 'material-ui/Slider';
 
@@ -20,14 +19,14 @@ const SideBarBlock = props =>{
                 return(<Subheader key={key}>{value}</Subheader>)
             }
             //Esconde o id do block , precisa mudar pra nao retornar o ID
-            if(key !== "id" && key !== "position"){
+            if(key !== "id" && key !== "position" && key !== "type"){
                 return(
                     <div key={key}>
-                        <p>{key}</p>
+                        <p>{_.capitalize(key)}</p>
                         <Slider
-                            min={0} step={0.1} max={5}
+                            min={0} step={1} max={10}
                             value={value}
-                            onChange={event => handleFirstSlider(value,key)}
+                            onChange={(event,newValue)=> handleFirstSlider(newValue,key)}
                          />
                     </div>
                 )
@@ -41,10 +40,7 @@ const SideBarBlock = props =>{
         }
         props.updateBlockValue(payload);
     };
-    //como saber qual campo mudou a variavel
-    const handleInputChange = event =>{
 
-    }
     return(
         <List>
             {_.map(props.clickedBlock,showProperties)}
@@ -54,7 +50,6 @@ const SideBarBlock = props =>{
 const mapStateToProps = state =>{
     return{
         clickedBlock : clickedBlockSelector(state),
-        slider: state.mainPage.slider
     }
 }
 export default connect(mapStateToProps,{updateBlockValue})(SideBarBlock);

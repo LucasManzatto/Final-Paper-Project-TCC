@@ -23,12 +23,12 @@ export class Axis extends React.Component {
   }
 
   render() {
-    const { transform } = this.props
     return (
       <g
         ref="axis"
-        transform={transform}
-      ></g>
+        transform={this.props.transform}
+      >
+      </g>
     )
   }
 }

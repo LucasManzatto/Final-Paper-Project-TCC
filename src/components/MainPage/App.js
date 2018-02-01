@@ -1,3 +1,4 @@
+/* @flow */
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {blue500} from 'material-ui/styles/colors';
@@ -41,7 +42,7 @@ const App = props =>(
         <Grid fluid>
             <Menu />
             <Row between="xs" style={style}>
-                <Col     xs={2}>
+                <Col xs={2}>
                     <SideBar/>
                 </Col>
                 <Col xs={7} className="text-center">

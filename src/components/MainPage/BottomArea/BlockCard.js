@@ -1,25 +1,23 @@
 import React from 'react';
-import {Card,CardMedia} from 'material-ui/Card';
-import {blue500} from 'material-ui/styles/colors';
 
 import { scaleLinear } from 'd3-scale'
-import { axisBottom, axisLeft } from 'd3-axis'
+//import { axisBottom, axisLeft } from 'd3-axis'
+//import { Axis } from './axis'
 import { SinDataSource } from './sinDataSource';
 import { Line } from './line'
 import { findMinMax } from './find-min-max'
-import { Axis } from './axis'
 
-const width = 500;
+const width = 300;
 const height = 170;
-const padding = 10;
+let padding = 10;
 
 const CardBlock = props =>{
     return(
         <svg width={width} height={height}>
-            <SinDataSource resolution={200} type={props.type}>{
+            <SinDataSource resolution={1000} block={props.block}>{
                 (data) => {
-                    const { minX, maxX, minY, maxY } = findMinMax(data)
-
+                    padding = props.block.amplitude;
+                    const { minX, maxX, minY, maxY } = findMinMax(data);
                     const xScale = scaleLinear()
                     .domain([minX.toFixed(2), maxX.toFixed(2)])
                     .range([padding, width - padding])

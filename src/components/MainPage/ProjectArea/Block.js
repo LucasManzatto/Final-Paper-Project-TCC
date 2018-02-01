@@ -1,6 +1,6 @@
 import React from 'react';
-import Draggable from 'react-draggable'; // Both at the same time
-import _ from 'lodash';
+import Draggable from 'react-draggable';
+
 //redux
 import {connect} from 'react-redux';
 import {trackLocation,blockClicked} from '../actions';

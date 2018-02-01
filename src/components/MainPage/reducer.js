@@ -1,5 +1,5 @@
-import * as consts from '../../constants';
-import _ from 'lodash';
+//import * as consts from '../../constants';
+//import _ from 'lodash';
 
 const initialState = {
     clickedBlock : "block1",

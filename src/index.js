@@ -11,12 +11,8 @@ import  orm  from '../src/components/MainPage/models';
 
 function bootstrapState() {
     const initialState = orm.getEmptyState();
-    const session = orm.withMutations(initialState);
-    const {
-        Block,
-        Project,
-        UI
-    } = session;
+    const session = orm.mutableSession(initialState);
+    const {Block,Project,UI} = session;
 
     const projeto = Project.create({
         name: "Project 1"
@@ -29,11 +25,11 @@ function bootstrapState() {
         name: 'Random Number Generator',
         frequency: 1,
         amplitude: 2,
-        steppedLine: true,
+        type: 'square',
         position : {x:200 , y: 530}
     });
 
-    const ui = UI.create({
+    UI.create({
         clickedBlock : block,
         currentProject : 0
     })
@@ -42,26 +38,33 @@ function bootstrapState() {
         name: 'Carrier Wave',
         frequency: 3,
         amplitude: 4,
+        type:'sine',
         position : {x:0 , y: 300}
     });
     const block3 = Block.create({
         name: 'BPSK',
         frequency :5,
         amplitude :5,
+        type : 'bpsk',
         position : {x:200, y: 120}
     });
 
     projeto.blocks.add(block);
     projeto.blocks.add(block2);
     projeto.blocks.add(block3);
+
+    projeto2.blocks.add(block);
     return initialState;
 }
 const initialState = bootstrapState();
 
 ReactDOM.render(
-    <Provider store={createStore(reducers,{
+    <Provider store={createStore(reducers,
+        {
         orm : initialState
-    })}>
+        },
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+        )}>
         <App />
     </Provider>
     ,

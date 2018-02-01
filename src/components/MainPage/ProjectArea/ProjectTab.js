@@ -9,11 +9,9 @@ const style={
 }
 
 const ProjectTab = props =>{
-
     const blocks = _.map(props.blocks, block =>{
         return <Block key={block.id} block={block}/>
     });
-
     return(
         <Paper zDepth={1} style={style}>
             {blocks}
