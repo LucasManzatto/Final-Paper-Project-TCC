@@ -16,14 +16,14 @@ const CardBlock = props =>{
         <svg width={width} height={height}>
             <SinDataSource resolution={1000} block={props.block}>{
                 (data) => {
-                    padding = props.block.amplitude;
+                    //padding = props.block.amplitude;
                     const { minX, maxX, minY, maxY } = findMinMax(data);
                     const xScale = scaleLinear()
                     .domain([minX.toFixed(2), maxX.toFixed(2)])
-                    .range([padding, width - padding])
+                    .range([padding, width])
 
                     const yScale = scaleLinear()
-                    .domain([minY.toFixed(2), maxY.toFixed(2)])
+                    .domain([minY, maxY])
                     .range([height - padding, padding])
 
                     return (

@@ -9,12 +9,13 @@ const blockStyle={
     height: 80,
     width: 120,
     border: '1px solid black',
-    backgroundColor : 'white'
+    backgroundColor : '#f5f5f5'
 }
 
 
 const Block = props =>{
     const handleDrag = (e,ui) => {
+        handleClick();
         const {x, y} = props.block.position;
         const deltaPosition ={
             x: x + ui.deltaX,

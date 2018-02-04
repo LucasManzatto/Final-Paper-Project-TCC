@@ -21,7 +21,34 @@ function bootstrapState() {
         name: "Project 2"
     })
 
-    const block = Block.create({
+    const squareWave = Block.create({
+        name: 'Random Number Generator',
+        frequency: 1,
+        amplitude: 2,
+        type: 'square',
+        position : {x:200 , y: 530}
+    });
+    const ui = UI.create({
+        clickedBlock :squareWave,
+        currentProject : 0,
+    })
+    console.log(ui);
+
+    const carrierWave = Block.create({
+        name: 'Carrier Wave',
+        frequency: 3,
+        amplitude: 4,
+        type:'sine',
+        position : {x:0 , y: 300}
+    });
+    const Bpsk = Block.create({
+        name: 'BPSK',
+        frequency: 3,
+        amplitude: 4,
+        type : 'bpsk',
+        position : {x:200, y: 120}
+    });
+    const block4 = Block.create({
         name: 'Random Number Generator',
         frequency: 1,
         amplitude: 2,
@@ -29,31 +56,11 @@ function bootstrapState() {
         position : {x:200 , y: 530}
     });
 
-    UI.create({
-        clickedBlock : block,
-        currentProject : 0
-    })
+    projeto.blocks.add(squareWave);
+    projeto.blocks.add(carrierWave);
+    projeto.blocks.add(Bpsk);
 
-    const block2 = Block.create({
-        name: 'Carrier Wave',
-        frequency: 3,
-        amplitude: 4,
-        type:'sine',
-        position : {x:0 , y: 300}
-    });
-    const block3 = Block.create({
-        name: 'BPSK',
-        frequency :5,
-        amplitude :5,
-        type : 'bpsk',
-        position : {x:200, y: 120}
-    });
-
-    projeto.blocks.add(block);
-    projeto.blocks.add(block2);
-    projeto.blocks.add(block3);
-
-    projeto2.blocks.add(block);
+    projeto2.blocks.add(block4);
     return initialState;
 }
 const initialState = bootstrapState();

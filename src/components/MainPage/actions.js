@@ -23,3 +23,7 @@ export const updateBlockValue = payload =>({
     type: consts.UPDATE_BLOCK,
     payload
 })
+export const updateDropDown = payload =>({
+    type: consts.UPDATE_DROPDOWN,
+    payload
+})

@@ -1,36 +1,31 @@
 import React from 'react';
 
-const updateInterval = 1000 / 60;
-
-export const generateData = (totalTime, offset = 1,type,frequency,amplitude) => {
+export const generateData = (totalTime, offset = 1,block) => {
   const data = new Array(totalTime);
-  const binary = [1,1,1,1,1,1,-1,1];
+  const binary = [1,-1,1,-1,1,1,-1,1];
   let index = 0;
   let x =0;
-  let freq =2*Math.PI*frequency;
-  let freq2 =2*Math.PI;
+
+  let angularFrequency =2*Math.PI*(block.frequency);
+  let freq2 =2*Math.PI*6;
   let currentTime =0;
   let y;
-
+  let size = (totalTime + offset)/binary.length;
+  let counter=0;
   //Rodar essa funcao para cada elemento do binario?
   for (let i=offset; i<totalTime + offset; i++) {
     currentTime = (i / totalTime);
-    x =  freq * currentTime;
-    let x2 = freq2 * currentTime;
-    if(type === 'sine'){
+    x =  angularFrequency * currentTime;
+    if(block.type === 'sine'){
         y = Math.sin(x);
     }
-    else if(type ==='square') {
-        //Square wave
+    else if(block.type ==='square') {
         y = Math.sign(Math.sin(x));
-        //y = -Math.cos(2*Math.PI*x);
-        //y = Math.cos(2*Math.PI*x);
-        //BPSK
-        // y = Math.cos(2*Math.PI*x);
     }
-    else if(type ==='bpsk') {
-        if(Math.sign(Math.sin(x2)) > 0){
-            y = -Math.cos(x);
+    else if(block.type ==='bpsk') {
+        let z =  freq2 * currentTime;
+        if(Math.sin(z) > 0){
+            y = -Math.cos(z);
         }
         else{
             y = Math.cos(x);
@@ -59,28 +54,24 @@ export class SinDataSource extends React.Component {
   }
 
   updateData() {
-    const {type,frequency,amplitude} = this.props.block;
-    const resolution = this.props.resolution;
+    const {resolution,block} = this.props;
     const duration = 5000;
+    const updateInterval = 1000 / 60;
+    // 5000/33.33=150
     const totalNumberOfUpdates = duration / updateInterval;
+    // 1000/150 = 6.66
     const offsetIncrement = resolution / totalNumberOfUpdates;
-    const { offset } = this.state;
-    const newOffset = offset + offsetIncrement;
-    const data = generateData(resolution, newOffset,type,frequency,amplitude);
+    const newOffset = this.state.offset + offsetIncrement;
+    const data = generateData(resolution, newOffset,block);
     this.setState({
       data,
       offset: newOffset,
-    }, () => {
-      window.requestAnimationFrame(this.updateData);
-    })
+    });
+    window.requestAnimationFrame(this.updateData);
   }
 
   componentDidMount() {
     this.animationId = window.requestAnimationFrame(this.updateData);
-  }
-
-  componentWillUnmount() {
-    window.cancelAnimationFrame(this.animationId);
   }
 
   render() {

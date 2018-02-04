@@ -24,3 +24,7 @@ export const projectsSelector = createSelector(orm, state =>
         return {...project, blocks : project.blocks.all().toRefArray()}
     });
 });
+export const sideBarBlockSelector = createSelector(orm, state =>
+    state.orm, session => {
+    return session.UI.withId(0).dropDownMenuValues;
+});

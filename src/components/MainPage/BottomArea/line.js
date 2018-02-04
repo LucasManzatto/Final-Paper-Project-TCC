@@ -1,5 +1,5 @@
 import React from 'react'
-import { line, curveLinear } from 'd3-shape'
+import { line, curveLinear ,curveStepBefore} from 'd3-shape'
 import simplify from 'simplify-js'
 
 export const Line = props => {
@@ -8,11 +8,10 @@ export const Line = props => {
   if (!data.length) {
     return null;
   }
-
-  for (let i=0; i<data.length; i++) {
-    data[i].x = xScale(data[i].x);
-    data[i].y = yScale(data[i].y);
-  }
+  data.map(data =>{
+      data.x = xScale(data.x);
+      data.y = yScale(data.y);
+  })
 
   const lineFunction = line()
     .curve(curveLinear)

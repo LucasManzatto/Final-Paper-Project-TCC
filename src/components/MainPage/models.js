@@ -10,15 +10,17 @@ export class UI extends Model {
                 UI.withId(0).clickedBlock = action.payload;
                 break;
             case consts.UPDATE_CURRENT_PROJECT:
+                //UI.withId(0).clickedBlock = {};
                 UI.withId(0).currentProject = action.payload;
                 break;
+            case consts.UPDATE_DROPDOWN:
+                UI.withId(0).dropDownMenuValues[action.payload.counter] = action.payload.value;
         }
     }
 }
 UI.modelName = 'UI';
 UI.fields = {
     id: attr(),
-    clickedBlock : attr(),
     currentProject : attr(),
 };
 
@@ -28,6 +30,13 @@ export class Block extends Model {
         switch(action.type){
             default:
                 return null;
+            case consts.UPDATE_BLOCK:
+                let block = session.UI.withId(0).clickedBlock;
+                const {key,value} = action.payload;
+                block[key] = value;
+                Block.withId(block.id).update(block);
+                Block.withId(2).update({frequency : value});
+                break;
         }
     }
 }
@@ -45,25 +54,12 @@ export class Project extends Model {
             default:
                 return null;
             case consts.ADD_TO_PROJECT:
-                const block3 = {
-                    name: 'BPSK',
-                    frequency :5,
-                    amplitude :5,
-                    type : 'bpsk',
-                    position : {x:200, y: 120}
-                };
-                Project.withId(0).blocks.add(block3);
-                break;
+                //Project.withId(0).blocks.add();
+                //break;
             case consts.TRACK_LOCATION:
                 let block = action.payload.block;
                 block.position = action.payload.deltaPosition;
                 Project.withId(0).blocks.update(block);
-                break;
-            case consts.UPDATE_BLOCK:
-                let block2 = session.UI.withId(0).clickedBlock;
-                const {key,value} = action.payload;
-                block2[key] = value;
-                Project.withId(0).blocks.update(block2);
                 break;
         }
     }
