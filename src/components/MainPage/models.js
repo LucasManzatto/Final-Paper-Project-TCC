@@ -31,7 +31,7 @@ export class Block extends Model {
             default:
                 return null;
             case consts.UPDATE_BLOCK:
-                let block = session.UI.withId(0).clickedBlock;
+                let block = session.UI.withId(0).clickedBlock._fields;
                 const {key,value} = action.payload;
                 block[key] = value;
                 Block.withId(block.id).update(block);
