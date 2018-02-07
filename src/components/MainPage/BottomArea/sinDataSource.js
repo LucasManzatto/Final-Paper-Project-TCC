@@ -18,9 +18,10 @@ export const generateData = (totalTime, offset = 1,block) => {
   //i ao total time é sempre o mesmo valor(totalTime);
   //No totalTime é calculado
   for (let i=offset; i<totalTime + offset; i++) {
+
     currentTime = (i / totalTime);
     xAxis =  angularFrequency * currentTime;
-    
+
     if(block.type === 'sine'){
         yAxis = Math.sin(xAxis);
     }
