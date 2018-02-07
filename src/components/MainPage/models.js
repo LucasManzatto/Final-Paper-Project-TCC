@@ -59,7 +59,7 @@ export class Project extends Model {
             case consts.TRACK_LOCATION:
                 let block = action.payload.block;
                 block.position = action.payload.deltaPosition;
-                Project.withId(0).blocks.update(block);
+                Project.withId(session.UI.withId(0).currentProject).blocks.update(block);
                 break;
         }
     }
