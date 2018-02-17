@@ -1,77 +1,104 @@
 import React from 'react';
+import _ from 'lodash';
 
-export const generateData = (totalTime, offset = 1,block) => {
-  const data = new Array(totalTime);
-  const binary = [1,-1,1,-1,1,1,-1,1];
-  const size = (totalTime + offset)/binary.length;
+export const generateData = (totalTime,block,binary,sineArray) => {
+    const data = new Array(totalTime);
+    let size = totalTime/binary.length;
 
-  let index = 0;
-  let xAxis;
-  let yAxis;
+    let index = 0;
+    let xAxis;
+    let counterSine = 0;
+    let binaryCounter=0;
 
+    const angularFrequency =2*Math.PI*(block.frequency);
 
-  const angularFrequency =2*Math.PI*(block.frequency);
-  let freq2 =2*Math.PI*6;
-  let currentTime =0;
-
-  //Rodar essa funcao para cada elemento do binario?
-  //i ao total time é sempre o mesmo valor(totalTime);
-  //No totalTime é calculado
-  for (let i=offset; i<totalTime + offset; i++) {
-
-    currentTime = (i / totalTime);
-    xAxis =  angularFrequency * currentTime;
-
-    if(block.type === 'sine'){
-        yAxis = Math.sin(xAxis);
-    }
-    else if(block.type ==='square') {
-        yAxis = Math.sign(Math.sin(xAxis));
-    }
-    else if(block.type ==='bpsk') {
-        let z =  freq2 * currentTime;
-        if(Math.sin(z) > 0){
-            yAxis = -Math.cos(z);
-        }
-        else{
-            yAxis = Math.cos(xAxis);
-        }
+    if(block.type === 'square'){
+        binary.map(item =>{
+            for(let i =0 ; i<size; i++){
+                data[index] = {
+                    x:index++,
+                    y: item
+                }
+            }
+        })
     }
 
-    data[index++] = {
-      x: xAxis,
-      y: yAxis
+    if(block.type === 'sine' || block.type === 'bpsk'){
+        sineArray.map(item =>{
+            let currentTime = (counterSine / totalTime);
+            xAxis =  angularFrequency * currentTime;
+            //counterSine++;
+            data[counterSine++] = {
+                x:xAxis,
+                y: item
+            }
+        })
     }
-}
-  return data;
+
+    //BPSK
+    //yAxis = -Math.cos(z);
+    //yAxis = Math.cos(xAxis);
+    return data;
 }
 
 export class SinDataSource extends React.Component {
   constructor(props) {
     super(props)
     this.updateData = this.updateData.bind(this);
+    const binary = [-1,-1,0,0,-1,0,0,-1,-1,0,-1,-1,0,0,0,-1,-1];
+    const size = props.resolution/binary.length;
+    let counter=0;
+    let binaryAux = [];
+    binary.map(item=>{
+        for(let i =0 ; i<size; i++){
+            binaryAux[counter++] =item;
+    }});
+
+    const sineArray = this.createSineArray(props.resolution);
     this.state = {
       data: [],
-      offset: 1,
+      binary : binaryAux,
+      sineArray
     }
   }
   //Se passar a data da square wave pro redux, tem como
   //usar no bpsk pra calcular quando é 0 e 1
   updateData() {
     const {resolution,block} = this.props;
-    const duration = 5000;
-    const updateInterval = 1000/30;
-    // 5000/16.66=300.12
-    const totalNumberOfUpdates = duration / updateInterval;
-    // 1000/300.12 = 3.33
-    const offsetIncrement = resolution / totalNumberOfUpdates;
-    const newOffset = this.state.offset + offsetIncrement;
-    const data = generateData(resolution, newOffset,block);
+    const {binary,offset,sineArray} = this.state;
+    const data = generateData(resolution,block,binary,sineArray);
+
+    this.shiftArray(binary);
+    this.shiftArray(sineArray);
+
+
     this.setState({
       data,
-      offset: newOffset,
+      binary,
+      sineArray
     });
     window.requestAnimationFrame(this.updateData);
+
+  }
+  //tira o primeiro elemento e coloca no final do array;
+  shiftArray(array){
+      let item = array.shift();
+      array.push(item);
+  }
+
+  createBinaryArray(binaryArray){
+
+  }
+
+  createSineArray(totalTime){
+      const array =[];
+      const angularFrequency =2*Math.PI*(this.props.block.frequency);
+      for(let i=0;i<totalTime;i++){
+          let currentTime = (i / totalTime);
+          let xAxis =  angularFrequency * currentTime;
+          array[i] = Math.sin(xAxis);
+      }
+      return array;
   }
 
   componentDidMount() {

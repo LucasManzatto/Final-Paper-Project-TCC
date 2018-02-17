@@ -1,11 +1,11 @@
 import React from 'react';
+import _ from 'lodash';
 
 import { scaleLinear } from 'd3-scale'
 //import { axisBottom, axisLeft } from 'd3-axis'
 //import { Axis } from './axis'
 import { SinDataSource } from './sinDataSource';
 import { Line } from './line'
-import { findMinMax } from './find-min-max'
 
 const width = 300;
 const height = 170;
@@ -39,4 +39,28 @@ const CardBlock = props =>{
         </svg>
     );
 }
+
+const findMinMax = dataArray => {
+  let minX = Number.MAX_SAFE_INTEGER,
+      maxX = Number.MIN_SAFE_INTEGER,
+      minY = Number.MAX_SAFE_INTEGER,
+      maxY = Number.MIN_SAFE_INTEGER
+
+    _.map(dataArray,data=>{
+        if (data.x < minX) {
+            minX = data.x;}
+        else if (data.x > maxX) {
+            maxX = data.x;
+        }
+
+        if (data.y < minY) {
+            minY = data.y;}
+        else if (data.y > maxY) {
+            maxY = data.y;
+        }
+    })
+
+  return {minX,maxX,minY,maxY};
+}
+
 export default CardBlock;

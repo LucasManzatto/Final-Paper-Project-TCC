@@ -21,7 +21,7 @@ const ProjectArea = props =>{
                 <ProjectTab key={project._fields.id} blocks={project.blocks} />
             </Tab>
         )
-    })
+    });
     return(
         <Tabs>
             {projects}
