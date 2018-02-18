@@ -30,6 +30,9 @@ export class Block extends Model {
         switch(action.type){
             default:
                 return null;
+            case consts.PAUSE_BLOCK:
+                Block.withId(action.payload.id).update({paused: !action.payload.paused})
+                break;
             case consts.UPDATE_BLOCK:
                 let block = session.UI.withId(0).clickedBlock;
                 const {key,value} = action.payload;
@@ -46,7 +49,8 @@ Block.fields = {
     name: attr(),
     frequency : attr(),
     amplitude : attr(),
-    type: attr()
+    type: attr(),
+    paused :attr(),
 };
 export class Project extends Model {
     static reducer(action,Project,session) {

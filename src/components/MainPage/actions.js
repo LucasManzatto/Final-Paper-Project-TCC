@@ -27,3 +27,7 @@ export const updateDropDown = payload =>({
     type: consts.UPDATE_DROPDOWN,
     payload
 })
+export const pauseBlock = payload =>({
+    type: consts.PAUSE_BLOCK,
+    payload
+})

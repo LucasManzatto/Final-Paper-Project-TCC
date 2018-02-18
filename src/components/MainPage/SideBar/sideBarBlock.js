@@ -78,7 +78,7 @@ const SideBarBlock = props =>{
 }
 
 const notHidden = key =>{
-    if(key !== "id" && key !== "position" && key !== "type"){
+    if(key !== "id" && key !== "position" && key !== "type" && key !== "paused"){
         return true;
     }
     return false;

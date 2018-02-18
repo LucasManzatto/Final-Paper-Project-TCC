@@ -1,104 +1,117 @@
 import React from 'react';
 import _ from 'lodash';
 
-export const generateData = (totalTime,block,binary,sineArray) => {
-    const data = new Array(totalTime);
-    let size = totalTime/binary.length;
+//AWGN +rnorm();
+import {rnorm} from 'randgen';
 
-    let index = 0;
-    let xAxis;
-    let counterSine = 0;
-    let binaryCounter=0;
-
-    const angularFrequency =2*Math.PI*(block.frequency);
-
-    if(block.type === 'square'){
-        binary.map(item =>{
-            for(let i =0 ; i<size; i++){
-                data[index] = {
-                    x:index++,
-                    y: item
-                }
-            }
-        })
+const generateData = (totalTime,block,binaryArray,sineArray,bpskArray) => {
+    let data = [];
+    switch(block.type){
+        case 'square':
+            data = createXYArray(binaryArray);
+            break;
+        case 'sine':
+            data = createXYArray(sineArray);
+            break;
+        case 'bpsk':
+            data = createXYArray(bpskArray);
+            break;
     }
-
-    if(block.type === 'sine' || block.type === 'bpsk'){
-        sineArray.map(item =>{
-            let currentTime = (counterSine / totalTime);
-            xAxis =  angularFrequency * currentTime;
-            //counterSine++;
-            data[counterSine++] = {
-                x:xAxis,
-                y: item
-            }
-        })
-    }
-
-    //BPSK
-    //yAxis = -Math.cos(z);
-    //yAxis = Math.cos(xAxis);
     return data;
 }
+const createXYArray = array =>{
+    let data=[];
+    array.map((item,index)=>{
+        data.push({
+            x:index,
+            y: item
+        });
+    })
+    return data;
+}
+
+
 
 export class SinDataSource extends React.Component {
   constructor(props) {
     super(props)
     this.updateData = this.updateData.bind(this);
-    const binary = [-1,-1,0,0,-1,0,0,-1,-1,0,-1,-1,0,0,0,-1,-1];
-    const size = props.resolution/binary.length;
-    let counter=0;
-    let binaryAux = [];
-    binary.map(item=>{
-        for(let i =0 ; i<size; i++){
-            binaryAux[counter++] =item;
-    }});
+    const binary = [0,0,1];
 
+    const binaryArray = this.createBinaryArray(binary,props.resolution);
     const sineArray = this.createSineArray(props.resolution);
+    const bpskArray = this.createBpskArray(binaryArray,props.resolution);
+
     this.state = {
       data: [],
-      binary : binaryAux,
-      sineArray
+      binaryArray,
+      sineArray,
+      bpskArray
     }
   }
   //Se passar a data da square wave pro redux, tem como
   //usar no bpsk pra calcular quando é 0 e 1
   updateData() {
     const {resolution,block} = this.props;
-    const {binary,offset,sineArray} = this.state;
-    const data = generateData(resolution,block,binary,sineArray);
+    const {binaryArray,offset,sineArray,cosArray,bpskArray} = this.state;
+    let data = generateData(resolution,block,binaryArray,sineArray,bpskArray);
 
-    this.shiftArray(binary);
-    this.shiftArray(sineArray);
-
-
+    if(!block.paused){
+        this.shiftArray(binaryArray);
+        this.shiftArray(sineArray);
+        this.shiftArray(bpskArray);
+    }
     this.setState({
       data,
-      binary,
-      sineArray
+      binaryArray,
+      sineArray,
+      bpskArray
     });
     window.requestAnimationFrame(this.updateData);
-
   }
+
   //tira o primeiro elemento e coloca no final do array;
   shiftArray(array){
       let item = array.shift();
       array.push(item);
   }
 
-  createBinaryArray(binaryArray){
-
+  createBinaryArray(binaryArray,totalTime){
+      const size = totalTime/binaryArray.length;
+      let index=0;
+      let binaryAux = [];
+      binaryArray.map(item=>{
+          for(let i =0 ; i<size; i++){
+              binaryAux[index++] =item;
+      }});
+      return binaryAux;
   }
 
-  createSineArray(totalTime){
-      const array =[];
+  createBpskArray(binaryArray,totalTime){
+      let data=[];
       const angularFrequency =2*Math.PI*(this.props.block.frequency);
       for(let i=0;i<totalTime;i++){
           let currentTime = (i / totalTime);
           let xAxis =  angularFrequency * currentTime;
-          array[i] = Math.sin(xAxis);
+          if(binaryArray[i] === 0){
+               data[i] = Math.cos(xAxis);
+          }
+          else{
+              data[i] = -Math.cos(xAxis);
+          }
       }
-      return array;
+      return data;
+  }
+
+  createSineArray(totalTime){
+      let data=[];
+      const angularFrequency =2*Math.PI*(this.props.block.frequency);
+      for(let i=0;i<totalTime;i++){
+          let currentTime = (i / totalTime);
+          let xAxis =  angularFrequency * currentTime;
+          data[i] = Math.sin(xAxis)
+      }
+      return data;
   }
 
   componentDidMount() {

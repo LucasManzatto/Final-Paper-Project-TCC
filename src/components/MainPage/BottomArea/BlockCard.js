@@ -14,7 +14,7 @@ let padding = 10;
 const CardBlock = props =>{
     return(
         <svg width={width} height={height}>
-            <SinDataSource resolution={1000} block={props.block}>{
+            <SinDataSource resolution={100} block={props.block}>{
                 (data) => {
                     //padding = props.block.amplitude;
                     const { minX, maxX, minY, maxY } = findMinMax(data);
@@ -39,7 +39,6 @@ const CardBlock = props =>{
         </svg>
     );
 }
-
 const findMinMax = dataArray => {
   let minX = Number.MAX_SAFE_INTEGER,
       maxX = Number.MIN_SAFE_INTEGER,

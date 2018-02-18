@@ -26,41 +26,45 @@ function bootstrapState() {
         frequency: 1,
         amplitude: 2,
         type: 'square',
-        position : {x:200 , y: 530}
+        position : {x:200 , y: 530},
+        paused : false
     });
     const ui = UI.create({
         clickedBlock :squareWave,
         currentProject : 0,
     })
-    console.log(ui);
 
     const carrierWave = Block.create({
         name: 'Carrier Wave',
         frequency: 3,
         amplitude: 4,
         type:'sine',
-        position : {x:0 , y: 300}
+        position : {x:0 , y: 300},
+        paused : false
     });
     const Bpsk = Block.create({
         name: 'BPSK',
         frequency: 3,
         amplitude: 4,
         type : 'bpsk',
-        position : {x:200, y: 120}
+        position : {x:200, y: 120},
+        paused : false
     });
-    const block4 = Block.create({
-        name: 'Random Number Generator',
+    const awgn = Block.create({
+        name: 'AWGN',
         frequency: 1,
         amplitude: 2,
         type: 'square',
-        position : {x:200 , y: 530}
+        position : {x:400 , y: 0},
+        paused : false
     });
 
     projeto.blocks.add(squareWave);
     projeto.blocks.add(carrierWave);
     projeto.blocks.add(Bpsk);
+    projeto.blocks.add(awgn);
 
-    projeto2.blocks.add(block4);
+    projeto2.blocks.add(awgn);
     return initialState;
 }
 const initialState = bootstrapState();
