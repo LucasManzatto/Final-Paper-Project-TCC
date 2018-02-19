@@ -27,6 +27,7 @@ UI.fields = {
 
 export class Block extends Model {
     static reducer(action,Block,session) {
+        let block;
         switch(action.type){
             default:
                 return null;
@@ -34,11 +35,14 @@ export class Block extends Model {
                 Block.withId(action.payload.id).update({paused: !action.payload.paused})
                 break;
             case consts.UPDATE_BLOCK:
-                let block = session.UI.withId(0).clickedBlock;
+                block = session.UI.withId(0).clickedBlock;
                 const {key,value} = action.payload;
                 block[key] = value;
                 Block.withId(block.id).update(block);
                 Block.withId(2).update({frequency : value});
+                break;
+            case consts.TRACK_LOCATION:
+                Block.withId(action.payload.block.id).update({position: action.payload.deltaPosition});
                 break;
         }
     }
@@ -60,11 +64,7 @@ export class Project extends Model {
             case consts.ADD_TO_PROJECT:
                 //Project.withId(0).blocks.add();
                 //break;
-            case consts.TRACK_LOCATION:
-                let block = action.payload.block;
-                block.position = action.payload.deltaPosition;
-                Project.withId(session.UI.withId(0).currentProject).blocks.update(block);
-                break;
+
         }
     }
 }

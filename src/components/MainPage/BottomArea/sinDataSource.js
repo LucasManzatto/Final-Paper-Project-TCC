@@ -4,7 +4,7 @@ import _ from 'lodash';
 //AWGN +rnorm();
 import {rnorm} from 'randgen';
 
-const generateData = (totalTime,block,binaryArray,sineArray,bpskArray) => {
+const generateData = (totalTime,block,binaryArray,sineArray,bpskArray,awgnArray) => {
     let data = [];
     switch(block.type){
         case 'square':
@@ -15,6 +15,9 @@ const generateData = (totalTime,block,binaryArray,sineArray,bpskArray) => {
             break;
         case 'bpsk':
             data = createXYArray(bpskArray);
+            break;
+        case 'awgn':
+            data = createXYArray(awgnArray);
             break;
     }
     return data;
@@ -41,33 +44,38 @@ export class SinDataSource extends React.Component {
     const binaryArray = this.createBinaryArray(binary,props.resolution);
     const sineArray = this.createSineArray(props.resolution);
     const bpskArray = this.createBpskArray(binaryArray,props.resolution);
+    const awgnArray = this.createAwgnArray(bpskArray);
 
     this.state = {
       data: [],
       binaryArray,
       sineArray,
-      bpskArray
+      bpskArray,
+      awgnArray
     }
   }
   //Se passar a data da square wave pro redux, tem como
   //usar no bpsk pra calcular quando é 0 e 1
   updateData() {
     const {resolution,block} = this.props;
-    const {binaryArray,offset,sineArray,cosArray,bpskArray} = this.state;
-    let data = generateData(resolution,block,binaryArray,sineArray,bpskArray);
+    const {binaryArray,offset,sineArray,cosArray,bpskArray,awgnArray} = this.state;
+    let data = generateData(resolution,block,binaryArray,sineArray,bpskArray,awgnArray);
 
     if(!block.paused){
         this.shiftArray(binaryArray);
         this.shiftArray(sineArray);
         this.shiftArray(bpskArray);
+        this.shiftArray(awgnArray);
     }
     this.setState({
       data,
       binaryArray,
       sineArray,
-      bpskArray
+      bpskArray,
+      awgnArray
     });
     window.requestAnimationFrame(this.updateData);
+
   }
 
   //tira o primeiro elemento e coloca no final do array;
@@ -102,6 +110,15 @@ export class SinDataSource extends React.Component {
       }
       return data;
   }
+
+  createAwgnArray(bpskArray){
+      let awgnArray = [];
+      bpskArray.map((item,index)=>{
+          awgnArray[index] = item +rnorm();
+      })
+      return awgnArray;
+  }
+
 
   createSineArray(totalTime){
       let data=[];

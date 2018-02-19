@@ -22,10 +22,9 @@ function bootstrapState() {
     })
 
     const squareWave = Block.create({
-        name: 'Random Number Generator',
-        frequency: 1,
-        amplitude: 2,
+        name: 'RNG',
         type: 'square',
+        samples: 1000,
         position : {x:200 , y: 530},
         paused : false
     });
@@ -54,7 +53,7 @@ function bootstrapState() {
         name: 'AWGN',
         frequency: 1,
         amplitude: 2,
-        type: 'square',
+        type: 'awgn',
         position : {x:400 , y: 0},
         paused : false
     });

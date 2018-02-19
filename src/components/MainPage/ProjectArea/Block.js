@@ -1,19 +1,42 @@
 import React from 'react';
 import Draggable from 'react-draggable';
+import _ from 'lodash';
+import Subheader from 'material-ui/Subheader';
 
 //redux
 import {connect} from 'react-redux';
 import {trackLocation,blockClicked} from '../actions';
 
 const blockStyle={
-    height: 80,
-    width: 120,
+    height: 110,
+    width: 150,
     border: '1px solid black',
     backgroundColor : '#f5f5f5'
 }
 
 
 const Block = props =>{
+    const showProperties = (value,key)=>{
+            //Hide unwanted properties
+            if(notHidden(key)){
+                return(
+                    <div key={key}>
+                        <p>{_.capitalize(key)}:{value}</p>
+                    </div>
+                )
+            }
+    }
+    const notHidden = key =>{
+        if(key !== "id"
+         && key !== "position"
+         && key !== "type"
+         && key !== "paused"
+         && key !== "name"){
+            return true;
+        }
+        return false;
+    }
+
     const handleDrag = (e,ui) => {
         handleClick();
         const {x, y} = props.block.position;
@@ -37,10 +60,14 @@ const Block = props =>{
         <Draggable bounds="parent" onDrag={handleDrag} defaultPosition={{x, y}}>
             <div style={blockStyle} onClick={handleClick}>
                 {props.block.name}
+                <br></br>
+                {_.map(props.block,showProperties)}
             </div>
         </Draggable>
     );
 }
+
+
 const mapStateToProps = state =>{
     return state;
 }
