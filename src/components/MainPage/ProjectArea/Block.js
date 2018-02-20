@@ -1,4 +1,4 @@
-import React from 'react';
+    import React from 'react';
 import Draggable from 'react-draggable';
 import _ from 'lodash';
 import Subheader from 'material-ui/Subheader';
@@ -8,10 +8,10 @@ import {connect} from 'react-redux';
 import {trackLocation,blockClicked} from '../actions';
 
 const blockStyle={
-    height: 110,
+    height: 100,
     width: 150,
     border: '1px solid black',
-    backgroundColor : '#f5f5f5'
+    backgroundColor : '#f5f5f5',
 }
 
 
@@ -59,8 +59,7 @@ const Block = props =>{
     return(
         <Draggable bounds="parent" onDrag={handleDrag} defaultPosition={{x, y}}>
             <div style={blockStyle} onClick={handleClick}>
-                {props.block.name}
-                <br></br>
+                <div style={{textAlign: 'center', fontWeight: 'bold'}}>{props.block.name}</div>
                 {_.map(props.block,showProperties)}
             </div>
         </Draggable>

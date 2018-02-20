@@ -1,4 +1,5 @@
 import React from 'react';
+import Dimensions from 'react-dimensions';
 import _ from 'lodash';
 
 import { scaleLinear } from 'd3-scale'
@@ -7,37 +8,43 @@ import { scaleLinear } from 'd3-scale'
 import { SinDataSource } from './sinDataSource';
 import { Line } from './line'
 
-const width = 300;
-const height = 170;
-let padding = 10;
 
-const CardBlock = props =>{
-    return(
-        <svg width={width} height={height}>
-            <SinDataSource resolution={100} block={props.block}>{
-                (data) => {
-                    //padding = props.block.amplitude;
-                    const { minX, maxX, minY, maxY } = findMinMax(data);
-                    const xScale = scaleLinear()
-                    .domain([minX.toFixed(2), maxX.toFixed(2)])
-                    .range([padding, width])
 
-                    const yScale = scaleLinear()
-                    .domain([minY, maxY])
-                    .range([height - padding, padding])
+export class CardBlock extends React.Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        let width = this.props.containerWidth;
+        let height = this.props.containerHeight;
+        let padding = 10;
+        return(
+            <svg height={height} width={width}>
+                <SinDataSource resolution={100} block={this.props.block}>{
+                    (data) => {
+                        //padding = props.block.amplitude;
+                        const { minX, maxX, minY, maxY } = findMinMax(data);
+                        const xScale = scaleLinear()
+                        .domain([minX.toFixed(2), maxX.toFixed(2)])
+                        .range([padding, width - padding])
 
-                    return (
-                        <Line
-                          xScale={xScale}
-                          yScale={yScale}
-                          data={data}
-                        />
-                    )
+                        const yScale = scaleLinear()
+                        .domain([minY, maxY])
+                        .range([height - padding, padding])
+
+                        return (
+                            <Line
+                              xScale={xScale}
+                              yScale={yScale}
+                              data={data}
+                            />
+                        )
+                    }
                 }
-            }
-            </SinDataSource>
-        </svg>
-    );
+                </SinDataSource>
+            </svg>
+        );
+    }
 }
 const findMinMax = dataArray => {
   let minX = Number.MAX_SAFE_INTEGER,
@@ -62,4 +69,4 @@ const findMinMax = dataArray => {
   return {minX,maxX,minY,maxY};
 }
 
-export default CardBlock;
+export default Dimensions()(CardBlock);

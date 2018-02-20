@@ -39,12 +39,12 @@ export class SinDataSource extends React.Component {
   constructor(props) {
     super(props)
     this.updateData = this.updateData.bind(this);
-    const binary = [0,0,1];
+    const binary = [0,1,0];
 
     const binaryArray = this.createBinaryArray(binary,props.resolution);
     const sineArray = this.createSineArray(props.resolution);
     const bpskArray = this.createBpskArray(binaryArray,props.resolution);
-    const awgnArray = this.createAwgnArray(bpskArray);
+    const awgnArray = this.createAwgnArray(sineArray);
 
     this.state = {
       data: [],
@@ -54,11 +54,10 @@ export class SinDataSource extends React.Component {
       awgnArray
     }
   }
-  //Se passar a data da square wave pro redux, tem como
-  //usar no bpsk pra calcular quando é 0 e 1
+
   updateData() {
     const {resolution,block} = this.props;
-    const {binaryArray,offset,sineArray,cosArray,bpskArray,awgnArray} = this.state;
+    const {binaryArray,sineArray,bpskArray,awgnArray} = this.state;
     let data = generateData(resolution,block,binaryArray,sineArray,bpskArray,awgnArray);
 
     if(!block.paused){
@@ -75,7 +74,6 @@ export class SinDataSource extends React.Component {
       awgnArray
     });
     window.requestAnimationFrame(this.updateData);
-
   }
 
   //tira o primeiro elemento e coloca no final do array;
@@ -114,7 +112,7 @@ export class SinDataSource extends React.Component {
   createAwgnArray(bpskArray){
       let awgnArray = [];
       bpskArray.map((item,index)=>{
-          awgnArray[index] = item +rnorm();
+          awgnArray[index] = item + rnorm();
       })
       return awgnArray;
   }

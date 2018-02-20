@@ -4,7 +4,7 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 
-import { Row} from 'react-flexbox-grid';
+import { Row,Col} from 'react-flexbox-grid';
 import BlockCard from './BlockCard';
 import _ from 'lodash';
 
@@ -17,16 +17,15 @@ const style={
 }
 
 const BottomArea = props =>{
-
     const blockCards = _.map(props.blocks, block =>{
         return(
-            <div>
+            <Col xs={3} key={block.id} style={{height:200 ,textAlign :'center' ,paddingBottom :30}}>
                 <FlatButton label={block.paused ? "Play" : "Pause"}
                   primary={true}
                   onClick={event => props.pauseBlock(block)}
                 />
                 <BlockCard block={block} key={block.id}/>
-            </div>
+            </Col>
         )
     })
 
