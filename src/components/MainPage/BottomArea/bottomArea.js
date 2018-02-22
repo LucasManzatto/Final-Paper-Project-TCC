@@ -40,7 +40,8 @@ const BottomArea = props =>{
 
 const mapStateToProps = state =>{
     return{
-        blocks : blocksFromCurrentProjectSelector(state),
+        //blocks : blocksFromCurrentProjectSelector(state),
+        blocks: state.mainPage.blocks
     }
 }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import _ from 'lodash';
 
 //AWGN +rnorm();
@@ -35,14 +36,13 @@ const createXYArray = array =>{
 
 
 
-export class SinDataSource extends React.Component {
+export default class DataSource extends React.Component {
   constructor(props) {
     super(props)
     this.updateData = this.updateData.bind(this);
     const binary = [0,1,0];
-
     const binaryArray = this.createBinaryArray(binary,props.resolution);
-    const sineArray = this.createSineArray(props.resolution);
+    const sineArray = this.createSineArray(props.resolution,props.block.frequency);
     const bpskArray = this.createBpskArray(binaryArray,props.resolution);
     const awgnArray = this.createAwgnArray(sineArray);
 
@@ -60,6 +60,7 @@ export class SinDataSource extends React.Component {
     const {binaryArray,sineArray,bpskArray,awgnArray} = this.state;
     let data = generateData(resolution,block,binaryArray,sineArray,bpskArray,awgnArray);
 
+    //update sem dar setState, errado
     if(!block.paused){
         this.shiftArray(binaryArray);
         this.shiftArray(sineArray);
@@ -68,10 +69,6 @@ export class SinDataSource extends React.Component {
     }
     this.setState({
       data,
-      binaryArray,
-      sineArray,
-      bpskArray,
-      awgnArray
     });
     window.requestAnimationFrame(this.updateData);
   }
@@ -80,6 +77,7 @@ export class SinDataSource extends React.Component {
   shiftArray(array){
       let item = array.shift();
       array.push(item);
+      return array;
   }
 
   createBinaryArray(binaryArray,totalTime){
@@ -118,15 +116,18 @@ export class SinDataSource extends React.Component {
   }
 
 
-  createSineArray(totalTime){
+  createSineArray(totalTime,frequency){
       let data=[];
-      const angularFrequency =2*Math.PI*(this.props.block.frequency);
+      const angularFrequency =2*Math.PI*frequency;
       for(let i=0;i<totalTime;i++){
           let currentTime = (i / totalTime);
           let xAxis =  angularFrequency * currentTime;
-          data[i] = Math.sin(xAxis)
+          data[i] = Math.sin(xAxis);
       }
       return data;
+  }
+  componentWillReceiveProps(nextProps){
+      this.props = nextProps;
   }
 
   componentDidMount() {
@@ -141,7 +142,6 @@ export class SinDataSource extends React.Component {
   render() {
     const { children } = this.props;
     const { data } = this.state;
-
     return children(data)
   }
 }

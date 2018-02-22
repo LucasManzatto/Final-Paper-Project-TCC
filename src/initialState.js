@@ -11,13 +11,16 @@ export const bootstrapState= () => {
         name: "Project 2"
     })
 
+    const binary = [0,1,0],samples =120;
+    const data = createBinaryArray(binary,samples);
     const squareWave = Block.create({
         name: 'RNG',
         type: 'square',
-        samples: 1000,
+        samples,
         position : {x:200 , y: 480},
-        paused : false
-    });
+        paused : false,
+        data
+    })
     const ui = UI.create({
         clickedBlock :squareWave,
         currentProject : 0,
@@ -33,8 +36,6 @@ export const bootstrapState= () => {
     });
     const Bpsk = Block.create({
         name: 'BPSK',
-        data : 0,
-        carrierWave : 1,
         frequency: 4,
         amplitude: 4,
         type : 'bpsk',
@@ -47,7 +48,6 @@ export const bootstrapState= () => {
         position : {x:400 , y: 0},
         paused : false
     });
-
     projeto.blocks.add(squareWave);
     projeto.blocks.add(carrierWave);
     projeto.blocks.add(Bpsk);
@@ -55,4 +55,15 @@ export const bootstrapState= () => {
 
     projeto2.blocks.add(awgn);
     return initialState;
+}
+
+const createBinaryArray = (binaryArray,totalTime) =>{
+    const size = totalTime/binaryArray.length;
+    let index=0;
+    let binaryAux = [];
+    binaryArray.map(item=>{
+        for(let i =0 ; i<size; i++){
+            binaryAux[index++] = item;
+    }});
+    return binaryAux;
 }

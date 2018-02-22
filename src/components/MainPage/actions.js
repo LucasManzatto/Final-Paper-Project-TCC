@@ -31,3 +31,7 @@ export const pauseBlock = payload =>({
     type: consts.PAUSE_BLOCK,
     payload
 })
+export const updateData = payload =>({
+    type : consts.UPDATE_DATA,
+    payload
+})

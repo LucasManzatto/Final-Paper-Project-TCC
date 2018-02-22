@@ -31,7 +31,8 @@ const Block = props =>{
          && key !== "position"
          && key !== "type"
          && key !== "paused"
-         && key !== "name"){
+         && key !== "name"
+         && key !== "data"){
             return true;
         }
         return false;

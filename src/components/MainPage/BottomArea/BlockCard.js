@@ -1,26 +1,26 @@
 import React from 'react';
 import Dimensions from 'react-dimensions';
+import {connect} from 'react-redux';
 import _ from 'lodash';
 
 import { scaleLinear } from 'd3-scale'
 //import { axisBottom, axisLeft } from 'd3-axis'
 //import { Axis } from './axis'
-import { SinDataSource } from './sinDataSource';
+import DataSource from './DataSource';
 import { Line } from './line'
 
+import {updateData} from '../actions';
 
-
-export class CardBlock extends React.Component{
-    constructor(props){
-        super(props);
-    }
-    render(){
-        let width = this.props.containerWidth;
-        let height = this.props.containerHeight;
-        let padding = 10;
+const BlockCard = props =>{
+    const component = new React.Component(props);
+    let width = props.containerWidth;
+    let height = props.containerHeight;
+    let padding = 10;
+    
+    component.render = () =>{
         return(
             <svg height={height} width={width}>
-                <SinDataSource resolution={100} block={this.props.block}>{
+                <DataSource resolution={100} block={component.props.block}>{
                     (data) => {
                         //padding = props.block.amplitude;
                         const { minX, maxX, minY, maxY } = findMinMax(data);
@@ -41,11 +41,13 @@ export class CardBlock extends React.Component{
                         )
                     }
                 }
-                </SinDataSource>
+                </DataSource>
             </svg>
         );
     }
+    return component;
 }
+
 const findMinMax = dataArray => {
   let minX = Number.MAX_SAFE_INTEGER,
       maxX = Number.MIN_SAFE_INTEGER,
@@ -68,5 +70,4 @@ const findMinMax = dataArray => {
 
   return {minX,maxX,minY,maxY};
 }
-
-export default Dimensions()(CardBlock);
+export default Dimensions()(BlockCard);

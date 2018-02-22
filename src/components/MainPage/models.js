@@ -1,5 +1,6 @@
 import {ORM, many, attr, Model} from 'redux-orm';
 import * as consts from '../../constants';
+import _ from 'lodash';
 
 export class UI extends Model {
     static reducer(action,UI,session) {
@@ -34,13 +35,16 @@ export class Block extends Model {
             case consts.PAUSE_BLOCK:
                 Block.withId(action.payload.id).update({paused: !action.payload.paused})
                 break;
-            case consts.UPDATE_BLOCK:
-                block = session.UI.withId(0).clickedBlock;
-                const {key,value} = action.payload;
-                block[key] = value;
-                Block.withId(block.id).update(block);
-                Block.withId(2).update({frequency : value});
+            case consts.UPDATE_DATA:
+                Block.withId(action.payload.block.id).update({data: action.payload.data})
                 break;
+            // case consts.UPDATE_BLOCK:
+            //     block = _.clone(session.UI.withId(0).clickedBlock);
+            //     const {key,value} = action.payload;
+            //     block[key] = value;
+            //     Block.withId(block.id).update(block);
+            //     Block.withId(2).update({frequency : value});
+            //     break;
             case consts.TRACK_LOCATION:
                 Block.withId(action.payload.block.id).update({position: action.payload.deltaPosition});
                 break;
