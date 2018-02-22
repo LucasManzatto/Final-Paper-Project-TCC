@@ -90,7 +90,7 @@ const notHidden = key =>{
 
 const mapStateToProps = state =>{
     return{
-        clickedBlock : clickedBlockSelector(state),
+        clickedBlock : state.mainPage.clickedBlock,
         dropDownMenuValues : sideBarBlockSelector(state)
     }
 }

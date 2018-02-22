@@ -17,8 +17,8 @@ const ProjectArea = props =>{
 //Cria uma aba com todos os blocks no projects.byId.project.blocks
     let projects = _.map(props.projects,project =>{
         return (
-            <Tab label={project._fields.name} key={project._fields.id} onActive={event => handleOnClick(event,project._fields.id)}>
-                <ProjectTab key={project._fields.id} blocks={project.blocks} />
+            <Tab label={project.name} key={project.id} onActive={event => handleOnClick(event,project.id)}>
+                <ProjectTab key={project.id} blocks={project.blocks} />
             </Tab>
         )
     });
@@ -31,7 +31,8 @@ const ProjectArea = props =>{
 
 const mapStateToProps = state =>{
     return{
-        projects : projectsSelector(state)
+        //projects : projectsSelector(state)
+        projects : state.mainPage.projects
     }
 }
 export default connect(mapStateToProps,{updateCurrentProject})(ProjectArea);

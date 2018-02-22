@@ -7,9 +7,9 @@ export class UI extends Model {
         switch(action.type){
             default:
                 return null;
-            case consts.BLOCK_CLICKED:
-                UI.withId(0).clickedBlock = action.payload;
-                break;
+            // case consts.BLOCK_CLICKED:
+            //     UI.withId(0).clickedBlock = action.payload;
+            //     break;
             case consts.UPDATE_CURRENT_PROJECT:
                 //UI.withId(0).clickedBlock = {};
                 UI.withId(0).currentProject = action.payload;
@@ -32,9 +32,9 @@ export class Block extends Model {
         switch(action.type){
             default:
                 return null;
-            case consts.PAUSE_BLOCK:
-                Block.withId(action.payload.id).update({paused: !action.payload.paused})
-                break;
+            // case consts.PAUSE_BLOCK:
+            //     Block.withId(action.payload.id).update({paused: !action.payload.paused})
+            //     break;
             case consts.UPDATE_DATA:
                 Block.withId(action.payload.block.id).update({data: action.payload.data})
                 break;

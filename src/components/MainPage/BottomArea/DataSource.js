@@ -127,7 +127,9 @@ export default class DataSource extends React.Component {
       return data;
   }
   componentWillReceiveProps(nextProps){
-      this.props = nextProps;
+      this.setState({
+          sineArray : this.createSineArray(nextProps.resolution,nextProps.block.frequency)
+      })
   }
 
   componentDidMount() {
