@@ -27,7 +27,8 @@ const Block = props =>{
          && key !== "type"
          && key !== "paused"
          && key !== "name"
-         && key !== "carrierWave"){
+         && key !== "carrierWave"
+         && key !== "source"){
             return true;
         }
         return false;

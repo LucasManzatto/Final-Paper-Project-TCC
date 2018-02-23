@@ -19,7 +19,7 @@ export const initialState ={
                 1:{
                     id:1,
                     name: 'Carrier Wave',
-                    frequency: 7,
+                    frequency: 5,
                     amplitude: 4,
                     type:'sine',
                     position : {x:0 , y: 300},
@@ -29,8 +29,7 @@ export const initialState ={
                     id:2,
                     name: 'BPSK',
                     carrierWave : 1,
-                    frequency: 7,
-                    amplitude: 4,
+                    source :0,
                     type : 'bpsk',
                     position : {x:200, y: 120},
                     paused : false

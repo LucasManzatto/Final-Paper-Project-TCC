@@ -1,32 +1,14 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import _ from 'lodash';
 
 //AWGN +rnorm();
 import {rnorm} from 'randgen';
-export default class DataSource extends React.Component {
+class DataSource extends React.Component {
   constructor(props) {
     super(props)
     this.updateData = this.updateData.bind(this);
-    const {resolution,block} = props;
-    const binary = [0,1,0,1,1];
-    let dataY = [];
-    switch(block.type){
-        case 'square':
-            dataY = this.createBinaryArray(block.binary,resolution);
-            break;
-        case 'sine':
-            dataY = this.createSineArray(resolution,block.frequency);
-            break;
-        case 'bpsk':
-            let binaryArray = this.createBinaryArray(binary,resolution);
-            dataY= this.createBpskArray(binaryArray,resolution,block.frequency);
-            break;
-        case 'awgn':
-            //array = this.createAwgnArray(sineArray);
-            break;
-        default:
-
-    }
+    let dataY = this.createDataArray(props);
     this.state = {
       data: [],
       dataY
@@ -76,7 +58,7 @@ export default class DataSource extends React.Component {
       return binaryAux;
   }
 
-    createBpskArray(binaryArray,totalTime,frequency){
+  createBpskArray(binaryArray,totalTime,frequency){
         let data=[];
         const angularFrequency =2*Math.PI*frequency;
         for(let i=0;i<totalTime;i++){
@@ -92,7 +74,7 @@ export default class DataSource extends React.Component {
         return data;
   }
 
-    createAwgnArray(bpskArray){
+  createAwgnArray(bpskArray){
         let awgnArray = [];
         bpskArray.forEach((item,index)=>{
             awgnArray[index] = item + rnorm();
@@ -101,7 +83,7 @@ export default class DataSource extends React.Component {
   }
 
 
-    createSineArray(totalTime,frequency){
+  createSineArray(totalTime,frequency){
         let data=[];
         const angularFrequency =2*Math.PI*frequency;
         for(let i=0;i<totalTime;i++){
@@ -111,18 +93,40 @@ export default class DataSource extends React.Component {
         }
         return data;
     }
+
+
+    createDataArray(props) {
+        const {resolution,block,blocks} = props;
+        let dataY = [];
+        switch(block.type){
+            case 'square':
+                dataY = this.createBinaryArray(block.binary,resolution);
+                break;
+            case 'sine':
+                dataY = this.createSineArray(resolution,block.frequency);
+                break;
+            case 'bpsk':
+                let binaryArray = this.createBinaryArray(blocks[block.source].binary,resolution);
+                dataY= this.createBpskArray(binaryArray,resolution,blocks[block.carrierWave].frequency);
+                break;
+            case 'awgn':
+                //array = this.createAwgnArray(sineArray);
+                break;
+            default:
+                return dataY;
+        }
+        return dataY;
+    }
+
     componentWillReceiveProps(nextProps){
-      switch (nextProps.block.type) {
-          case 'sine':
-              this.setState({
-                  dataY : this.createSineArray(nextProps.resolution,nextProps.block.frequency)
-              })
-              break;
-
-          default:
-      }
-
-  }
+        //Checa se houve mudança no bloco, se houve dá o update, senão continua a execução normal
+        if(this.props.block !== nextProps.block){
+            let dataY = this.createDataArray(nextProps);
+            this.setState({
+              dataY
+            })
+        }
+    }
 
     componentDidMount() {
         this.animationId = window.requestAnimationFrame(this.updateData);
@@ -139,3 +143,9 @@ export default class DataSource extends React.Component {
         return children(data)
     }
     }
+const mapStateToProps = state =>{
+    return {
+        blocks: state.mainPage.projects[state.mainPage.currentProject].blocks
+    }
+}
+export default connect(mapStateToProps,{})(DataSource)
