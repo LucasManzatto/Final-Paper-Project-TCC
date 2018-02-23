@@ -1,7 +1,6 @@
-    import React from 'react';
+import React from 'react';
 import Draggable from 'react-draggable';
 import _ from 'lodash';
-import Subheader from 'material-ui/Subheader';
 
 //redux
 import {connect} from 'react-redux';
@@ -19,11 +18,7 @@ const Block = props =>{
     const showProperties = (value,key)=>{
             //Hide unwanted properties
             if(notHidden(key)){
-                return(
-                    <div key={key}>
-                        <p>{_.capitalize(key)}:{value}</p>
-                    </div>
-                )
+                return <p key={key}>{_.capitalize(key)}:{value}</p>;
             }
     }
     const notHidden = key =>{
@@ -32,7 +27,7 @@ const Block = props =>{
          && key !== "type"
          && key !== "paused"
          && key !== "name"
-         && key !== "data"){
+         && key !== "carrierWave"){
             return true;
         }
         return false;

@@ -1,7 +1,6 @@
 import React from 'react'
-import { line, curveLinear ,curveStepBefore} from 'd3-shape'
+import { line, curveLinear} from 'd3-shape'
 import simplify from 'simplify-js'
-import {blue500} from 'material-ui/styles/colors';
 
 export const Line = props => {
   const { xScale, yScale, data } = props
@@ -9,7 +8,7 @@ export const Line = props => {
   if (!data.length) {
     return null;
   }
-  data.map(data =>{
+  data.forEach(data =>{
       data.x = xScale(data.x);
       data.y = yScale(data.y);
   })

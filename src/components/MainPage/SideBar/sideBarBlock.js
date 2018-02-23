@@ -7,7 +7,6 @@ import Slider from 'material-ui/Slider';
 //redux
 import {connect} from 'react-redux';
 import {updateBlockValue,updateDropDown} from '../actions';
-import {clickedBlockSelector,sideBarBlockSelector} from '../selectors';
 //import {updateBlockValue} from '../SideBar/actions';
 
 import DropDownMenu from 'material-ui/DropDownMenu';
@@ -91,7 +90,6 @@ const notHidden = key =>{
 const mapStateToProps = state =>{
     return{
         clickedBlock : state.mainPage.clickedBlock,
-        dropDownMenuValues : sideBarBlockSelector(state)
     }
 }
 export default connect(mapStateToProps,{updateBlockValue,updateDropDown})(SideBarBlock);

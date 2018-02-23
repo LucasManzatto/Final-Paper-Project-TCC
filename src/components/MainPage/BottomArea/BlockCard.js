@@ -1,6 +1,5 @@
 import React from 'react';
 import Dimensions from 'react-dimensions';
-import {connect} from 'react-redux';
 import _ from 'lodash';
 
 import { scaleLinear } from 'd3-scale'
@@ -9,18 +8,16 @@ import { scaleLinear } from 'd3-scale'
 import DataSource from './DataSource';
 import { Line } from './line'
 
-import {updateData} from '../actions';
-
 const BlockCard = props =>{
     const component = new React.Component(props);
     let width = props.containerWidth;
     let height = props.containerHeight;
     let padding = 10;
-    
+
     component.render = () =>{
         return(
             <svg height={height} width={width}>
-                <DataSource resolution={100} block={component.props.block}>{
+                <DataSource resolution={1000} block={component.props.block}>{
                     (data) => {
                         //padding = props.block.amplitude;
                         const { minX, maxX, minY, maxY } = findMinMax(data);

@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 
 //Material
@@ -9,8 +8,6 @@ import Paper from 'material-ui/Paper';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import _ from 'lodash';
-
-import {blocksSelector} from '../selectors';
 
 //Redux
 import {connect} from 'react-redux';
@@ -53,7 +50,7 @@ const SideBar = props =>{
 
 const mapStateToProps = state =>{
     return{
-        blocks : blocksSelector(state),
+        blocks : state.mainPage.projects[state.mainPage.currentProject].blocks,
     }
 }
 export default connect(mapStateToProps,{addBlockToProject})(SideBar);

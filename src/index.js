@@ -7,13 +7,10 @@ import { createStore} from 'redux';
 import registerServiceWorker from './registerServiceWorker';
 import reducers from './rootReducer';
 
-import {bootstrapState} from './initialState';
+
 
 ReactDOM.render(
     <Provider store={createStore(reducers,
-        {
-        orm : bootstrapState()
-        },
         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
         )}>
         <App />

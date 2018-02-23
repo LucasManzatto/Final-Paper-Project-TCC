@@ -7,7 +7,6 @@ import _ from 'lodash';
 //redux
 import {connect} from 'react-redux';
 import {updateCurrentProject} from '../actions';
-import {projectsSelector} from '../selectors';
 
 
 const ProjectArea = props =>{
