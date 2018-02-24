@@ -14,12 +14,12 @@ export const initialState ={
                     samples :120,
                     position : {x:200 , y: 480},
                     paused : false,
-                    binary : [0,1,0,1,1]
+                    binary : [1,0,1,0,1,0]
                 },
                 1:{
                     id:1,
                     name: 'Carrier Wave',
-                    frequency: 5,
+                    frequency: 7,
                     amplitude: 4,
                     type:'sine',
                     position : {x:0 , y: 300},

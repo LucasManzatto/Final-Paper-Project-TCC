@@ -1,10 +1,14 @@
 import React from 'react';
 import Draggable from 'react-draggable';
 import _ from 'lodash';
-
+import FlatButton from 'material-ui/FlatButton';
+import NavigationChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
+import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 //redux
 import {connect} from 'react-redux';
-import {trackLocation,blockClicked} from '../actions';
+import {trackLocation,blockClicked,updateBlockValue} from '../actions';
+
+import { Grid, Row, Col } from 'react-flexbox-grid';
 
 const blockStyle={
     height: 100,
@@ -12,14 +16,32 @@ const blockStyle={
     border: '1px solid black',
     backgroundColor : '#f5f5f5',
 }
-
+const iconStyle ={
+    position: 'relative',
+    top :'6px'
+}
 
 const Block = props =>{
     const showProperties = (value,key)=>{
             //Hide unwanted properties
             if(notHidden(key)){
-                return <p key={key}>{_.capitalize(key)}:{value}</p>;
+                return (
+                    <div key={key}>
+                        <b>{_.capitalize(key)}:</b>
+                        <NavigationChevronLeft onClick={(event,value)=> onClickHandler(--props.block[key],key)} style={iconStyle}/>
+                        {value}
+                        <NavigationChevronRight onClick={(event,value)=> onClickHandler(++props.block[key],key)} style={iconStyle}/>
+                    </div>
+                );
             }
+    }
+    const onClickHandler = (value,key) =>{
+        const payload ={
+            value,
+            key,
+            id: props.block.id
+        }
+        props.updateBlockValue(payload);
     }
     const notHidden = key =>{
         if(key !== "id"
@@ -57,8 +79,9 @@ const Block = props =>{
         <Draggable bounds="parent" onDrag={handleDrag} defaultPosition={{x, y}}>
             <div style={blockStyle} onClick={handleClick}>
                 <div style={{textAlign: 'center', fontWeight: 'bold'}}>{props.block.name}</div>
-                {_.map(props.block,showProperties)}
-            </div>
+                    {_.map(props.block,showProperties)}
+                    {/* <FlatButton label="Link" primary={true}></FlatButton> */}
+                </div>
         </Draggable>
     );
 }
@@ -68,4 +91,4 @@ const mapStateToProps = state =>{
     return state;
 }
 
-export default connect(mapStateToProps,{trackLocation,blockClicked})(Block);
+export default connect(mapStateToProps,{trackLocation,blockClicked,updateBlockValue})(Block);

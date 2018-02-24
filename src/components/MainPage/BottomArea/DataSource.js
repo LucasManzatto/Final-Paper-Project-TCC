@@ -19,8 +19,7 @@ class DataSource extends React.Component {
     const {block} = this.props;
     const {dataY} = this.state;
     let data = this.createXYArray(dataY);
-
-    //update sem dar setState, errado
+    //mudando o state sem dar o setState
     if(!block.paused){
         this.shiftArray(dataY);
     }
@@ -65,10 +64,10 @@ class DataSource extends React.Component {
             let currentTime = (i / totalTime);
             let xAxis =  angularFrequency * currentTime;
             if(binaryArray[i] === 0){
-                data[i] = Math.cos(xAxis);
+                data[i] = -Math.cos(xAxis);
             }
             else{
-                data[i] = -Math.cos(xAxis);
+                data[i] = Math.cos(xAxis);
             }
         }
         return data;
@@ -120,7 +119,7 @@ class DataSource extends React.Component {
 
     componentWillReceiveProps(nextProps){
         //Checa se houve mudança no bloco, se houve dá o update, senão continua a execução normal
-        if(this.props.block !== nextProps.block){
+        if((this.props.block !== nextProps.block) || nextProps.block.type === 'bpsk'){
             let dataY = this.createDataArray(nextProps);
             this.setState({
               dataY

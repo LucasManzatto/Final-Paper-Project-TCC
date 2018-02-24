@@ -10,14 +10,14 @@ import { Line } from './line'
 
 const BlockCard = props =>{
     const component = new React.Component(props);
-    let width = props.containerWidth;
-    let height = props.containerHeight;
+    let width = component.props.containerWidth;
+    let height = component.props.containerHeight;
     let padding = 10;
 
     component.render = () =>{
         return(
             <svg height={height} width={width}>
-                <DataSource resolution={1000} block={component.props.block}>{
+                <DataSource resolution={100} block={component.props.block}>{
                     (data) => {
                         //padding = props.block.amplitude;
                         const { minX, maxX, minY, maxY } = findMinMax(data);

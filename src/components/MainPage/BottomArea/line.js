@@ -19,6 +19,7 @@ export const Line = props => {
     .y(d => d.y)
 
   const path = lineFunction(simplify(data));
+  //const path = lineFunction(data);
 
   return (
     <path
