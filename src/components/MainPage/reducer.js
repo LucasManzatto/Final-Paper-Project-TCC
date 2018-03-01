@@ -26,6 +26,11 @@ export default function reducer(state = initialState,action){
                 }
         case consts.UPDATE_CURRENT_PROJECT:
             return {...state,currentProject : action.payload,clickedBlock : {}};
+        case consts.TRACK_ABSOLUTE_LOCATION:
+            block = action.payload.block;
+            newState = _.clone(state);
+            newState.projects[currentProject].blocks[block.id].absolutePosition = action.payload.deltaPosition;
+            return newState;
         case consts.TRACK_LOCATION:
             block = action.payload.block;
             newState = _.clone(state);

@@ -81,7 +81,10 @@ const notHidden = key =>{
      && key !== "position"
      && key !== "type"
      && key !== "paused"
-     && key !== "data"){
+     && key !== "data"
+     && key !== "absolutePosition"
+     && key !== "binary"
+    ){
         return true;
     }
     return false;

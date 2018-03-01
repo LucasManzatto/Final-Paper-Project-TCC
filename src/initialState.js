@@ -81,7 +81,7 @@ export const initialState ={
             frequency: 4,
             amplitude: 4,
             type : 'bpsk',
-            position : {x:200, y: 120},
+            position : {x:200, y: 100},
             paused : false
         },
         3:{
