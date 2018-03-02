@@ -25,8 +25,9 @@ class DataSource extends React.Component {
     }
     this.setState({
       data,
-    });
-    window.requestAnimationFrame(this.updateData);
+  }, () =>{
+      window.requestAnimationFrame(this.updateData);
+  });
   }
 
   //tira o primeiro elemento e coloca no final do array;

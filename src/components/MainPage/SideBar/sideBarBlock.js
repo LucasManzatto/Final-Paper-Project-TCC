@@ -84,6 +84,7 @@ const notHidden = key =>{
      && key !== "data"
      && key !== "absolutePosition"
      && key !== "binary"
+     && key !== "linked"
     ){
         return true;
     }

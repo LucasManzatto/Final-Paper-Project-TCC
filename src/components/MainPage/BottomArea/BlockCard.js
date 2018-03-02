@@ -4,9 +4,9 @@ import _ from 'lodash';
 
 import { scaleLinear } from 'd3-scale'
 //import { axisBottom, axisLeft } from 'd3-axis'
-//import { Axis } from './axis'
+//import { Axis } from './Axis'
 import DataSource from './DataSource';
-import { Line } from './line'
+import { Line } from './Line'
 
 const BlockCard = props =>{
     const component = new React.Component(props);

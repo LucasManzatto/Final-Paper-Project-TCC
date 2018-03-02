@@ -6,7 +6,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 
 //Imports dos components do projeto
-import Menu from './menu';
+import Menu from './Menu';
 import SideBar from './SideBar/sideBar';
 import SideBarBlock from './SideBar/sideBarBlock';
 import ProjectArea from './ProjectArea/projectArea';

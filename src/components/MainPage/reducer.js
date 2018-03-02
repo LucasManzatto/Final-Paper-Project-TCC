@@ -1,13 +1,15 @@
 import * as consts from '../../constants';
 import _ from 'lodash';
 
-import {initialState} from '../../initialState';
+import {initialState,initialStateLogged} from '../../initialState';
 
 export default function reducer(state = initialState,action){
     let block,currentProject = state.currentProject,newState;
     switch(action.type){
         default:
             return state;
+        case consts.LOGIN:
+            return initialStateLogged;
         case consts.UPDATE_BLOCK:
             const {key,value,id} = action.payload;
             block = _.clone(state.projects[currentProject].blocks[id]);

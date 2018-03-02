@@ -8,6 +8,7 @@ import FlatButton from 'material-ui/FlatButton';
 import NavigationChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
 import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 
+
 //redux
 import {connect} from 'react-redux';
 import {trackLocation,blockClicked,updateBlockValue,trackAbsoluteLocation} from '../actions';
@@ -19,7 +20,8 @@ const blockStyle={
     width: 160,
     border: '1px solid black',
     backgroundColor : '#f5f5f5',
-    position: 'absolute'
+    position: 'absolute',
+    zIndex: 2
 }
 const iconStyle ={
     position: 'relative',
@@ -60,13 +62,16 @@ const Block = props =>{
          && key !== "name"
          && key !== "carrierWave"
          && key !== "source"
-         && key !== "absolutePosition"){
+         && key !== "absolutePosition"
+         && key !== "linked"
+        ){
             return true;
         }
         return false;
     }
 
     const handleDrag = (e,ui) => {
+        handleClick();
         const {x, y} = block.position;
         const deltaPosition ={
             x: x + ui.deltaX,
@@ -77,7 +82,6 @@ const Block = props =>{
             deltaPosition
         };
         trackLocation(payload);
-        handleClick();
     }
 
     const handleClick = () =>{
@@ -85,27 +89,47 @@ const Block = props =>{
             blockClicked(block);
         }
     }
-    const {x, y} = block.position;
+
     component.componentDidMount = () =>{
+        blockClicked(block);
         offsetX = window.pageXOffset;
         offsetY = window.pageYOffset;
-        const boxp = document.getElementsByClassName('projectTab')[0].getBoundingClientRect();
-        offsetX += boxp.left;
-        offsetY += boxp.top;
+        const projectTabOffset = document.getElementsByClassName('projectTab')[0].getBoundingClientRect();
+        offsetX += projectTabOffset.left;
+        offsetY += projectTabOffset.top;
     }
+
     component.render = () =>{
-        let line;
-        if(block.name !== mainPage.projects[mainPage.currentProject].blocks[1].name){
-            line = <Line borderColor="black" zIndex={3} x0={block.position.x + offsetX} y0={block.position.y + height/2 +offsetY} x1={mainPage.projects[mainPage.currentProject].blocks[1].position.x + offsetX} y1={mainPage.projects[mainPage.currentProject].blocks[1].position.y + height/2 + offsetY} />
+        const {x, y} = block.position;
+        let linkLine,linkLine2;
+        if(block.linked){
+            let linkBlock = mainPage.projects[mainPage.currentProject].blocks[1];
+            let linkBlock2 = mainPage.projects[mainPage.currentProject].blocks[0];
+            if(block.name !== linkBlock.name){
+                linkLine = <Line borderColor="black" zIndex={1}
+                        x0={block.position.x + width/2 + offsetX}
+                        y0={block.position.y + height/2 +offsetY}
+                        x1={linkBlock.position.x + width/2+ offsetX}
+                        y1={linkBlock.position.y + height/2 + offsetY}
+                        />
+                linkLine2 = <Line borderColor="black" zIndex={1}
+                        x0={block.position.x + width/2 + offsetX}
+                        y0={block.position.y + height/2 +offsetY}
+                        x1={linkBlock2.position.x + width/2 + offsetX}
+                        y1={linkBlock2.position.y + height/2 + offsetY}
+                        />
+            }
         }
+
         return(
             <Draggable bounds="parent" onDrag={handleDrag} defaultPosition={{x, y}}>
                 <div style={blockStyle} onClick={handleClick}>
                     <div style={{textAlign: 'center', fontWeight: 'bold'}}>{block.name}</div>
-                        {_.map(block,showProperties)}
-                        {/* <FlatButton label="Link" primary={true}></FlatButton> */}
-                        {line}
-                    </div>
+                    {_.map(block,showProperties)}
+                    {/* <FlatButton label="Link" primary={true}></FlatButton> */}
+                    {linkLine}
+                    {linkLine2}
+                </div>
             </Draggable>
         );
     }
