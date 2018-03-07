@@ -41,24 +41,24 @@ export default function reducer(state = initialState,action){
         case consts.BLOCK_CLICKED:
             return {...state,clickedBlock : action.payload};
         case consts.PAUSE_BLOCK:
-            block = action.payload.block;
+            block = action.payload;
             newState = _.clone(state);
             newState.projects[currentProject].blocks[block.id].paused = !block.paused;
             return newState;
-        // return {...state,
-        //             projects: {
-        //                 ...state.projects,
-        //                 [currentProject]: {
-        //                 ...state.projects[currentProject],
-        //                 blocks : {
-        //                     ...state.projects[currentProject].blocks,
-        //                     [block.id] :{
-        //                         ...state.projects[currentProject].blocks[block.id],
-        //                     paused : !block.paused
-        //                     }
-        //                 }
-        //                 }
-        //             }
-        //         }
+            // return {...state,
+            //             projects: {
+            //                 ...state.projects,
+            //                 [currentProject]: {
+            //                 ...state.projects[currentProject],
+            //                 blocks : {
+            //                     ...state.projects[currentProject].blocks,
+            //                     [block.id] :{
+            //                         ...state.projects[currentProject].blocks[block.id],
+            //                     paused : !block.paused
+            //                     }
+            //                 }
+            //                 }
+            //             }
+            //         }
     }
 }

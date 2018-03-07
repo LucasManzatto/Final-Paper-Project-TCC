@@ -8,7 +8,7 @@ import { Row,Col} from 'react-flexbox-grid';
 import BlockCard from './BlockCard';
 import _ from 'lodash';
 
-import {connect} from 'react-redux';    
+import {connect} from 'react-redux';
 import {pauseBlock} from '../actions';
 
 const style={

@@ -26,21 +26,27 @@ const SideBarBlock = props =>{
     const showProperties = (value,key)=>{
             //Mostrar o nome em um Sub-Header
             if(key === "name"){
-                return(<Subheader key={key}>{value}</Subheader>)
-            }
-            //Hide unwanted properties
-            if(notHidden(key)){
                 return(
-                    <div key={key}>
-                        <p>{_.capitalize(key)}</p>
-                        <Slider
-                            min={0} step={1} max={10}
-                            value={value}
-                            onChange={(event,newValue)=> handleSlider(newValue,key)}
-                         />
+                    <div>
+                        <Subheader key={key}>{value}</Subheader>
+                        <p>Description:</p>
+                        <p>Formula:</p>
                     </div>
                 )
             }
+            //Hide unwanted properties
+            // if(notHidden(key)){
+            //     return(
+            //         <div key={key}>
+            //             <p>{_.capitalize(key)}</p>
+            //             <Slider
+            //                 min={0} step={1} max={10}
+            //                 value={value}
+            //                 onChange={(event,newValue)=> handleSlider(newValue,key)}
+            //              />
+            //         </div>
+            //     )
+            // }
     }
     const handleSlider = (value,key) => {
         const payload ={
@@ -50,30 +56,30 @@ const SideBarBlock = props =>{
         }
         props.updateBlockValue(payload);
     };
-    if(props.clickedBlock.name === 'BPSK'){
-        return(
-            <List>
-                <Subheader key={20}>BPSK</Subheader>
-                <p>Random Number Generator</p>
-                <DropDownMenu value={1} onChange={onDropDownChange} >
-                    <MenuItem value={1} primaryText="Random Number Generator" />
-                    <MenuItem value={2} primaryText="Random Number Generator 2" />
-                </DropDownMenu>
-                <p>Carrier Wave</p>
-                <DropDownMenu value={2} onChange={onDropDownChange} >
-                    <MenuItem value={1} primaryText="Carrier Wave" />
-                    <MenuItem value={2} primaryText="Carrier Wave 2" />
-                </DropDownMenu>
-            </List>
-        )
-    }
-    else{
+    // if(props.clickedBlock.name === 'BPSK'){
+    //     return(
+    //         <List>
+    //             <Subheader key={20}>BPSK</Subheader>
+    //             <p>Random Number Generator</p>
+    //             <DropDownMenu value={1} onChange={onDropDownChange} >
+    //                 <MenuItem value={1} primaryText="Random Number Generator" />
+    //                 <MenuItem value={2} primaryText="Random Number Generator 2" />
+    //             </DropDownMenu>
+    //             <p>Carrier Wave</p>
+    //             <DropDownMenu value={2} onChange={onDropDownChange} >
+    //                 <MenuItem value={1} primaryText="Carrier Wave" />
+    //                 <MenuItem value={2} primaryText="Carrier Wave 2" />
+    //             </DropDownMenu>
+    //         </List>
+    //     )
+    // }
+    // else{
         return(
             <List>
                 {_.map(props.clickedBlock,showProperties)}
             </List>
         );
-    }
+    // }
 }
 
 const notHidden = key =>{

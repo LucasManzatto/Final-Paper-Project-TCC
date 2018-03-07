@@ -110,7 +110,7 @@ class DataSource extends React.Component {
                 dataY= this.createBpskArray(binaryArray,resolution,blocks[block.carrierWave].frequency);
                 break;
             case 'awgn':
-                //array = this.createAwgnArray(sineArray);
+                dataY = this.createAwgnArray(this.createSineArray(resolution,8));
                 break;
             default:
                 return dataY;

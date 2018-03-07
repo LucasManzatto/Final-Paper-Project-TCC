@@ -34,7 +34,6 @@ const Menu = props =>{
             targetOrigin={{horizontal: 'right', vertical: 'top'}}
             anchorOrigin={{horizontal: 'right', vertical: 'top'}}
             >
-            <MenuItem primaryText="Refresh" />
             <MenuItem primaryText="Help" />
             <MenuItem primaryText="Sign out" onClick={handleChange}/>
         </IconMenu>
@@ -54,7 +53,6 @@ const Menu = props =>{
             <FlatButton
             label="Submit"
             primary={true}
-            keyboardFocused={true}
             onClick={handleClose}
             />,
         ];
@@ -76,6 +74,7 @@ const Menu = props =>{
                 >
                 <TextField
                   floatingLabelText="Login"
+                  autoFocus
                   floatingLabelFixed={true}
                 />
                 <br/>

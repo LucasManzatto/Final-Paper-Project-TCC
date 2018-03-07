@@ -18,8 +18,8 @@ export const Line = props => {
     .x(d => d.x)
     .y(d => d.y)
 
-  const path = lineFunction(simplify(data));
-  //const path = lineFunction(data);
+  //onst path = lineFunction(simplify(data));
+  const path = lineFunction(data);
 
   return (
     <path

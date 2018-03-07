@@ -34,6 +34,14 @@ const Block = props =>{
     let offsetX,offsetY;
     const {block,blockClicked,updateBlockValue,trackLocation,mainPage} = component.props;
     const showProperties = (value,key)=>{
+            if(key === 'binary'){
+                return (
+                    <div key={key}>
+                        <b>{_.capitalize(key)}:</b>
+                        {value}
+                    </div>
+                );
+            }
             //Hide unwanted properties
             if(notHidden(key)){
                 return (
@@ -64,6 +72,8 @@ const Block = props =>{
          && key !== "source"
          && key !== "absolutePosition"
          && key !== "linked"
+         && key !== "samples"
+         && key !== "bpsk"
         ){
             return true;
         }
@@ -103,21 +113,34 @@ const Block = props =>{
         const {x, y} = block.position;
         let linkLine,linkLine2;
         if(block.linked){
-            let linkBlock = mainPage.projects[mainPage.currentProject].blocks[1];
-            let linkBlock2 = mainPage.projects[mainPage.currentProject].blocks[0];
-            if(block.name !== linkBlock.name){
-                linkLine = <Line borderColor="black" zIndex={1}
-                        x0={block.position.x + width/2 + offsetX}
-                        y0={block.position.y + height/2 +offsetY}
-                        x1={linkBlock.position.x + width/2+ offsetX}
-                        y1={linkBlock.position.y + height/2 + offsetY}
-                        />
-                linkLine2 = <Line borderColor="black" zIndex={1}
-                        x0={block.position.x + width/2 + offsetX}
-                        y0={block.position.y + height/2 +offsetY}
-                        x1={linkBlock2.position.x + width/2 + offsetX}
-                        y1={linkBlock2.position.y + height/2 + offsetY}
-                        />
+            if(block.name==='BPSK'){
+                let linkBlock = mainPage.projects[mainPage.currentProject].blocks[1];
+                let linkBlock2 = mainPage.projects[mainPage.currentProject].blocks[0];
+                if(block.name !== linkBlock.name){
+                    linkLine = <Line borderColor="black" zIndex={1}
+                            x0={block.position.x + width/2 + offsetX}
+                            y0={block.position.y + height/2 +offsetY}
+                            x1={linkBlock.position.x + width/2+ offsetX}
+                            y1={linkBlock.position.y + height/2 + offsetY}
+                            />
+                    linkLine2 = <Line borderColor="black" zIndex={1}
+                            x0={block.position.x + width/2 + offsetX}
+                            y0={block.position.y + height/2 +offsetY}
+                            x1={linkBlock2.position.x + width/2 + offsetX}
+                            y1={linkBlock2.position.y + height/2 + offsetY}
+                            />
+                }
+            }
+            else if(block.name==='AWGN'){
+                let linkBlock = mainPage.projects[mainPage.currentProject].blocks[2];
+                if(block.name !== linkBlock.name){
+                    linkLine = <Line borderColor="black" zIndex={1}
+                            x0={block.position.x + width/2 + offsetX}
+                            y0={block.position.y + height/2 +offsetY}
+                            x1={linkBlock.position.x + width/2+ offsetX}
+                            y1={linkBlock.position.y + height/2 + offsetY}
+                            />
+                    }
             }
         }
 

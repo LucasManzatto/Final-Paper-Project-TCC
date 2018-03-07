@@ -40,10 +40,11 @@ export const initialState ={
                 3:{
                     id:3,
                     name: 'AWGN',
+                    bpsk: 2,
                     type: 'awgn',
                     position : {x:400 , y: 0},
                     paused : false,
-                    linked: false
+                    linked: true
                 }
             }
         },
