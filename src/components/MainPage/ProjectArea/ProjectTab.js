@@ -1,8 +1,6 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 import _ from 'lodash';
-import { SteppedLineTo } from 'react-lineto';
-
 
 import Block from './Block';
 

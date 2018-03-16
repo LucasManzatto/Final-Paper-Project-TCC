@@ -1,19 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Draggable from 'react-draggable';
 import _ from 'lodash';
 import { Line } from 'react-lineto';
-
-import FlatButton from 'material-ui/FlatButton';
 import NavigationChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
 import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 
 
 //redux
 import {connect} from 'react-redux';
-import {trackLocation,blockClicked,updateBlockValue,trackAbsoluteLocation} from '../actions';
-
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import {trackLocation,blockClicked,updateBlockValue} from '../actions';
 
 const blockStyle={
     height: 100,
@@ -30,6 +25,7 @@ const iconStyle ={
 
 const Block = props =>{
     const height = 100,width =160;
+    let projectTabOffset =0;
     const component = new React.Component(props);
     let offsetX,offsetY;
     const {block,blockClicked,updateBlockValue,trackLocation,mainPage} = component.props;
@@ -104,9 +100,12 @@ const Block = props =>{
         blockClicked(block);
         offsetX = window.pageXOffset;
         offsetY = window.pageYOffset;
-        const projectTabOffset = document.getElementsByClassName('projectTab')[0].getBoundingClientRect();
+        projectTabOffset = document.getElementsByClassName('projectTab')[0].getBoundingClientRect();
         offsetX += projectTabOffset.left;
         offsetY += projectTabOffset.top;
+    }
+    component.componentWillUnmount = () =>{
+        console.log("test");
     }
 
     component.render = () =>{

@@ -27,8 +27,8 @@ const SideBarBlock = props =>{
             //Mostrar o nome em um Sub-Header
             if(key === "name"){
                 return(
-                    <div>
-                        <Subheader key={key}>{value}</Subheader>
+                    <div key={key}>
+                        <Subheader>{value}</Subheader>
                         <p>Description:</p>
                         <p>Formula:</p>
                     </div>
@@ -91,6 +91,7 @@ const notHidden = key =>{
      && key !== "absolutePosition"
      && key !== "binary"
      && key !== "linked"
+     && key !== "linkedWith"
     ){
         return true;
     }

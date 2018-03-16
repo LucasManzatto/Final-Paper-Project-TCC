@@ -15,16 +15,17 @@ export default function reducer(state = initialState,action){
             block = _.clone(state.projects[currentProject].blocks[id]);
             block[key] = value;
             return {...state,
-                      projects: {
-                        ...state.projects,
-                        [currentProject]: {
-                          ...state.projects[currentProject],
-                          blocks : {
-                              ...state.projects[currentProject].blocks,
-                          [id] : block
-                          }
+                        amplitude:value,
+                        projects: {
+                            ...state.projects,
+                            [currentProject]: {
+                                ...state.projects[currentProject],
+                                blocks : {
+                                    ...state.projects[currentProject].blocks,
+                                    [id] : block
+                                }
+                            }
                         }
-                    }
                 }
         case consts.UPDATE_CURRENT_PROJECT:
             return {...state,currentProject : action.payload,clickedBlock : {}};

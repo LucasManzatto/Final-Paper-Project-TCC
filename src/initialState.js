@@ -1,5 +1,6 @@
 export const initialState ={
     currentProject : 0,
+    amplitude :1,
     clickedBlock : {
     },
     projects : {
@@ -21,7 +22,7 @@ export const initialState ={
                     id:1,
                     name: 'Carrier Wave',
                     frequency: 8,
-                    amplitude: 4,
+                    amplitude: 1,
                     type:'sine',
                     position : {x:0 , y: 300},
                     paused : false,
@@ -40,7 +41,7 @@ export const initialState ={
                 3:{
                     id:3,
                     name: 'AWGN',
-                    bpsk: 2,
+                    linkedWith: 1,
                     type: 'awgn',
                     position : {x:400 , y: 0},
                     paused : false,

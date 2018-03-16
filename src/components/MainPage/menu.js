@@ -60,9 +60,7 @@ const Menu = props =>{
             <div>
                 <AppBar
                     title="Projeto TCC"
-                    iconClassNameRight="muidocs-icon-navigation-expand-more"
                     iconElementRight={component.state.logged ? <Logged /> : <Login />}
-                    // iconElementRight={this.state.logged ? <Logged /> : <Login />}
                 />
                 <Dialog
                     style={{textAlign : 'center'}}

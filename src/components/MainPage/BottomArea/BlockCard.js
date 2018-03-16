@@ -10,14 +10,14 @@ import { Line } from './Line'
 
 const BlockCard = props =>{
     const component = new React.Component(props);
-    let width = component.props.containerWidth;
-    let height = component.props.containerHeight;
     let padding = 10;
 
     component.render = () =>{
+        let width = component.props.containerWidth;
+        let height = component.props.containerHeight;
         return(
             <svg height={height} width={width}>
-                <DataSource resolution={240} block={component.props.block}>{
+                <DataSource resolution={2400} block={component.props.block}>{
                     (data) => {
                         //padding = props.block.amplitude;
                         const { minX, maxX, minY, maxY } = findMinMax(data);
@@ -67,4 +67,5 @@ const findMinMax = dataArray => {
 
   return {minX,maxX,minY,maxY};
 }
+
 export default Dimensions()(BlockCard);
