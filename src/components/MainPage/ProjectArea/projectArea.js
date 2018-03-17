@@ -1,5 +1,5 @@
 import React from 'react';
-import {Tabs, Tab} from 'material-ui/Tabs';
+import Tabs, { Tab } from 'material-ui/Tabs';
 
 import ProjectTab from './ProjectTab';
 import _ from 'lodash';
@@ -10,28 +10,30 @@ import {updateCurrentProject} from '../actions';
 
 
 const ProjectArea = props =>{
+    const value =0;
     const handleOnClick = (event,projectId) =>{
         props.updateCurrentProject(projectId);
     }
 //Cria uma aba com todos os blocks no projects.byId.project.blocks
-    let projects = _.map(props.projects,project =>{
-        return (
-            <Tab label={project.name} key={project.id} onActive={event => handleOnClick(event,project.id)}>
-                <ProjectTab key={project.id} blocks={project.blocks} />
-            </Tab>
-        )
-    });
+    // let projects = _.map(props.projects,project =>{
+    //     return (
+    //
+    //     )
+    // });
     return(
-        <Tabs>
-            {projects}
-        </Tabs>
+        <div className='tabs'>
+            <Tabs  indicatorColor="primary" textColor="primary" value={0}>
+                <Tab label={props.project.name} key={props.project.id} value={props.project.id} />
+            </Tabs>
+            <ProjectTab key="0" blocks={props.project.blocks}/>
+        </div>
     );
     }
 
 const mapStateToProps = state =>{
     return{
         //projects : projectsSelector(state)
-        projects : state.mainPage.projects
+        project : state.mainPage.projects[0]
     }
 }
 export default connect(mapStateToProps,{updateCurrentProject})(ProjectArea);

@@ -2,8 +2,8 @@ import React from 'react';
 import Draggable from 'react-draggable';
 import _ from 'lodash';
 import { Line } from 'react-lineto';
-import NavigationChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
-import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
+import Left from 'material-ui-icons/ChevronLeft';
+import Right from 'material-ui-icons/ChevronRight';
 
 
 //redux
@@ -43,9 +43,9 @@ const Block = props =>{
                 return (
                     <div key={key}>
                         <b>{_.capitalize(key)}:</b>
-                        <NavigationChevronLeft onClick={(event,value)=> onClickHandler(--block[key],key)} style={iconStyle}/>
+                        <Left onClick={(event,value)=> onClickHandler(--block[key],key)} style={iconStyle}/>
                         {value}
-                        <NavigationChevronRight onClick={(event,value)=> onClickHandler(++block[key],key)} style={iconStyle}/>
+                        <Right onClick={(event,value)=> onClickHandler(++block[key],key)} style={iconStyle}/>
                     </div>
                 );
             }
@@ -101,6 +101,7 @@ const Block = props =>{
         offsetX = window.pageXOffset;
         offsetY = window.pageYOffset;
         projectTabOffset = document.getElementsByClassName('projectTab')[0].getBoundingClientRect();
+        console.log(projectTabOffset);
         offsetX += projectTabOffset.left;
         offsetY += projectTabOffset.top;
     }
@@ -144,7 +145,7 @@ const Block = props =>{
         }
 
         return(
-            <Draggable bounds="parent" onDrag={handleDrag} defaultPosition={{x, y}}>
+            <Draggable bounds={{left: 0,top: 0,right:500,bottom:projectTabOffset.bottom}} onDrag={handleDrag} defaultPosition={{x, y}}>
                 <div style={blockStyle} onClick={handleClick}>
                     <div style={{textAlign: 'center', fontWeight: 'bold'}}>{block.name}</div>
                     {_.map(block,showProperties)}

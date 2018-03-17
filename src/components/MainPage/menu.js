@@ -1,90 +1,47 @@
-import React ,{Component} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import FlatButton from 'material-ui/FlatButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
+import MenuIcon from 'material-ui-icons/Menu';
 
-const Menu = props =>{
-    const component = new React.Component(props);
-    component.state = {
-        logged: false,
-        open : false
-    };
-
-    const handleChange = () => {
-        component.setState({logged: !component.state.logged});
-    };
-    const handleLogin = () =>{
-        component.setState({logged: !component.state.logged, open: true});
-    }
-    const handleClose = () =>{
-        component.setState({open: false});
-    }
-
-    const Logged = () => (
-        <IconMenu
-            iconButtonElement={
-              <IconButton ><MoreVertIcon /></IconButton>
-            }
-            targetOrigin={{horizontal: 'right', vertical: 'top'}}
-            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-            >
-            <MenuItem primaryText="Help" />
-            <MenuItem primaryText="Sign out" onClick={handleChange}/>
-        </IconMenu>
-    );
-
-    const Login = () =>(
-        <FlatButton style={{color: "#ffffff",marginTop:7}} label="Login" onClick={handleLogin}/>
-    )
-
-    component.render = () =>{
-        const actions = [
-            <FlatButton
-            label="Cancel"
-            primary={true}
-            onClick={handleClose}
-            />,
-            <FlatButton
-            label="Submit"
-            primary={true}
-            onClick={handleClose}
-            />,
-        ];
-        return(
-            <div>
-                <AppBar
-                    title="Projeto TCC"
-                    iconElementRight={component.state.logged ? <Logged /> : <Login />}
-                />
-                <Dialog
-                    style={{textAlign : 'center'}}
-                    title="Login"
-                    actions={actions}
-                    modal={true}
-                    open={component.state.open}
-                    onRequestClose={handleClose}
-                >
-                <TextField
-                  floatingLabelText="Login"
-                  autoFocus
-                  floatingLabelFixed={true}
-                />
-                <br/>
-                <TextField
-                  floatingLabelText="Password"
-                  floatingLabelFixed={true}
-                  type="password"
-                />
-              </Dialog>
-            </div>
-        )
-    }
-    return component;
+const styles = {
+  root: {
+    flexGrow: 1,
+  },
+  flex: {
+    flex: 1,
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
 };
-export default Menu;
+
+function Menu(props) {
+  const { classes } = props;
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="title" color="inherit" className={classes.flex}>
+            TCC
+          </Typography>
+          <Button color="inherit">Login</Button>
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+}
+
+Menu.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Menu);

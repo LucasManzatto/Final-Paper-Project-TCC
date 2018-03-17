@@ -2,6 +2,14 @@ export const initialState ={
     currentProject : 0,
     amplitude :1,
     clickedBlock : {
+        id:1,
+        name: 'Carrier Wave',
+        frequency: 8,
+        amplitude: 1,
+        type:'sine',
+        position : {x:0 , y: 300},
+        paused : false,
+        linked: false
     },
     projects : {
         0 : {

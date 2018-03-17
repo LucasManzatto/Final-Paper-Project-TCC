@@ -5,7 +5,7 @@ import _ from 'lodash';
 import Block from './Block';
 
 const style={
-    height: 620
+    height: 600
 }
 const ProjectTab = props =>{
     const blocks = _.map(props.blocks, block =>{

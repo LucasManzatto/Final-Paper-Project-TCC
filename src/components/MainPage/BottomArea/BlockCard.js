@@ -10,11 +10,15 @@ import { Line } from './Line'
 
 const BlockCard = props =>{
     const component = new React.Component(props);
+    console.log(component.props);
     let padding = 10;
 
     component.render = () =>{
         let width = component.props.containerWidth;
         let height = component.props.containerHeight;
+        // if(height >170){
+        //     height =500;
+        // }
         return(
             <svg height={height} width={width}>
                 <DataSource resolution={2400} block={component.props.block}>{

@@ -1,54 +1,81 @@
 import React from 'react';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import Button from 'material-ui/Button';
+import Dialog ,{DialogContent} from 'material-ui/Dialog';
+import List, { ListItem, ListItemText } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import IconButton from 'material-ui/IconButton';
+import Typography from 'material-ui/Typography';
+import CloseIcon from 'material-ui-icons/Close';
+import Slide from 'material-ui/transitions/Slide';
+import Paper from 'material-ui/Paper';
+
+import { Grid, Row, Col } from 'react-flexbox-grid';
+
 
 import BlockCard from './BlockCard';
 
-const customContentStyle = {
-  width: '100%',
-  maxWidth: 'none',
+const styles = {
+  appBar: {
+    position: 'relative',
+  },
+  flex: {
+    flex: 1,
+  },
 };
 
-/**
- * The dialog width has been set to occupy the full width of browser through the `contentStyle` property.
- */
-export default class ExpandBlockCard extends React.Component {
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
+class FullScreenDialog extends React.Component {
   state = {
     open: false,
   };
 
-  handleOpen = () => {
-    this.setState({open: true});
+  handleClickOpen = () => {
+    this.setState({ open: true });
   };
 
   handleClose = () => {
-    this.setState({open: false});
+    this.setState({ open: false });
   };
 
   render() {
-    const actions = [
-      <FlatButton
-        label="Close"
-        primary={true}
-        onClick={this.handleClose}
-      />,
-    ];
-
+    const { classes } = this.props;
     return (
       <div>
-        <FlatButton primary={true} label="Expand" onClick={this.handleOpen} />
+        <Button onClick={this.handleClickOpen} color="primary">Expand</Button>
         <Dialog
-          actions={actions}
-          modal={false}
-          contentStyle={customContentStyle}
-          bodyStyle = {{height: 300}}
-          onRequestClose={this.handleClose}
+          fullScreen
           open={this.state.open}
+          onClose={this.handleClose}
+          transition={Transition}
         >
-          <BlockCard block={this.props.block} key={this.props.block.id}/>
+          <AppBar className={classes.appBar}>
+            <Toolbar>
+              <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+                <CloseIcon />
+              </IconButton>
+              <Typography variant="title" color="inherit" className={classes.flex}>
+                {this.props.block.name}
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <div style={{height:200 * this.props.amplitude}}>
+                <BlockCard block={this.props.block}/>
+          </div>
         </Dialog>
       </div>
     );
   }
 }
+
+FullScreenDialog.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(FullScreenDialog);

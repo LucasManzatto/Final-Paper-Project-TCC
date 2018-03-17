@@ -1,11 +1,12 @@
 import React from 'react';
 
 //Material
-import {List, ListItem, makeSelectable} from 'material-ui/List';
-import Subheader from 'material-ui/Subheader';
-import {grey50,blue500} from 'material-ui/styles/colors';
+//import {List, ListItem, makeSelectable} from 'material-ui/List';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import ListSubheader from 'material-ui/List/ListSubheader';
+import SendIcon from 'material-ui-icons/Send';
+// import {grey50,blue500} from 'material-ui/styles/colors';
 import Paper from 'material-ui/Paper';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import _ from 'lodash';
 
@@ -13,14 +14,14 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {addBlockToProject} from '../actions';
 
-let SelectableList = makeSelectable(List);
+//let SelectableList = makeSelectable(List);
 
-const subHeaderStyle={
-    backgroundColor : blue500,
-    color : grey50
-}
+// const subHeaderStyle={
+//     backgroundColor : blue500,
+//     color : grey50
+// }
 const style={
-    height:670
+    height:'100%'
 }
 
 const SideBar = props =>{
@@ -29,21 +30,19 @@ const SideBar = props =>{
             props.addBlockToProject(block);
         }
         return(
-            <ListItem
-                onClick={onClickHandler}
-                key={block.id}
-                value={block.id}
-                primaryText={block.name}
-                rightIcon={<ContentAdd />}
-            />
+            <ListItem button>
+              <ListItemText primary={block.name}/>
+            </ListItem>
         )
     })
     return(
         <Paper zDepth={1} style={style}>
-            <SelectableList defaultValue={3}>
-                <Subheader style={subHeaderStyle}>Blocos</Subheader>
+            <List
+                component="nav"
+                subheader={<ListSubheader component="div">Blocks</ListSubheader>}
+                >
                 {ItemList}
-            </SelectableList>
+            </List>
         </Paper>
     );
 }
