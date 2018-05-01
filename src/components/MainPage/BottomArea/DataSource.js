@@ -4,30 +4,30 @@ import {connect} from 'react-redux';
 //AWGN +rnorm();
 import {rnorm} from 'randgen';
 class DataSource extends React.Component {
-  constructor(props) {
-    super(props)
-    this.updateData = this.updateData.bind(this);
-    let dataY = this.createDataArray(props);
-    this.state = {
-      data: [],
-      dataY
-    }
+    constructor(props) {
+        super(props)
+        this.updateData = this.updateData.bind(this);
+        let dataY = this.createDataArray(props);
+        this.state = {
+          data: [],
+          dataY
+        }
   }
 
-  updateData() {
-    const {block} = this.props;
-    const {dataY} = this.state;
-    let data = this.createXYArray(dataY);
-    //mudando o state sem dar o setState
-    if(!block.paused){
-        this.shiftArray(dataY);
-    }
-    this.setState({
-      data,
-  }, () =>{
-      window.requestAnimationFrame(this.updateData);
-  });
-  }
+    updateData() {
+        const {block} = this.props;
+        const {dataY} = this.state;
+        let data = this.createXYArray(dataY);
+        //mudando o state sem dar o setState
+        if(!block.paused){
+            this.shiftArray(dataY);
+        }
+        this.setState({
+            data,
+            }, () =>{
+                window.requestAnimationFrame(this.updateData);
+            });
+        }
 
   //tira o primeiro elemento e coloca no final do array;
   shiftArray(array){
@@ -73,7 +73,7 @@ class DataSource extends React.Component {
         return data;
   }
 
-  createAwgnArray(linkedBlock){
+    createAwgnArray(linkedBlock){
         let awgnArray = [];
         linkedBlock.forEach((item,index)=>{
             awgnArray[index] = item + rnorm();
@@ -82,7 +82,7 @@ class DataSource extends React.Component {
   }
 
 
-  createSineArray(totalTime,frequency,amplitude){
+    createSineArray(totalTime,frequency,amplitude){
         let data=[];
         const angularFrequency =2*Math.PI*frequency;
         for(let i=0;i<totalTime;i++){
@@ -105,11 +105,12 @@ class DataSource extends React.Component {
                 dataY = this.createSineArray(resolution,block.frequency,block.amplitude);
                 break;
             case 'bpsk':
+                if(!block.linked) break;
                 let binaryArray = this.createBinaryArray(blocks[block.source].binary,resolution);
                 dataY= this.createBpskArray(binaryArray,resolution,blocks[block.carrierWave].frequency,blocks[block.carrierWave].amplitude);
                 break;
             case 'awgn':
-                let sineArray = this.createSineArray(resolution,blocks[block.linkedWith].frequency,blocks[block.linkedWith].amplitude);
+                let sineArray = this.createSineArray(resolution,blocks[block.links[0]].frequency,blocks[block.links[0]].amplitude);
                 dataY = this.createAwgnArray(sineArray);
                 break;
             default:
@@ -120,11 +121,11 @@ class DataSource extends React.Component {
 
     componentWillReceiveProps(nextProps){
         //Checa se houve mudança no bloco, se houve dá o update, senão continua a execução normal
-        if((this.props.block !== nextProps.block) || nextProps.block.type === 'bpsk' || nextProps.block.type === 'awgn'){
-            let dataY = this.createDataArray(nextProps);
-            this.setState({
-              dataY
-            })
+        if((this.props.block !== nextProps.block) || nextProps.block.type === 'bpsk' || nextProps.block.type === 'awgn' ){
+                let dataY = this.createDataArray(nextProps);
+                this.setState({
+                  dataY
+                })
         }
     }
 

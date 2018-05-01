@@ -3,42 +3,51 @@ import Dimensions from 'react-dimensions';
 import _ from 'lodash';
 
 import { scaleLinear } from 'd3-scale'
-//import { axisBottom, axisLeft } from 'd3-axis'
-//import { Axis } from './Axis'
+import {axisRight } from 'd3-axis'
+import { Axis } from './axis'
 import DataSource from './DataSource';
 import { Line } from './Line'
 
 const BlockCard = props =>{
     const component = new React.Component(props);
-    console.log(component.props);
-    let padding = 10;
+    let tickCount =2;
+    let paddingxAxis = 30;
+    let paddingyAxis =20;
 
     component.render = () =>{
+        const {block} = component.props;
         let width = component.props.containerWidth;
         let height = component.props.containerHeight;
-        // if(height >170){
-        //     height =500;
-        // }
+        const maxHeight = 870;
+        if(height >maxHeight){
+            height =maxHeight;
+        }
         return(
             <svg height={height} width={width}>
-                <DataSource resolution={2400} block={component.props.block}>{
+                <DataSource resolution={2400} block={block}>{
                     (data) => {
                         //padding = props.block.amplitude;
                         const { minX, maxX, minY, maxY } = findMinMax(data);
                         const xScale = scaleLinear()
                         .domain([minX.toFixed(2), maxX.toFixed(2)])
-                        .range([padding, width - padding])
+                        .range([paddingxAxis, width - paddingxAxis])
 
                         const yScale = scaleLinear()
                         .domain([minY, maxY])
-                        .range([height - padding, padding])
-
+                        .range([height - paddingyAxis, paddingyAxis])
                         return (
-                            <Line
-                              xScale={xScale}
-                              yScale={yScale}
-                              data={data}
-                            />
+                            <g>
+                                <Line
+                                  xScale={xScale}
+                                  yScale={yScale}
+                                  data={data}
+                                />
+                                <Axis
+                                    axis={axisRight}
+                                    tickCount={tickCount}
+                                    scale={yScale}
+                                />
+                            </g>
                         )
                     }
                 }

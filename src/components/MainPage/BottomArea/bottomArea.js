@@ -2,7 +2,6 @@ import React from 'react';
 
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
-import Dialog from 'material-ui/Dialog';
 
 import { Row,Col} from 'react-flexbox-grid';
 import BlockCard from './BlockCard';
@@ -18,7 +17,7 @@ const style={
 const BottomArea = props =>{
     const blockCards = _.map(props.blocks, block =>{
         return(
-            <Col xs={3} key={block.id} style={{height:200 ,textAlign :'center' ,paddingBottom :30}}>
+            <Col xs={3} key={block.id} style={{height:'100%' ,textAlign :'center' ,paddingBottom :30}}>
                 <Row>
                     <Col xs={6}>
                         <Button color="primary" onClick={event => props.pauseBlock(block)}>
@@ -35,7 +34,7 @@ const BottomArea = props =>{
     })
 
     return(
-        <Paper zDepth={1} style={style}>
+        <Paper style={style}>
             <Row around="xs" middle="xs" style={style}>
                 {blockCards}
             </Row>

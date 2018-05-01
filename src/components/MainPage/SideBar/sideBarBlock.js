@@ -1,9 +1,8 @@
 import React from 'react';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 //import Subheader from 'material-ui/Subheader';
-import _ from 'lodash';
 
 //redux
 import {connect} from 'react-redux';
@@ -13,7 +12,7 @@ import {updateBlockValue,updateDropDown} from '../actions';
 const SideBarBlock = props =>{
     return(
         <Paper style={{height:'100%'}}>
-            <Typography variant="title" className='title'>
+            <Typography variant="title" className='title' style={{textAlign:'center'}}>
                   {props.clickedBlock.name}
             </Typography>
             <List>

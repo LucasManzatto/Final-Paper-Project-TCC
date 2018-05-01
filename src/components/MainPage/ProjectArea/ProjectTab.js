@@ -7,13 +7,14 @@ import Block from './Block';
 const style={
     height: 600
 }
+
 const ProjectTab = props =>{
-    const blocks = _.map(props.blocks, block =>{
+    const renderBlocks = _.map(props.blocks, block =>{
         return <Block key={block.id} block={block}/>
     });
     return(
-        <Paper className="projectTab" zDepth={2} style={style}>
-            {blocks}
+        <Paper className="projectTab" style={style}>
+            {renderBlocks}
         </Paper>
     )
 };

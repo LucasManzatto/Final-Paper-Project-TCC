@@ -8,11 +8,13 @@ import Right from 'material-ui-icons/ChevronRight';
 
 //redux
 import {connect} from 'react-redux';
-import {trackLocation,blockClicked,updateBlockValue} from '../actions';
+import {trackLocation,blockClicked,updateBlockValue,deleteLink} from '../actions';
 
+const blockHeight = 100;
+const blockWidth = 160;
 const blockStyle={
-    height: 100,
-    width: 160,
+    height: blockHeight,
+    width:  blockWidth,
     border: '1px solid black',
     backgroundColor : '#f5f5f5',
     position: 'absolute',
@@ -24,11 +26,28 @@ const iconStyle ={
 }
 
 const Block = props =>{
-    const height = 100,width =160;
-    let projectTabOffset =0;
     const component = new React.Component(props);
-    let offsetX,offsetY;
-    const {block,blockClicked,updateBlockValue,trackLocation,mainPage} = component.props;
+    let offsetX,offsetY,projectTabOffset =0;
+    let linkLine = [];
+    let {block,blockClicked} = component.props;
+
+    const renderLines = () => {
+        return(
+            component.props.block.links.map(link => {
+                let linkBlock = component.props.mainPage.projects[component.props.mainPage.currentProject].blocks[link];
+                return(
+                    <div key={link} onClick={event => component.props.deleteLink({block,link})}>
+                        <Line borderWidth={4} borderColor="black" zIndex={1}
+                            x0={component.props.block.position.x + blockWidth/2 + offsetX}
+                            y0={component.props.block.position.y + blockHeight/2 +offsetY}
+                            x1={linkBlock.position.x + blockWidth/2+ offsetX}
+                            y1={linkBlock.position.y + blockHeight/2 + offsetY}
+                        />
+                    </div>
+                    );
+            })
+        )
+    }
     const showProperties = (value,key)=>{
             if(key === 'binary'){
                 return (
@@ -43,9 +62,9 @@ const Block = props =>{
                 return (
                     <div key={key}>
                         <b>{_.capitalize(key)}:</b>
-                        <Left onClick={(event,value)=> onClickHandler(--block[key],key)} style={iconStyle}/>
+                        <Left onClick={(event,value)=> onClickHandler(--component.props.block[key],key)} style={iconStyle}/>
                         {value}
-                        <Right onClick={(event,value)=> onClickHandler(++block[key],key)} style={iconStyle}/>
+                        <Right onClick={(event,value)=> onClickHandler(++component.props.block[key],key)} style={iconStyle}/>
                     </div>
                 );
             }
@@ -54,9 +73,9 @@ const Block = props =>{
         const payload ={
             value,
             key,
-            id: block.id
+            id: component.props.block.id
         }
-        updateBlockValue(payload);
+        component.props.updateBlockValue(payload);
     }
     const notHidden = key =>{
         if(key !== "id"
@@ -70,6 +89,7 @@ const Block = props =>{
          && key !== "linked"
          && key !== "samples"
          && key !== "bpsk"
+         && key !== "links"
         ){
             return true;
         }
@@ -78,80 +98,46 @@ const Block = props =>{
 
     const handleDrag = (e,ui) => {
         handleClick();
-        const {x, y} = block.position;
+        const {x, y} = component.props.block.position;
         const deltaPosition ={
             x: x + ui.deltaX,
             y: y + ui.deltaY
         };
         const payload = {
-            block,
+            block : component.props.block,
             deltaPosition
         };
-        trackLocation(payload);
+        component.props.trackLocation(payload);
     }
 
     const handleClick = () =>{
-        if(block !== mainPage.clickedBlock){
-            blockClicked(block);
+        if(component.props.block !== component.props.mainPage.clickedBlock){
+            component.props.blockClicked(component.props.block);
         }
     }
 
     component.componentDidMount = () =>{
-        blockClicked(block);
-        offsetX = window.pageXOffset;
-        offsetY = window.pageYOffset;
+        component.props.blockClicked(component.props.block);
         projectTabOffset = document.getElementsByClassName('projectTab')[0].getBoundingClientRect();
-        console.log(projectTabOffset);
-        offsetX += projectTabOffset.left;
-        offsetY += projectTabOffset.top;
+        offsetX = window.pageXOffset + projectTabOffset.left;
+        offsetY = window.pageYOffset + projectTabOffset.top;
     }
-    component.componentWillUnmount = () =>{
-        console.log("test");
-    }
+    // component.componentWillReceiveProps = nextProps =>{
+    //     component.props = nextProps;
+    // }
 
     component.render = () =>{
-        const {x, y} = block.position;
-        let linkLine,linkLine2;
-        if(block.linked){
-            if(block.name==='BPSK'){
-                let linkBlock = mainPage.projects[mainPage.currentProject].blocks[1];
-                let linkBlock2 = mainPage.projects[mainPage.currentProject].blocks[0];
-                if(block.name !== linkBlock.name){
-                    linkLine = <Line borderColor="black" zIndex={1}
-                            x0={block.position.x + width/2 + offsetX}
-                            y0={block.position.y + height/2 +offsetY}
-                            x1={linkBlock.position.x + width/2+ offsetX}
-                            y1={linkBlock.position.y + height/2 + offsetY}
-                            />
-                    linkLine2 = <Line borderColor="black" zIndex={1}
-                            x0={block.position.x + width/2 + offsetX}
-                            y0={block.position.y + height/2 +offsetY}
-                            x1={linkBlock2.position.x + width/2 + offsetX}
-                            y1={linkBlock2.position.y + height/2 + offsetY}
-                            />
-                }
-            }
-            else if(block.name==='AWGN'){
-                let linkBlock = mainPage.projects[mainPage.currentProject].blocks[2];
-                if(block.name !== linkBlock.name){
-                    linkLine = <Line borderColor="black" zIndex={1}
-                            x0={block.position.x + width/2 + offsetX}
-                            y0={block.position.y + height/2 +offsetY}
-                            x1={linkBlock.position.x + width/2+ offsetX}
-                            y1={linkBlock.position.y + height/2 + offsetY}
-                            />
-                    }
-            }
+        const {x, y} = component.props.block.position;
+        if(component.props.block.linked){
+            linkLine = renderLines();
         }
-
         return(
-            <Draggable bounds={{left: 0,top: 0,right:500,bottom:projectTabOffset.bottom}} onDrag={handleDrag} defaultPosition={{x, y}}>
+            <Draggable bounds={{left: 0,top: 0,right:projectTabOffset.width - blockWidth,bottom:projectTabOffset.height - blockHeight}} onDrag={handleDrag} defaultPosition={{x, y}}>
                 <div style={blockStyle} onClick={handleClick}>
-                    <div style={{textAlign: 'center', fontWeight: 'bold'}}>{block.name}</div>
-                    {_.map(block,showProperties)}
+                    <div style={{textAlign: 'center', fontWeight: 'bold'}}>{component.props.block.name}</div>
+                    {_.map(component.props.block,showProperties)}
                     {/* <FlatButton label="Link" primary={true}></FlatButton> */}
                     {linkLine}
-                    {linkLine2}
                 </div>
             </Draggable>
         );
@@ -164,4 +150,4 @@ const mapStateToProps = state =>{
     return state;
 }
 
-export default connect(mapStateToProps,{trackLocation,blockClicked,updateBlockValue})(Block);
+export default connect(mapStateToProps,{trackLocation,blockClicked,updateBlockValue,deleteLink})(Block);

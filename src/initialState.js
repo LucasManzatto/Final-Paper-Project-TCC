@@ -1,6 +1,7 @@
 export const initialState ={
     currentProject : 0,
     amplitude :1,
+
     clickedBlock : {
         id:1,
         name: 'Carrier Wave',
@@ -39,6 +40,7 @@ export const initialState ={
                 2: {
                     id:2,
                     name: 'BPSK',
+                    links: [0,1],
                     carrierWave : 1,
                     source :0,
                     type : 'bpsk',
@@ -49,7 +51,7 @@ export const initialState ={
                 3:{
                     id:3,
                     name: 'AWGN',
-                    linkedWith: 1,
+                    links:[1],
                     type: 'awgn',
                     position : {x:400 , y: 0},
                     paused : false,

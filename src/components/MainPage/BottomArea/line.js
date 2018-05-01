@@ -1,6 +1,6 @@
 import React from 'react'
 import { line, curveLinear} from 'd3-shape'
-import simplify from 'simplify-js'
+//import simplify from 'simplify-js'
 
 export const Line = props => {
   const { xScale, yScale, data } = props

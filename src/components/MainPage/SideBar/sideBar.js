@@ -2,9 +2,8 @@ import React from 'react';
 
 //Material
 //import {List, ListItem, makeSelectable} from 'material-ui/List';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 import ListSubheader from 'material-ui/List/ListSubheader';
-import SendIcon from 'material-ui-icons/Send';
 // import {grey50,blue500} from 'material-ui/styles/colors';
 import Paper from 'material-ui/Paper';
 
@@ -26,17 +25,17 @@ const style={
 
 const SideBar = props =>{
     const ItemList = _.map(props.blocks, block =>{
-        const onClickHandler = () =>{
-            props.addBlockToProject(block);
-        }
+        // const onClickHandler = () =>{
+        //     props.addBlockToProject(block);
+        // }
         return(
-            <ListItem button>
+            <ListItem key={block.id} button>
               <ListItemText primary={block.name}/>
             </ListItem>
         )
     })
     return(
-        <Paper zDepth={1} style={style}>
+        <Paper style={style}>
             <List
                 component="nav"
                 subheader={<ListSubheader component="div">Blocks</ListSubheader>}

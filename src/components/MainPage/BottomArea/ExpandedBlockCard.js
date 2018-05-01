@@ -2,19 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
-import Dialog ,{DialogContent} from 'material-ui/Dialog';
-import List, { ListItem, ListItemText } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
+import Dialog from 'material-ui/Dialog';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
-import Paper from 'material-ui/Paper';
 
-import { Grid, Row, Col } from 'react-flexbox-grid';
-
+import _ from 'lodash';
 
 import BlockCard from './BlockCard';
 
@@ -45,7 +41,21 @@ class FullScreenDialog extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes ,block } = this.props;
+    let haveProperties = false;
+    if(!_.isNil(block.frequency)){
+        haveProperties =true;
+    }
+    const showProperties = haveProperties ? (
+        <div className={classes.flex}>
+            <Typography color="inherit">
+              Frequency:{block.frequency}
+            </Typography>
+            <Typography color="inherit">
+              Amplitude:{block.amplitude}
+            </Typography>
+        </div>
+    ) : (<div></div>)
     return (
       <div>
         <Button onClick={this.handleClickOpen} color="primary">Expand</Button>
@@ -61,12 +71,15 @@ class FullScreenDialog extends React.Component {
                 <CloseIcon />
               </IconButton>
               <Typography variant="title" color="inherit" className={classes.flex}>
-                {this.props.block.name}
+                {block.name}
               </Typography>
+              {showProperties}
             </Toolbar>
           </AppBar>
-          <div style={{height:200 * this.props.amplitude}}>
-                <BlockCard block={this.props.block}/>
+          <div style={{height:500 - (100*this.props.amplitude)}}>
+          </div>
+            <BlockCard block={block}/>
+          <div style={{height:500 - (100*this.props.amplitude)}}>
           </div>
         </Dialog>
       </div>
