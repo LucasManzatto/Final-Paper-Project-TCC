@@ -15,12 +15,16 @@ const style={
 }
 
 const BottomArea = props =>{
-    const blockCards = _.map(props.blocks, block =>{
+    const renderBlockCards = _.map(props.blocks, block =>{
+        //Se o total de link for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
+        if(block.neededLinks !=0 && !block.linked ){
+            return;
+        }
         return(
             <Col xs={3} key={block.id} style={{height:'100%' ,textAlign :'center' ,paddingBottom :30}}>
-                <Row>
+                <Row start="xs">
                     <Col xs={6}>
-                        <Button color="primary" onClick={event => props.pauseBlock(block)}>
+                        <Button color="primary" onClick={event => props.pauseBlock({block:block})}>
                             Pause
                         </Button>
                     </Col>
@@ -36,7 +40,7 @@ const BottomArea = props =>{
     return(
         <Paper style={style}>
             <Row around="xs" middle="xs" style={style}>
-                {blockCards}
+                {renderBlockCards}
             </Row>
         </Paper>
     );
@@ -44,9 +48,8 @@ const BottomArea = props =>{
 
 const mapStateToProps = state =>{
     return{
-        //blocks : blocksFromCurrentProjectSelector(state),
-        amplitude : state.mainPage.amplitude,
-        blocks: state.mainPage.projects[state.mainPage.currentProject].blocks
+        amplitude : state.mainPage.present.amplitude,
+        blocks: state.mainPage.present.projects[state.mainPage.present.currentProject].blocks
     }
 }
 

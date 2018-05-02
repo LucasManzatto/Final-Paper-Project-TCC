@@ -1,9 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import _ from 'lodash';
+import {createSineArray,createAwgnArray,createBpskArray,createBinaryArray} from '../utils';
+import {blockUpdated} from '../actions';
 
-//AWGN +rnorm();
-import {rnorm} from 'randgen';
 class DataSource extends React.Component {
+
     constructor(props) {
         super(props)
         this.updateData = this.updateData.bind(this);
@@ -18,12 +20,14 @@ class DataSource extends React.Component {
         const {block} = this.props;
         const {dataY} = this.state;
         let data = this.createXYArray(dataY);
-        //mudando o state sem dar o setState
+
+        let new_dataY = _.clone(dataY);
         if(!block.paused){
-            this.shiftArray(dataY);
+            new_dataY = this.shiftArray(new_dataY);
         }
         this.setState({
             data,
+            dataY: new_dataY
             }, () =>{
                 window.requestAnimationFrame(this.updateData);
             });
@@ -46,72 +50,25 @@ class DataSource extends React.Component {
       return data;
   }
 
-  createBinaryArray(binaryArray,totalTime){
-      const size = totalTime/binaryArray.length;
-      let index=0;
-      let binaryAux = [];
-      binaryArray.forEach(item=>{
-          for(let i =0 ; i<size; i++){
-              binaryAux[index++] =item;
-      }});
-      return binaryAux;
-  }
-
-  createBpskArray(binaryArray,totalTime,frequency,amplitude){
-        let data=[];
-        const angularFrequency =2*Math.PI*frequency;
-        for(let i=0;i<totalTime;i++){
-            let currentTime = (i / totalTime);
-            let xAxis =  angularFrequency * currentTime;
-            if(binaryArray[i] === 0){
-                data[i] = -amplitude*Math.cos(xAxis);
-            }
-            else{
-                data[i] = amplitude*Math.cos(xAxis);
-            }
-        }
-        return data;
-  }
-
-    createAwgnArray(linkedBlock){
-        let awgnArray = [];
-        linkedBlock.forEach((item,index)=>{
-            awgnArray[index] = item + rnorm();
-        })
-        return awgnArray;
-  }
-
-
-    createSineArray(totalTime,frequency,amplitude){
-        let data=[];
-        const angularFrequency =2*Math.PI*frequency;
-        for(let i=0;i<totalTime;i++){
-          let currentTime = (i / totalTime);
-          let xAxis =  angularFrequency * currentTime;
-          data[i] = amplitude * Math.sin(xAxis);
-        }
-        return data;
-    }
-
-
     createDataArray(props) {
         const {resolution,block,blocks} = props;
         let dataY = [];
         switch(block.type){
             case 'square':
-                dataY = this.createBinaryArray(block.binary,resolution);
+                dataY = createBinaryArray(block.binary,resolution);
                 break;
             case 'sine':
-                dataY = this.createSineArray(resolution,block.frequency,block.amplitude);
+                dataY = createSineArray(resolution,block.frequency,block.amplitude);
                 break;
             case 'bpsk':
-                if(!block.linked) break;
-                let binaryArray = this.createBinaryArray(blocks[block.source].binary,resolution);
-                dataY= this.createBpskArray(binaryArray,resolution,blocks[block.carrierWave].frequency,blocks[block.carrierWave].amplitude);
+                let binaryArray = createBinaryArray(blocks[block.links[0]].binary,resolution);
+                dataY= createBpskArray(binaryArray,resolution,blocks[block.links[1]].frequency,blocks[block.links[1]].amplitude);
                 break;
             case 'awgn':
-                let sineArray = this.createSineArray(resolution,blocks[block.links[0]].frequency,blocks[block.links[0]].amplitude);
-                dataY = this.createAwgnArray(sineArray);
+                let linkedBlock = this.props.blocks[block.links[0]];
+                let awgnBinaryArray = createBinaryArray(blocks[linkedBlock.links[0]].binary,resolution);
+                let bpskArray= createBpskArray(awgnBinaryArray,resolution,blocks[linkedBlock.links[1]].frequency,blocks[linkedBlock.links[1]].amplitude);
+                dataY = createAwgnArray(bpskArray);
                 break;
             default:
                 return dataY;
@@ -121,11 +78,16 @@ class DataSource extends React.Component {
 
     componentWillReceiveProps(nextProps){
         //Checa se houve mudança no bloco, se houve dá o update, senão continua a execução normal
-        if((this.props.block !== nextProps.block) || nextProps.block.type === 'bpsk' || nextProps.block.type === 'awgn' ){
-                let dataY = this.createDataArray(nextProps);
-                this.setState({
-                  dataY
-                })
+        if(nextProps.block.name === 'Carrier Wave' && nextProps.block.updated){
+            this.props.blockUpdated({block:this.props.blocks[2],updated:true})
+            this.props.blockUpdated({block:this.props.blocks[3],updated:true})
+        }
+        if(nextProps.block.updated){
+            let dataY = this.createDataArray(nextProps);
+            this.setState({
+              dataY
+            })
+            this.props.blockUpdated({block:this.props.block,updated:false})
         }
     }
 
@@ -146,7 +108,7 @@ class DataSource extends React.Component {
     }
 const mapStateToProps = state =>{
     return {
-        blocks: state.mainPage.projects[state.mainPage.currentProject].blocks
+        blocks: state.mainPage.present.projects[state.mainPage.present.currentProject].blocks
     }
 }
-export default connect(mapStateToProps,{})(DataSource)
+export default connect(mapStateToProps,{blockUpdated})(DataSource)

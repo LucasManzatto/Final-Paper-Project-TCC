@@ -1,12 +1,13 @@
 import React from 'react';
 import Dimensions from 'react-dimensions';
-import _ from 'lodash';
+
 
 import { scaleLinear } from 'd3-scale'
 import {axisRight } from 'd3-axis'
 import { Axis } from './axis'
 import DataSource from './DataSource';
 import { Line } from './Line'
+import {findMinMax} from '../utils';
 
 const BlockCard = props =>{
     const component = new React.Component(props);
@@ -33,7 +34,7 @@ const BlockCard = props =>{
                         .range([paddingxAxis, width - paddingxAxis])
 
                         const yScale = scaleLinear()
-                        .domain([minY, maxY])
+                        .domain([minY.toFixed(2), maxY.toFixed(2)])
                         .range([height - paddingyAxis, paddingyAxis])
                         return (
                             <g>
@@ -56,29 +57,6 @@ const BlockCard = props =>{
         );
     }
     return component;
-}
-
-const findMinMax = dataArray => {
-  let minX = Number.MAX_SAFE_INTEGER,
-      maxX = Number.MIN_SAFE_INTEGER,
-      minY = Number.MAX_SAFE_INTEGER,
-      maxY = Number.MIN_SAFE_INTEGER
-
-    _.map(dataArray,data=>{
-        if (data.x < minX) {
-            minX = data.x;}
-        else if (data.x > maxX) {
-            maxX = data.x;
-        }
-
-        if (data.y < minY) {
-            minY = data.y;}
-        else if (data.y > maxY) {
-            maxY = data.y;
-        }
-    })
-
-  return {minX,maxX,minY,maxY};
 }
 
 export default Dimensions()(BlockCard);

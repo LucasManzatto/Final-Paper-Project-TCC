@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux';
+import undoable from 'redux-undo';
 import mainPage from '../src/components/MainPage/reducer';
 
 const rootReducer = combineReducers({
-    //orm: createReducer(orm),
-    mainPage,
+     mainPage: undoable(mainPage),
 });
 
 export default rootReducer;

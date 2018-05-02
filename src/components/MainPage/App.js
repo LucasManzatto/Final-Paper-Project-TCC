@@ -7,7 +7,12 @@ import SideBarBlock from './SideBar/sideBarBlock';
 import ProjectArea from './ProjectArea/projectArea';
 import BottomArea from './BottomArea/bottomArea';
 
-    import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+import KeyHandler, {KEYPRESS} from 'react-key-handler';
+import {deleteLink} from './actions';
+
+import {connect} from 'react-redux';
+import { ActionCreators } from 'redux-undo';
 
 const style={
     paddingTop: 10
@@ -23,6 +28,8 @@ const styleBottomArea ={
 
 const App = props =>(
     <Grid fluid>
+        <KeyHandler keyEventName={KEYPRESS} keyValue="x" onKeyHandle={() => props.deleteLink()} />
+        <KeyHandler keyEventName={KEYPRESS} keyValue="z" onKeyHandle={() => props.undo()} />
         <Menu />
         <Row between="xs" style={style}>
             <Col xs={2}>
@@ -42,4 +49,11 @@ const App = props =>(
         </Row>
     </Grid>);
 
-export default App;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deleteLink: () => {dispatch(deleteLink())},
+    undo: () => {dispatch(ActionCreators.undo())}
+  }
+}
+
+export default connect(null,mapDispatchToProps)(App)

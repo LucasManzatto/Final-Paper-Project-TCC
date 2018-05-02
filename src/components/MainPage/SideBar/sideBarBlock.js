@@ -33,7 +33,7 @@ const SideBarBlock = props =>{
 
 const mapStateToProps = state =>{
     return{
-        clickedBlock : state.mainPage.clickedBlock,
+        clickedBlock : state.mainPage.present.clickedBlock,
     }
 }
 export default connect(mapStateToProps,{updateBlockValue,updateDropDown})(SideBarBlock);

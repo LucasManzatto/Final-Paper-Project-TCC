@@ -22,7 +22,7 @@ const ProjectArea = props =>{
 const mapStateToProps = state =>{
     return{
         //projects : projectsSelector(state)
-        project : state.mainPage.projects[0]
+        project : state.mainPage.present.projects[0]
     }
 }
 export default connect(mapStateToProps,{updateCurrentProject})(ProjectArea);

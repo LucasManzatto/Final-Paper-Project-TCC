@@ -24,8 +24,8 @@ export default function reducer(state = initialState,action){
     switch(action.type){
         default:
             return state;
-        case consts.LOGIN:
-            return initialStateLogged;
+        // case consts.LOGIN:
+        //     return initialStateLogged;
         case consts.UPDATE_BLOCK:
             const {key,value,id} = action.payload;
             newState = update(state,{
@@ -34,59 +34,55 @@ export default function reducer(state = initialState,action){
                     [currentProject] : {
                         blocks : {
                             [id]: {
-                                [key]: {$set: value}
+                                [key]: {$set: value},
                             }
                         }
                     }
                 }
             });
             return newState;
+
+        case consts.BLOCK_UPDATED:
+            return updateBlock(action.payload.block.id,'updated',action.payload.updated);
+
         case consts.UPDATE_CURRENT_PROJECT:
-            newState = update(state, {
+            return update(state, {
               currentProject: {$set: action.payload},
               clickedBlock: {$set: {}}
             });
-            return newState;
+
         case consts.TRACK_LOCATION:
-            block = action.payload.block;
-            //newState = updateBlock(block.id,'position',action.payload.deltaPosition);
-            return updateBlock(block.id,'position',action.payload.deltaPosition);;
+            return updateBlock(action.payload.block.id,'position',action.payload.deltaPosition);
+
         case consts.BLOCK_CLICKED:
-            newState = update(state,{clickedBlock : {$set: action.payload}})
-            return newState;
-            //return {...state,clickedBlock : action.payload};
+            return update(state,{clickedBlock : {$set: action.payload}});
+
         case consts.PAUSE_BLOCK:
-            block = action.payload;
-            newState = updateBlock(block.id,'paused',!block.paused);
-            return newState;
+            return updateBlock(action.payload.block.id,'paused',!action.payload.block.paused);
+        case consts.SELECT_LINK:
+            return update(state,{
+                    selectedLink : {$set : action.payload}
+            })
         case consts.DELETE_LINK:
-            block = action.payload.block;
-            const link = action.payload.link;
-             const links = state.projects[currentProject].blocks[block.id].links.filter(item => item !== link);
-            // if(_.isEmpty(links)){
-            //     newState.projects[currentProject].blocks[block.id].links = links;
-            //     newState.projects[currentProject].blocks[block.id].linked = false;
-            // }
-            // else{
-            //     newState.projects[currentProject].blocks[block.id].links = links;
-            // }
-            // console.log(newState.projects[currentProject].blocks[block.id]);
-            // return newState;
-            return {...state,
-                        projects: {
-                            ...state.projects,
-                            [currentProject]: {
-                            ...state.projects[currentProject],
-                            blocks : {
-                                ...state.projects[currentProject].blocks,
-                                [block.id] :{
-                                    ...state.projects[currentProject].blocks[block.id],
-                                    links : links,
-                                    linked: false
-                                }
-                            }
+            block = state.projects[currentProject].blocks[state.selectedLink.id];
+            const linkPosition = state.selectedLink.linkPosition;
+            let linked = block.linked;
+            //Se o total de links menos 1 for igual a 0, quer dizer que o bloco não está mais linkado
+            if(block.links.length-1 === 0){
+                linked = false;
+            }
+            newState = update(state,{
+                projects : {
+                    [currentProject] : {
+                        blocks : {
+                            [block.id]: {
+                                links: arr => arr.filter(item => item != linkPosition),
+                                linked : {$set: linked}
                             }
                         }
                     }
+                }
+            });
+            return newState;
     }
 }

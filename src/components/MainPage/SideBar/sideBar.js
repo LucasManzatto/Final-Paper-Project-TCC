@@ -48,7 +48,7 @@ const SideBar = props =>{
 
 const mapStateToProps = state =>{
     return{
-        blocks : state.mainPage.projects[state.mainPage.currentProject].blocks,
+        blocks : state.mainPage.present.projects[state.mainPage.present.currentProject].blocks,
     }
 }
 export default connect(mapStateToProps,{addBlockToProject})(SideBar);

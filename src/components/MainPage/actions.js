@@ -8,12 +8,20 @@ export const trackLocation = payload => ({
     type:consts.TRACK_LOCATION,
     payload
 });
+export const blockUpdated = payload => ({
+    type:consts.BLOCK_UPDATED,
+    payload
+});
 export const deleteLink= payload => ({
     type:consts.DELETE_LINK,
     payload
 });
 export const blockClicked = payload => ({
     type:consts.BLOCK_CLICKED,
+    payload
+});
+export const selectLink = payload => ({
+    type:consts.SELECT_LINK,
     payload
 });
 

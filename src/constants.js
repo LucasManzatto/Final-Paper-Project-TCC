@@ -10,3 +10,5 @@ export const UPDATE_CURRENT_PROJECT = 'UPDATE_CURRENT_PROJECT';
 export const UPDATE_DATA = 'UPDATE_DATA';
 export const LOGIN = 'LOGIN';
 export const DELETE_LINK = 'DELETE_LINK';
+export const BLOCK_UPDATED = 'BLOCK_UPDATED';
+export const SELECT_LINK = 'SELECT_LINK';
