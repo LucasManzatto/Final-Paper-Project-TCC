@@ -39,7 +39,7 @@ const SideBar = props =>{
             <List
                 component="nav"
                 subheader={<ListSubheader component="div">Blocks</ListSubheader>}
-                >
+            >
                 {ItemList}
             </List>
         </Paper>

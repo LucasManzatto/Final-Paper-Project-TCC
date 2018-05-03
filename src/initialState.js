@@ -29,7 +29,7 @@ export const initialState ={
                     paused : false,
                     linked: false,
                     updated: false,
-                    binary : [1,0,1,0,1,0],
+                    binary : [1,0,1,0],
                     neededLinks : 0
                 },
                 1:{
@@ -48,8 +48,6 @@ export const initialState ={
                     id:2,
                     name: 'BPSK',
                     links: [0,1],
-                    carrierWave : 1,
-                    source :0,
                     type : 'bpsk',
                     position : {x:200, y: 120},
                     paused : false,

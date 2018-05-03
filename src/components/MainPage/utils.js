@@ -30,8 +30,8 @@ export const createSineArray = (totalTime,frequency,amplitude) =>{
     const angularFrequency =2*Math.PI*frequency;
     for(let i=0;i<totalTime;i++){
       let currentTime = (i / totalTime);
-      let xAxis =  angularFrequency * currentTime;
-      data[i] = amplitude * Math.sin(xAxis);
+      let wt =  angularFrequency * currentTime;
+      data[i] = amplitude * Math.sin(wt);
     }
     return data;
 }
@@ -46,18 +46,56 @@ export const createBinaryArray = (binaryArray,totalTime) =>{
       }});
       return binaryAux;
   }
+  export const createQPSKBinaryArray = (binaryArray,totalTime) =>{
+        const size = totalTime/binaryArray.length;
+        let index=0;
+        let binaryAux = [];
+        let item;
+        for(item in binaryArray){
+            if(!((parseInt(item) + 1) === binaryArray.length)){
+                for(let i =0 ; i<size/2; i++){
+                    binaryAux[index++] = binaryArray[item];
+                    binaryAux[index++] = binaryArray[parseInt(item) + 1];
+                }
+            }
+        }
+        return binaryAux;
+    }
+    // export const createBpskArray=(binaryArray,totalTime,frequency,amplitude)=>{
+    //         let data=[];
+    //         const angularFrequency =2*Math.PI*frequency;
+    //         for(let i=0;i<totalTime-400;i++){
+    //             let currentTime = (i / totalTime);
+    //             let wt =  angularFrequency * currentTime;
+    //             if(binaryArray[i] === 0 && binaryArray[i+400] === 0){
+    //                 data[i] = amplitude*Math.sin(wt + 45);
+    //             }
+    //             else if(binaryArray[i] === 0 && binaryArray[i+400] === 1){
+    //
+    //                 data[i] = amplitude*Math.sin(wt + 135);
+    //             }
+    //             if(binaryArray[i] === 1 && binaryArray[i+400] === 0){
+    //                 data[i] =amplitude*Math.sin(wt - 45);
+    //             }
+    //             else if(binaryArray[i] === 1 && binaryArray[i+400] === 1){
+    //                 data[i] = amplitude*Math.sin(wt - 135);
+    //             }
+    //         }
+    //         return data;
+    //   }
 
 export const createBpskArray=(binaryArray,totalTime,frequency,amplitude)=>{
         let data=[];
+        let dataSine = []
         const angularFrequency =2*Math.PI*frequency;
         for(let i=0;i<totalTime;i++){
             let currentTime = (i / totalTime);
-            let xAxis =  angularFrequency * currentTime;
+            let wt =  angularFrequency * currentTime;
             if(binaryArray[i] === 0){
-                data[i] = -amplitude*Math.cos(xAxis);
+                data[i] = -amplitude*Math.cos(wt);
             }
             else{
-                data[i] = amplitude*Math.cos(xAxis);
+                data[i] = amplitude*Math.cos(wt);
             }
         }
         return data;

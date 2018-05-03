@@ -11,7 +11,6 @@ import {notHidden} from '../utils';
 //redux
 import {connect} from 'react-redux';
 import * as actions from '../actions';
-//import {trackLocation,blockClicked,actions.updateBlockValue,actions.deleteLink,actions.blockUpdated,selectLink} from '../actions';
 
 const blockHeight = 100;
 const blockWidth = 160;
@@ -30,7 +29,6 @@ const iconStyle ={
 
 const Block = props =>{
     const component = new React.Component(props);
-    console.log(component.props);
     let offsetX,offsetY,projectTabOffset =0;
     let linkLine = [];
 
@@ -78,15 +76,9 @@ const Block = props =>{
             }
     }
     const onClickHandler = (value,key) =>{
-        const payload ={
-            value,
-            key,
-            id: component.props.block.id
-        }
-        component.props.updateBlockValue(payload);
+        component.props.updateBlockValue({value,key,id: component.props.block.id});
         component.props.blockUpdated({block: component.props.block,updated: true});
     }
-
 
     const handleDrag = (e,ui) => {
         const {block,trackLocation} = component.props;
@@ -96,11 +88,7 @@ const Block = props =>{
             x: x + ui.deltaX,
             y: y + ui.deltaY
         };
-        const payload = {
-            block,
-            deltaPosition
-        };
-        trackLocation(payload);
+        trackLocation({block,deltaPosition});
     }
 
     const handleClick = () =>{

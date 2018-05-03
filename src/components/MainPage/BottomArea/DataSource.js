@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
-import {createSineArray,createAwgnArray,createBpskArray,createBinaryArray} from '../utils';
+import {createSineArray,createAwgnArray,createBpskArray,createBinaryArray,createQPSKBinaryArray} from '../utils';
 import {blockUpdated} from '../actions';
 
 class DataSource extends React.Component {
