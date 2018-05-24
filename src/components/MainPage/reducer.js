@@ -28,19 +28,25 @@ export default function reducer(state = initialState,action){
         //     return initialStateLogged;
         case consts.UPDATE_BLOCK:
             const {key,value,id} = action.payload;
-            newState = update(state,{
-                amplitude : {$set: value},
-                projects : {
-                    [currentProject] : {
-                        blocks : {
-                            [id]: {
-                                [key]: {$set: value},
+            if(value <= 0){
+                return state;
+            }
+
+            else{
+                newState = update(state,{
+                    [key]: {$set: value},
+                    projects : {
+                        [currentProject] : {
+                            blocks : {
+                                [id]: {
+                                    [key]: {$set: value},
+                                }
                             }
                         }
                     }
-                }
-            });
-            return newState;
+                });
+                return newState;
+            }
 
         case consts.BLOCK_UPDATED:
             return updateBlock(action.payload.block.id,'updated',action.payload.updated);
@@ -67,8 +73,9 @@ export default function reducer(state = initialState,action){
             block = state.projects[currentProject].blocks[state.selectedLink.id];
             const linkPosition = state.selectedLink.linkPosition;
             let linked = block.linked;
+            //O block deve ter linked=false quando o numero de links for menor que o numero de links necessarios
             //Se o total de links menos 1 for igual a 0, quer dizer que o bloco não está mais linkado
-            if(block.links.length-1 === 0){
+            if(block.links.length-1 < block.neededLinks){
                 linked = false;
             }
             newState = update(state,{

@@ -16,8 +16,11 @@ const style={
 
 const BottomArea = props =>{
     const renderBlockCards = _.map(props.blocks, block =>{
+        if ('amplitude' in block){
+
+        }
         //Se o total de link for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
-        if(block.neededLinks !=0 && !block.linked ){
+        if(block.neededLinks !=0 && !block.linked){
             return;
         }
         return(
@@ -29,7 +32,7 @@ const BottomArea = props =>{
                         </Button>
                     </Col>
                     <Col xs={6}>
-                        <ExpandBlockCard block={block} amplitude={props.amplitude}/>
+                        <ExpandBlockCard block={block}/>
                     </Col>
                 </Row>
                 <BlockCard block={block} amplitude={props.amplitude} key={block.id}/>
@@ -39,7 +42,7 @@ const BottomArea = props =>{
 
     return(
         <Paper style={style}>
-            <Row around="xs" middle="xs" style={style}>
+            <Row start="xs" middle="xs" style={style}>
                 {renderBlockCards}
             </Row>
         </Paper>

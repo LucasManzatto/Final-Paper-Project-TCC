@@ -61,11 +61,17 @@ class DataSource extends React.Component {
                 dataY = createSineArray(resolution,block.frequency,block.amplitude);
                 break;
             case 'bpsk':
+                if(block.links.length < block.neededLinks){
+                    break;
+                }
                 let binaryArray = createBinaryArray(blocks[block.links[0]].binary,resolution);
                 dataY= createBpskArray(binaryArray,resolution,blocks[block.links[1]].frequency,blocks[block.links[1]].amplitude);
                 break;
             case 'awgn':
                 let linkedBlock = this.props.blocks[block.links[0]];
+                if(linkedBlock.links.length < linkedBlock.neededLinks){
+                    break;
+                }
                 let awgnBinaryArray = createBinaryArray(blocks[linkedBlock.links[0]].binary,resolution);
                 let bpskArray= createBpskArray(awgnBinaryArray,resolution,blocks[linkedBlock.links[1]].frequency,blocks[linkedBlock.links[1]].amplitude);
                 dataY = createAwgnArray(bpskArray);
@@ -78,6 +84,7 @@ class DataSource extends React.Component {
 
     componentWillReceiveProps(nextProps){
         //Checa se houve mudança no bloco, se houve dá o update, senão continua a execução normal
+
         if(nextProps.block.name === 'Carrier Wave' && nextProps.block.updated){
             this.props.blockUpdated({block:this.props.blocks[2],updated:true})
             this.props.blockUpdated({block:this.props.blocks[3],updated:true})

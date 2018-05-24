@@ -16,9 +16,9 @@ export class Axis extends React.Component {
   }
 
   renderAxis() {
-    const { scale, axis, tickCount } = this.props
+    const { scale, axis, tickCount ,tickValues} = this.props
     const node = this.refs.axis
-    const axisFn = axis(scale).ticks(tickCount)
+    const axisFn = axis(scale).tickValues(tickValues)
     axisFn(select(node))
   }
 

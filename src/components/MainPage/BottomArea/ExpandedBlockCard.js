@@ -9,25 +9,39 @@ import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
+import { Row,Col} from 'react-flexbox-grid';
+import List, { ListItem, ListItemText } from 'material-ui/List';
+
+import Left from 'material-ui-icons/ChevronLeft';
+import Right from 'material-ui-icons/ChevronRight';
 
 import _ from 'lodash';
 
 import BlockCard from './BlockCard';
 
+//react redux
+import {connect} from 'react-redux';
+import * as actions from '../actions';
+
+
 const styles = {
-  appBar: {
-    position: 'relative',
-  },
-  flex: {
-    flex: 1,
-  },
+    iconStyle :{
+        position: 'relative',
+        top :'6px'
+    },
+    appBar: {
+        position: 'relative',
+    },
+    flex: {
+        flex: 1,
+    },
 };
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-class FullScreenDialog extends React.Component {
+class ExpandedBlockCard extends React.Component {
   state = {
     open: false,
   };
@@ -39,9 +53,13 @@ class FullScreenDialog extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+  onClickHandler = (block,value,key) =>{
+      this.props.updateBlockValue({value,key,id: block.id});
+      this.props.blockUpdated({block,updated: true});
+  }
 
   render() {
-    const { classes ,block } = this.props;
+    const { classes ,block, amplitude} = this.props;
     let haveProperties = false;
     if(!_.isNil(block.frequency)){
         haveProperties =true;
@@ -49,10 +67,14 @@ class FullScreenDialog extends React.Component {
     const showProperties = haveProperties ? (
         <div className={classes.flex}>
             <Typography color="inherit">
-              Frequency:{block.frequency}
+                {/* <Left onClick={(event,value)=> this.onClickHandler(block,block.frequency - 1,'frequency')} style={styles.iconStyle}/> */}
+                Frequency: {block.frequency}
+                {/* <Right onClick={(event,value)=> this.onClickHandler(block,block.frequency + 1,'frequency')} style={styles.iconStyle}/> */}
             </Typography>
             <Typography color="inherit">
-              Amplitude:{block.amplitude}
+                {/* <Left onClick={(event,value)=> this.onClickHandler(block,block.amplitude - 1,'amplitude')} style={styles.iconStyle}/> */}
+                Amplitude: {block.amplitude}
+                {/* <Right onClick={(event,value)=> this.onClickHandler(block,block.amplitude + 1,'amplitude')} style={styles.iconStyle}/> */}
             </Typography>
         </div>
     ) : (<div></div>)
@@ -76,10 +98,12 @@ class FullScreenDialog extends React.Component {
               {showProperties}
             </Toolbar>
           </AppBar>
-          <div style={{height:500 - (100*this.props.amplitude)}}>
+          <div style={{height:500 + (25*this.props.amplitude)}}>
           </div>
-            <BlockCard block={block}/>
-          <div style={{height:500 - (100*this.props.amplitude)}}>
+          <div style={{height:100 + (50*this.props.amplitude)}}>
+                <BlockCard block={block}/>
+          </div>
+          <div style={{height:500 + (25*this.props.amplitude)}}>
           </div>
         </Dialog>
       </div>
@@ -87,8 +111,12 @@ class FullScreenDialog extends React.Component {
   }
 }
 
-FullScreenDialog.propTypes = {
+ExpandedBlockCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
+const mapStateToProps = state =>{
+    return {amplitude : state.mainPage.present.amplitude}
+}
 
-export default withStyles(styles)(FullScreenDialog);
+let ExpandedBlockCardWithStyles = withStyles(styles)(ExpandedBlockCard);
+export default connect(mapStateToProps,actions)(ExpandedBlockCardWithStyles);

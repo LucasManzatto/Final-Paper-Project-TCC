@@ -11,7 +11,7 @@ import {updateCurrentProject} from '../actions';
 const ProjectArea = props =>{
     return(
         <div className='tabs'>
-            <Tabs  indicatorColor="primary" textColor="primary" value={0}>
+            <Tabs indicatorColor="primary" textColor="primary" value={0}>
                 <Tab label={props.project.name} key={props.project.id} value={props.project.id} />
             </Tabs>
             <ProjectTab key="0" blocks={props.project.blocks}/>

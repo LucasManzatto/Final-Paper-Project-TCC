@@ -6,12 +6,12 @@ import { scaleLinear } from 'd3-scale'
 import {axisRight } from 'd3-axis'
 import { Axis } from './axis'
 import DataSource from './DataSource';
-import { Line } from './Line'
+import {Line} from './Line';
 import {findMinMax} from '../utils';
 
 const BlockCard = props =>{
     const component = new React.Component(props);
-    let tickCount =2;
+    let tickValues;
     let paddingxAxis = 30;
     let paddingyAxis =20;
 
@@ -36,6 +36,21 @@ const BlockCard = props =>{
                         const yScale = scaleLinear()
                         .domain([minY.toFixed(2), maxY.toFixed(2)])
                         .range([height - paddingyAxis, paddingyAxis])
+
+                        let yScaleAxis;
+                        if(block.id===0){
+                            yScaleAxis = scaleLinear()
+                            .domain([0, 1])
+                            .range([height - paddingyAxis, paddingyAxis])
+                            tickValues= [-1,0,1];
+                        }
+                        else{
+                            yScaleAxis = scaleLinear()
+                            .domain([-component.props.amplitude/2, component.props.amplitude/2])
+                            .range([height - paddingyAxis, paddingyAxis])
+                            tickValues= [-component.props.amplitude/2,0,component.props.amplitude/2];
+                        }
+
                         return (
                             <g>
                                 <Line
@@ -45,8 +60,8 @@ const BlockCard = props =>{
                                 />
                                 <Axis
                                     axis={axisRight}
-                                    tickCount={tickCount}
-                                    scale={yScale}
+                                    tickValues={tickValues}
+                                    scale={yScaleAxis}
                                 />
                             </g>
                         )

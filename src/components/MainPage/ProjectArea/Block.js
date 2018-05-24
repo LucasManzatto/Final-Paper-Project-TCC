@@ -27,13 +27,20 @@ const iconStyle ={
     top :'6px'
 }
 
-const Block = props =>{
-    const component = new React.Component(props);
-    let offsetX,offsetY,projectTabOffset =0;
-    let linkLine = [];
+class Block extends React.Component{
 
-    const renderLines = () => {
-        let {block,mainPage,selectLink} = component.props;
+    constructor(props) {
+        super(props);
+        this.state = {
+            projectTabOffset :0,
+            offsetX:0,
+            offsetY:0,
+            blockPosition : props.block.position
+        }
+    }
+    renderLines = () => {
+        let {mainPage,selectLink,block} = this.props;
+        let {offsetX,offsetY,blockPosition} = this.state;
         return(
             block.links.map(linkPosition => {
                 let linkBlock = mainPage.present.projects[mainPage.present.currentProject].blocks[linkPosition];
@@ -42,10 +49,10 @@ const Block = props =>{
                     borderStyle="dashed";
                 }
                 return(
-                    <div key={linkPosition}  onClick={event => selectLink({id: block.id,linkPosition})}>
+                    <div key={linkPosition} onClick={event => selectLink({id: block.id,linkPosition})}>
                         <Line borderWidth={4} borderStyle={borderStyle} borderColor="black" zIndex={1}
-                            x0={block.position.x + blockWidth/2 + offsetX}
-                            y0={block.position.y + blockHeight/2 +offsetY}
+                            x0={blockPosition.x + blockWidth/2 + offsetX}
+                            y0={blockPosition.y + blockHeight/2 +offsetY}
                             x1={linkBlock.position.x + blockWidth/2+ offsetX}
                             y1={linkBlock.position.y + blockHeight/2 + offsetY}
                         />
@@ -54,7 +61,7 @@ const Block = props =>{
             })
         )
     }
-    const showProperties = (value,key)=>{
+    showProperties = (value,key)=>{
             if(key === 'binary'){
                 return (
                     <div key={key}>
@@ -68,61 +75,82 @@ const Block = props =>{
                 return (
                     <div key={key}>
                         <b>{_.capitalize(key)}:</b>
-                        <Left onClick={(event,value)=> onClickHandler(--component.props.block[key],key)} style={iconStyle}/>
+                        <Left onClick={(event,value)=> this.onClickHandler(this.props.block[key] - 1,key)} style={iconStyle}/>
                         {value}
-                        <Right onClick={(event,value)=> onClickHandler(++component.props.block[key],key)} style={iconStyle}/>
+                        <Right onClick={(event,value)=> this.onClickHandler(this.props.block[key] + 1,key)} style={iconStyle}/>
                     </div>
                 );
             }
     }
-    const onClickHandler = (value,key) =>{
-        component.props.updateBlockValue({value,key,id: component.props.block.id});
-        component.props.blockUpdated({block: component.props.block,updated: true});
+    onClickHandler = (value,key) =>{
+        this.props.updateBlockValue({value,key,id: this.props.block.id});
+        this.props.blockUpdated({block: this.props.block,updated: true});
     }
 
-    const handleDrag = (e,ui) => {
-        const {block,trackLocation} = component.props;
-        handleClick();
-        const {x, y} = block.position;
+    handleDrag = (e,ui) => {
+        this.handleClick();
+        const {x, y} = this.state.blockPosition;
         const deltaPosition ={
             x: x + ui.deltaX,
             y: y + ui.deltaY
         };
-        trackLocation({block,deltaPosition});
+        this.setState({
+            blockPosition : deltaPosition
+        })
+        this.props.trackLocation({block: this.props.block,deltaPosition});
     }
 
-    const handleClick = () =>{
-        if(component.props.block !== component.props.mainPage.present.clickedBlock){
-            component.props.blockClicked(component.props.block);
+    handleClick = () =>{
+        if(this.props.block !== this.props.mainPage.present.clickedBlock){
+            this.props.blockClicked(this.props.block);
         }
     }
-
-    component.componentDidMount = () =>{
-        component.props.blockClicked(component.props.block);
-        projectTabOffset = document.getElementsByClassName('projectTab')[0].getBoundingClientRect();
-        offsetX = window.pageXOffset + projectTabOffset.left;
-        offsetY = window.pageYOffset + projectTabOffset.top;
+    componentWillReceiveProps = nextProps =>{
+        this.calculateOffset();
     }
 
-    component.render = () =>{
-        const {block} = component.props;
-        const {x, y} = block.position;
-        linkLine = [];
-        if(block.linked){
-            linkLine = renderLines();
+    componentDidMount = () =>{
+        this.props.blockClicked(this.props.block);
+        this.calculateOffset();
+    }
+    calculateOffset = () =>{
+        let projectTabOffset = document.getElementsByClassName('projectTab')[0].getBoundingClientRect();
+        let offsetX = window.pageXOffset + projectTabOffset.left;
+        let offsetY = window.pageYOffset + projectTabOffset.top;
+        this.setState({
+            projectTabOffset,
+            offsetX,offsetY
+        })
+    }
+    getBounds = () =>{
+        return {left: 0,top: 0,right:this.state.projectTabOffset.width - blockWidth,bottom:this.state.projectTabOffset.height - blockHeight}
+    }
+    getPosition = bounds =>{
+        let position = {x: this.state.blockPosition.x, y: this.state.blockPosition.y};
+        if(position.x > bounds.right){
+            position.x = bounds.right;
         }
+        if(position.y > bounds.bottom){
+            position.y = bounds.bottom
+        }
+        return position
+    }
+
+    render = () =>{
+        const {block,dimensions} = this.props;
+        const bounds=this.getBounds();
+        const position = this.getPosition(bounds);
         return(
-            <Draggable bounds={{left: 0,top: 0,right:projectTabOffset.width - blockWidth,bottom:projectTabOffset.height - blockHeight}} onDrag={handleDrag} defaultPosition={{x, y}}>
-                <div style={blockStyle} onClick={handleClick}>
+            <Draggable grid={[10, 10]} bounds={bounds} onDrag={this.handleDrag} position={position}>
+                <div style={blockStyle} onClick={this.handleClick}>
                     <div style={{textAlign: 'center', fontWeight: 'bold'}}>{block.name}</div>
-                    {_.map(block,showProperties)}
+                    {_.map(block,this.showProperties)}
                     {/* <FlatButton label="Link" primary={true}></FlatButton> */}
-                    {linkLine}
+                    {!_.isNil(block.links) ? this.renderLines() : []}
                 </div>
             </Draggable>
         );
     }
-    return component;
 }
 
 

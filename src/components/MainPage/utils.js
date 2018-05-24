@@ -86,7 +86,6 @@ export const createBinaryArray = (binaryArray,totalTime) =>{
 
 export const createBpskArray=(binaryArray,totalTime,frequency,amplitude)=>{
         let data=[];
-        let dataSine = []
         const angularFrequency =2*Math.PI*frequency;
         for(let i=0;i<totalTime;i++){
             let currentTime = (i / totalTime);
@@ -123,7 +122,8 @@ export const notHidden = key =>{
    && key !== "bpsk"
    && key !== "links"
    && key !== "neededLinks"
-    && key !== "updated"
+   && key !== "updated"
+   && key !== "description"
   ){
       return true;
   }
