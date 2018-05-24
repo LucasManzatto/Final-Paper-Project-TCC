@@ -35,7 +35,6 @@ class Block extends React.Component{
             projectTabOffset :0,
             offsetX:0,
             offsetY:0,
-            blockPosition : props.block.position
         }
     }
     renderLines = () => {
@@ -51,8 +50,8 @@ class Block extends React.Component{
                 return(
                     <div key={linkPosition} onClick={event => selectLink({id: block.id,linkPosition})}>
                         <Line borderWidth={4} borderStyle={borderStyle} borderColor="black" zIndex={1}
-                            x0={blockPosition.x + blockWidth/2 + offsetX}
-                            y0={blockPosition.y + blockHeight/2 +offsetY}
+                            x0={block.position.x + blockWidth/2 + offsetX}
+                            y0={block.position.y + blockHeight/2 +offsetY}
                             x1={linkBlock.position.x + blockWidth/2+ offsetX}
                             y1={linkBlock.position.y + blockHeight/2 + offsetY}
                         />
@@ -89,14 +88,11 @@ class Block extends React.Component{
 
     handleDrag = (e,ui) => {
         this.handleClick();
-        const {x, y} = this.state.blockPosition;
+        const {x, y} = this.props.block.position;
         const deltaPosition ={
             x: x + ui.deltaX,
             y: y + ui.deltaY
         };
-        this.setState({
-            blockPosition : deltaPosition
-        })
         this.props.trackLocation({block: this.props.block,deltaPosition});
     }
 
@@ -126,7 +122,7 @@ class Block extends React.Component{
         return {left: 0,top: 0,right:this.state.projectTabOffset.width - blockWidth,bottom:this.state.projectTabOffset.height - blockHeight}
     }
     getPosition = bounds =>{
-        let position = {x: this.state.blockPosition.x, y: this.state.blockPosition.y};
+        let position = {x: this.props.block.position.x, y: this.props.block.position.y};
         if(position.x > bounds.right){
             position.x = bounds.right;
         }

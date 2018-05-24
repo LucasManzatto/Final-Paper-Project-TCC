@@ -25,7 +25,7 @@ const BlockCard = props =>{
         }
         return(
             <svg height={height} width={width}>
-                <DataSource resolution={2400} block={block}>{
+                <DataSource resolution={1200} block={block}>{
                     (data) => {
                         //padding = props.block.amplitude;
                         const { minX, maxX, minY, maxY } = findMinMax(data);
