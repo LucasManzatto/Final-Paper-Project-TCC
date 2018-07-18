@@ -31,22 +31,7 @@ export default function reducer(state = initialState,action){
             if(value <= 0){
                 return state;
             }
-
-            else{
-                newState = update(state,{
-                    [key]: {$set: value},
-                    projects : {
-                        [currentProject] : {
-                            blocks : {
-                                [id]: {
-                                    [key]: {$set: value},
-                                }
-                            }
-                        }
-                    }
-                });
-                return newState;
-            }
+            return updateBlock(id,key,value);
 
         case consts.BLOCK_UPDATED:
             return updateBlock(action.payload.block.id,'updated',action.payload.updated);

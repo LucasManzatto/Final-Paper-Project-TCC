@@ -32,7 +32,7 @@ const BottomArea = props =>{
                         </Button>
                     </Col>
                     <Col xs={6}>
-                        <ExpandBlockCard block={block}/>
+                        <ExpandBlockCard block={block} amplitude={props.amplitude}/>
                     </Col>
                 </Row>
                 <BlockCard block={block} amplitude={props.amplitude} key={block.id}/>

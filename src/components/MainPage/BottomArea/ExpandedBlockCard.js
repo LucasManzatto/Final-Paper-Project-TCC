@@ -1,16 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import Dialog from 'material-ui/Dialog';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import IconButton from 'material-ui/IconButton';
-import Typography from 'material-ui/Typography';
-import CloseIcon from 'material-ui-icons/Close';
-import Slide from 'material-ui/transitions/Slide';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import Slide from '@material-ui/core/Slide';
+import Paper from '@material-ui/core/Paper';
+
 import { Row,Col} from 'react-flexbox-grid';
-import List, { ListItem, ListItemText } from 'material-ui/List';
+
 
 import Left from 'material-ui-icons/ChevronLeft';
 import Right from 'material-ui-icons/ChevronRight';
@@ -57,6 +63,12 @@ class ExpandedBlockCard extends React.Component {
       this.props.updateBlockValue({value,key,id: block.id});
       this.props.blockUpdated({block,updated: true});
   }
+  blackSpace = () =>{
+      return(
+          <div style={{height:'5%'}}>
+          </div>
+      )
+  }
 
   render() {
     const { classes ,block, amplitude} = this.props;
@@ -98,13 +110,15 @@ class ExpandedBlockCard extends React.Component {
               {showProperties}
             </Toolbar>
           </AppBar>
-          <div style={{height:500 + (25*this.props.amplitude)}}>
-          </div>
-          <div style={{height:100 + (50*this.props.amplitude)}}>
-                <BlockCard block={block}/>
-          </div>
-          <div style={{height:500 + (25*this.props.amplitude)}}>
-          </div>
+          <Paper style={{height:'90%'}}>
+              <Col xs="10" center="xs" style={{height:'100%',textAlign :'center'}}>
+                  {this.blackSpace}
+                  <div style={{height:'90%'}}>
+                      <BlockCard block={block} amplitude={this.props.amplitude} key={block.id}/>
+                  </div>
+                  {this.blackSpace}
+              </Col>
+          </Paper>
         </Dialog>
       </div>
     );

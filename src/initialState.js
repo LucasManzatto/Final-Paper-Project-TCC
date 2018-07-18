@@ -30,7 +30,8 @@ export const initialState ={
                     linked: false,
                     updated: false,
                     binary : [1,0,1,0],
-                    neededLinks : 0
+                    neededLinks : 0,
+                    data: []
                 },
                 1:{
                     id:1,
@@ -43,6 +44,7 @@ export const initialState ={
                     linked: false,
                     updated: false,
                     neededLinks : 0,
+                    data: [],
                     description: 'In telecommunications, a carrier wave, carrier signal, or just carrier, is a waveform (usually sinusoidal) that is modulated (modified) with an input signal for the purpose of conveying information'
                 },
                 2: {
@@ -55,6 +57,7 @@ export const initialState ={
                     linked: true,
                     updated: false,
                     neededLinks : 2,
+                    data: [],
                     description: 'Binary Phase Shift Keying (BPSK) is a two phase modulation scheme, where the 0’s and 1’s in a binary message are represented by two different phase states in the carrier signal: θ=0° for binary 1 and θ=180° for binary 0.'
                 },
                 3:{
@@ -67,6 +70,7 @@ export const initialState ={
                     linked: true,
                     updated: false,
                     neededLinks : 1,
+                    data: [],
                     description : 'Additive white Gaussian noise (AWGN) is a basic noise model used in Information theory to mimic the effect of many random processes that occur in nature.'
                 }
             }

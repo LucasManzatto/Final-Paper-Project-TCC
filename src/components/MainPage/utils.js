@@ -24,28 +24,6 @@ export const findMinMax = dataArray => {
 
   return {minX,maxX,minY,maxY};
 }
-
-export const createSineArray = (totalTime,frequency,amplitude) =>{
-    let data=[];
-    const angularFrequency =2*Math.PI*frequency;
-    for(let i=0;i<totalTime;i++){
-      let currentTime = (i / totalTime);
-      let wt =  angularFrequency * currentTime;
-      data[i] = amplitude * Math.sin(wt);
-    }
-    return data;
-}
-
-export const createBinaryArray = (binaryArray,totalTime) =>{
-      const size = totalTime/binaryArray.length;
-      let index=0;
-      let binaryAux = [];
-      binaryArray.forEach(item=>{
-          for(let i =0 ; i<size; i++){
-              binaryAux[index++] =item;
-      }});
-      return binaryAux;
-  }
   export const createQPSKBinaryArray = (binaryArray,totalTime) =>{
         const size = totalTime/binaryArray.length;
         let index=0;
@@ -84,30 +62,6 @@ export const createBinaryArray = (binaryArray,totalTime) =>{
     //         return data;
     //   }
 
-export const createBpskArray=(binaryArray,totalTime,frequency,amplitude)=>{
-        let data=[];
-        const angularFrequency =2*Math.PI*frequency;
-        for(let i=0;i<totalTime;i++){
-            let currentTime = (i / totalTime);
-            let wt =  angularFrequency * currentTime;
-            if(binaryArray[i] === 0){
-                data[i] = -amplitude*Math.cos(wt);
-            }
-            else{
-                data[i] = amplitude*Math.cos(wt);
-            }
-        }
-        return data;
-  }
-
-export const createAwgnArray=(linkedBlock) =>{
-        let awgnArray = [];
-        linkedBlock.forEach((item,index)=>{
-            awgnArray[index] = item + rnorm();
-        })
-        return awgnArray;
-  }
-
 export const notHidden = key =>{
   if(key !== "id"
    && key !== "position"
@@ -124,6 +78,7 @@ export const notHidden = key =>{
    && key !== "neededLinks"
    && key !== "updated"
    && key !== "description"
+   && key !== "data"
   ){
       return true;
   }
