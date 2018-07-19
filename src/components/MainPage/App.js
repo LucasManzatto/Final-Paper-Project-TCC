@@ -37,7 +37,7 @@ const App = props =>(
                 <SideBar/>
             </Col>
             <Col xs={7} className="text-center">
-                <Pie/>
+                <ProjectArea/>
             </Col>
             <Col xs={2}>
                 <SideBarBlock />

@@ -26,7 +26,7 @@ const BlockCard = props =>{
         //     data = <BinaryData width={width} height={height} resolution={1200} block={block}/>;
         // }
         if(block.name == "Carrier Wave"){
-            // data = <CarrierWaveData width={width} height={height} resolution={1200} block={block}/>;
+            data = <CarrierWaveData width={width} height={height} resolution={1200} block={block}/>;
         }
         // if(block.name == "BPSK"){
         //     data = <BPSKData width={width} height={height} resolution={1200} block={block}/>;
@@ -35,10 +35,9 @@ const BlockCard = props =>{
         //     data = <AWGNData width={width} height={height} resolution={1200} block={block}/>;
         //}
         return(
-          <Pie/>
-            // <svg height={height} width={width}>
-            //     {data}
-            // </svg>
+            <svg height={height} width={width}>
+                {data}
+            </svg>
         );
     }
     return component;
