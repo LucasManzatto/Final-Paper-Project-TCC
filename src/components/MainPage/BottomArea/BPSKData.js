@@ -29,7 +29,6 @@ class BPSKData extends React.Component {
         const {block} = this.props;
         const {dataY} = this.state;
         let data = this.createFullArray(dataY);
-
         let new_dataY = _.clone(dataY);
         if(!block.paused){
             new_dataY = this.shiftArray(new_dataY);
@@ -94,7 +93,6 @@ class BPSKData extends React.Component {
         let paddingxAxis = 30;
         let paddingyAxis =20;
         const { minX, maxX, minY, maxY } = findMinMax(data);
-
         scale.xLine = scaleLinear()
         .domain([minX.toFixed(2), maxX.toFixed(2)])
         .range([paddingxAxis, width - paddingxAxis])

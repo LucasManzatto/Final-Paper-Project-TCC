@@ -13,6 +13,7 @@ import {deleteLink} from './actions';
 
 import {connect} from 'react-redux';
 import { ActionCreators } from 'redux-undo';
+import Pie from './BottomArea/Pie';
 
 const style={
     paddingTop: 10
@@ -36,7 +37,7 @@ const App = props =>(
                 <SideBar/>
             </Col>
             <Col xs={7} className="text-center">
-                <ProjectArea />
+                <Pie/>
             </Col>
             <Col xs={2}>
                 <SideBarBlock />

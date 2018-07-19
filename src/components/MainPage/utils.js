@@ -2,6 +2,28 @@ import _ from 'lodash';
 //AWGN +rnorm();
 import {rnorm} from 'randgen';
 
+export const findMinMax2 = (dataArray,resolution) => {
+  let minX = 0,
+      maxX = resolution-1,
+      minY = Number.MAX_SAFE_INTEGER,
+      maxY = Number.MIN_SAFE_INTEGER
+    // _.map(dataArray.x,data=>{
+    //     if (data < minX) {
+    //         minX = data;}
+    //     else if (data > maxX) {
+    //         maxX = data;
+    //     }
+    //   })
+    _.map(dataArray,data=>{
+      if (data < minY) {
+          minY = data;}
+      else if (data > maxY) {
+          maxY = data;
+      }
+    })
+
+  return {minX,maxX,minY,maxY};
+}
 export const findMinMax = dataArray => {
   let minX = Number.MAX_SAFE_INTEGER,
       maxX = Number.MIN_SAFE_INTEGER,
@@ -14,7 +36,6 @@ export const findMinMax = dataArray => {
         else if (data.x > maxX) {
             maxX = data.x;
         }
-
         if (data.y < minY) {
             minY = data.y;}
         else if (data.y > maxY) {

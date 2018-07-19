@@ -63,12 +63,6 @@ class ExpandedBlockCard extends React.Component {
       this.props.updateBlockValue({value,key,id: block.id});
       this.props.blockUpdated({block,updated: true});
   }
-  blackSpace = () =>{
-      return(
-          <div style={{height:'5%'}}>
-          </div>
-      )
-  }
 
   render() {
     const { classes ,block, amplitude} = this.props;
@@ -111,12 +105,14 @@ class ExpandedBlockCard extends React.Component {
             </Toolbar>
           </AppBar>
           <Paper style={{height:'90%'}}>
-              <Col xs="10" center="xs" style={{height:'100%',textAlign :'center'}}>
-                  {this.blackSpace}
+              <Col center="xs" style={{height:'100%',textAlign :'center'}}>
+                <div style={{height:'5%'}}>
+                </div>
                   <div style={{height:'90%'}}>
                       <BlockCard block={block} amplitude={this.props.amplitude} key={block.id}/>
                   </div>
-                  {this.blackSpace}
+                  <div style={{height:'5%'}}>
+                  </div>
               </Col>
           </Paper>
         </Dialog>
