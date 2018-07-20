@@ -1,145 +1,111 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import _ from 'lodash';
-import {blockUpdated,updateBlockValue} from '../actions';
+import React from "react";
+import { connect } from "react-redux";
+import _ from "lodash";
+import { blockUpdated, updateBlockValue } from "../actions";
 
-import { scaleLinear } from 'd3-scale'
-import {axisRight } from 'd3-axis'
-import { Axis } from './axis'
-import {Line} from './Line';
-import {findMinMax} from '../utils';
+import { scaleLinear } from "d3-scale";
+import { axisRight } from "d3-axis";
+import { Axis } from "./axis";
+import { Line } from "./Line";
+import { findMinMax, shiftArray, createTimeArray, getScales } from "../utils";
 
 class BPSKData extends React.Component {
+  constructor(props) {
+    super(props);
+    this.updateData = this.updateData.bind(this);
+    const blockLink1 = props.blocks[props.block.links[0]];
+    const blockLink2 = props.blocks[props.block.links[1]];
+    let data = this.createDataArray(
+      blockLink1.data,
+      props.resolution,
+      blockLink2
+    );
+    props.updateBlockValue({ id: props.block.id, key: "data", value: data });
+    this.state = {
+      data,
+      blockLink2
+    };
+  }
 
-    constructor(props) {
-        super(props)
-        this.updateData = this.updateData.bind(this);
-        const dataLink1 = props.blocks[props.block.links[0]].data;
-        const blockLink2 = props.blocks[props.block.links[1]];
-        let dataY = this.createDataArray(dataLink1,props.resolution,blockLink2.frequency,blockLink2.amplitude);
-        props.updateBlockValue({id: props.block.id,key:'data',value:dataY});
-        this.state = {
-          data: [],
-          dataY,
-          blockLink2
-        }
+  updateData() {
+    const { block } = this.props;
+    const { data } = this.state;
+    let new_data = _.clone(data);
+    if (!block.paused) {
+      new_data = shiftArray(new_data);
     }
-
-    updateData() {
-        const {block} = this.props;
-        const {dataY} = this.state;
-        let data = this.createFullArray(dataY);
-        let new_dataY = _.clone(dataY);
-        if(!block.paused){
-            new_dataY = this.shiftArray(new_dataY);
-        }
-        this.setState({
-            data,
-            dataY: new_dataY
-            }, () =>{
-                window.requestAnimationFrame(this.updateData);
-            });
-        }
-
-        //tira o primeiro elemento e coloca no final do array;
-    shiftArray(array){
-      let item = array.shift();
-      array.push(item);
-      return array;
-    }
-    createFullArray(array){
-      let data=[];
-      array.forEach((item,index)=>{
-          data.push({
-              x:index,
-              y: item
-          });
-      })
-      return data;
-    }
-
-    createDataArray=(binaryArray,totalTime,frequency,amplitude)=>{
-            let data=[];
-            const angularFrequency =2*Math.PI*frequency;
-            for(let i=0;i<totalTime;i++){
-                let currentTime = (i / totalTime);
-                let wt =  angularFrequency * currentTime;
-                if(binaryArray[i] === 0){
-                    data[i] = -amplitude*Math.cos(wt);
-                }
-                else{
-                    data[i] = amplitude*Math.cos(wt);
-                }
-            }
-            return data;
+    this.setState(
+      {
+        data: new_data
+      },
+      () => {
+        window.requestAnimationFrame(this.updateData);
       }
+    );
+  }
+  createDataArray = (binaryArray, totalTime, blockLink2) => {
+    let data = [];
+    let time = createTimeArray(totalTime);
+    const angularFrequency = 2 * Math.PI * blockLink2.frequency;
+    time.forEach((currentTime, index) => {
+      let wt = angularFrequency * currentTime;
+      data.push(binaryArray[index] * blockLink2.data[index]);
+    });
+    return data;
+  };
 
-    componentDidMount() {
-        this.animationId = window.requestAnimationFrame(this.updateData);
-    }
+  componentDidMount() {
+    this.animationId = window.requestAnimationFrame(this.updateData);
+  }
 
-    componentWillUnmount(){
-        window.cancelAnimationFrame(this.animationId);
+  componentWillUnmount() {
+    window.cancelAnimationFrame(this.animationId);
+  }
+  componentWillReceiveProps(nextProps) {
+    const blockLink1 = nextProps.blocks[nextProps.block.links[0]];
+    const nextProps_blockLink2 = nextProps.blocks[nextProps.block.links[1]];
+    if (nextProps_blockLink2 != this.state.blockLink2) {
+      let data = this.createDataArray(
+        blockLink1.data,
+        this.props.resolution,
+        nextProps_blockLink2
+      );
+      this.props.updateBlockValue({
+        id: this.props.block.id,
+        key: "data",
+        value: data
+      });
+      this.setState({ data, blockLink2: nextProps_blockLink2 });
     }
-    getScales = (data,height,width,block) =>{
-        const amplitude = this.state.blockLink2.amplitude;
-        let tickValues;
-        let scale ={
-            xLine :0,
-            yLine :0,
-            yAxis :0,
-            tickValues :0
-        };
-        let paddingxAxis = 30;
-        let paddingyAxis =20;
-        const { minX, maxX, minY, maxY } = findMinMax(data);
-        scale.xLine = scaleLinear()
-        .domain([minX.toFixed(2), maxX.toFixed(2)])
-        .range([paddingxAxis, width - paddingxAxis])
-
-        scale.yLine = scaleLinear()
-        .domain([minY.toFixed(2), maxY.toFixed(2)])
-        .range([height - paddingyAxis, paddingyAxis])
-
-        //Binary Block
-        if(block.id===0){
-            scale.yAxis = scaleLinear()
-            .domain([0, 1])
-            .range([height - paddingyAxis, paddingyAxis])
-            scale.tickValues= [-1,0,1];
-        }
-        else{
-            scale.yAxis = scaleLinear()
-            .domain([-amplitude/2, amplitude/2])
-            .range([height - paddingyAxis, paddingyAxis])
-            scale.tickValues= [-amplitude/2,0,amplitude/2];
-        }
-        return scale;
-    }
-
-    render() {
-        const {height,width,block} = this.props;
-        const {data} = this.state;
-        const scale = this.getScales(data,height,width,block);
-        return (
-            <g>
-                <Line
-                  xScale={scale.xLine}
-                  yScale={scale.yLine}
-                  data={data}
-                />
-                <Axis
-                    axis={axisRight}
-                    tickValues={scale.tickValues}
-                    scale={scale.yAxis}
-                />
-            </g>
-        )
-    }
-    }
-const mapStateToProps = state =>{
-    return {
-        blocks: state.mainPage.present.projects[0].blocks
-    }
+  }
+  render() {
+    const { height, width, block } = this.props;
+    const { data } = this.state;
+    const scale = getScales(
+      data,
+      { height, width },
+      block,
+      this.props.resolution,
+      this.state.blockLink2.amplitude
+    );
+    return (
+      <g>
+        <Line xScale={scale.xLine} yScale={scale.yLine} data={data} />
+        <Axis
+          axis={axisRight}
+          tickValues={scale.tickValues}
+          scale={scale.yAxis}
+        />
+      </g>
+    );
+  }
 }
-export default connect(mapStateToProps,{blockUpdated,updateBlockValue})(BPSKData)
+const mapStateToProps = state => {
+  return {
+    blocks: state.mainPage.present.projects[0].blocks
+  };
+};
+export default connect(
+  mapStateToProps,
+  { blockUpdated, updateBlockValue }
+)(BPSKData);

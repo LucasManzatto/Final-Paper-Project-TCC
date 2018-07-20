@@ -1,43 +1,34 @@
-import React from 'react'
-import { line, curveLinear} from 'd3-shape'
-import _ from 'lodash'
+import React from "react";
+import { line, curveLinear } from "d3-shape";
 //import simplify from 'simplify-js'
 
 export const Line = props => {
-  const { xScale, yScale, data } = props
-  let new_data;
-  // const createFullArray = array =>{
-  //   let data=[];
-  //   array.forEach((item,index)=>{
-  //       data.push({
-  //           x:index,
-  //           y: item
-  //       });
-  //   })
-  //   return data;
-  // }
-  // const fullArray = createFullArray(data);
+  const { xScale, yScale, data } = props;
+
   if (!data.length) {
     return null;
   }
-  data.x.forEach(data =>{
-      new_data.x = xScale(data);
-  })
-  data.y.forEach(data =>{
-      new_data.y = yScale(data);
-  })
+  const createFullArray = data => {
+    let new_data = [];
+    data.forEach((item, index) => {
+      new_data.push({ x: index, y: item });
+    });
+    return new_data;
+  };
+  let fullData = createFullArray(data);
+  fullData.forEach(data => {
+    data.x = xScale(data.x);
+    data.y = yScale(data.y);
+  });
 
   const lineFunction = line()
     .curve(curveLinear)
     .x(d => d.x)
-    .y(d => d.y)
+    .y(d => d.y);
+  //onst path = lineFunction(simplify(data));
+  const path = lineFunction(fullData);
 
-  //const path = lineFunction(simplify(data));
-  const path = lineFunction(new_data);
   return (
-    <path
-      d={path}
-      style={{ stroke: 'blue', strokeWidth: 3, fill: 'none' }}
-    />
-  )
-}
+    <path d={path} style={{ stroke: "blue", strokeWidth: 3, fill: "none" }} />
+  );
+};
