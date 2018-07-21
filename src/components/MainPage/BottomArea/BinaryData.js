@@ -7,7 +7,7 @@ import { scaleLinear } from "d3-scale";
 import { axisRight } from "d3-axis";
 import { Axis } from "./axis";
 import { Line } from "./Line";
-import { findMinMax, shiftArray } from "../utils";
+import { findMinMax, shiftArray ,getScales} from "../utils";
 
 class BinaryData extends React.Component {
   constructor(props) {
@@ -70,7 +70,7 @@ class BinaryData extends React.Component {
   render() {
     const { height, width, block } = this.props;
     const { data } = this.state;
-    const scale = this.getScales(data, { height, width }, block);
+    const scale = getScales(data, { height, width }, block,this.props.resolution);
     return (
       <g>
         <Line xScale={scale.xLine} yScale={scale.yLine} data={data} />

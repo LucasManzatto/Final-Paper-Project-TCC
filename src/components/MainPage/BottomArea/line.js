@@ -5,9 +5,15 @@ import { line, curveLinear } from "d3-shape";
 export const Line = props => {
   const { xScale, yScale, data } = props;
 
+  //if there's no data return
   if (!data.length) {
     return null;
   }
+  /**
+   * Create an xy array with the data to create the line path.
+   * @param  {Array} data Data of the block.
+   * @return {Array}      Return an xy array.
+   */
   const createFullArray = data => {
     let new_data = [];
     data.forEach((item, index) => {
@@ -16,6 +22,8 @@ export const Line = props => {
     return new_data;
   };
   let fullData = createFullArray(data);
+
+  //Scale the data to fit the SVG
   fullData.forEach(data => {
     data.x = xScale(data.x);
     data.y = yScale(data.y);
@@ -25,7 +33,7 @@ export const Line = props => {
     .curve(curveLinear)
     .x(d => d.x)
     .y(d => d.y);
-  //onst path = lineFunction(simplify(data));
+  //const path = lineFunction(simplify(data));
   const path = lineFunction(fullData);
 
   return (

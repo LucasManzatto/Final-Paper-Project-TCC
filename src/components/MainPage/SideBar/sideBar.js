@@ -2,10 +2,13 @@ import React from "react";
 
 //Material
 //import {List, ListItem, makeSelectable} from 'material-ui/List';
-import List, { ListItem, ListItemText } from "material-ui/List";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from "material-ui/List/ListSubheader";
 // import {grey50,blue500} from 'material-ui/styles/colors';
-import Paper from "material-ui/Paper";
+import Paper from '@material-ui/core/Paper';
 
 import _ from "lodash";
 

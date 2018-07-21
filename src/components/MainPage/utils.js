@@ -5,10 +5,10 @@ import { scaleLinear } from "d3-scale";
 import { axisRight } from "d3-axis";
 
 /**
- * Find min and max
- * @param  {Array} dataArray  x axis of array
- * @param  {Integer} resolution Total time of the function
- * @return {Object}            Return the min and max
+ * Find min and max.
+ * @param  {Array} dataArray  x axis of array.
+ * @param  {Integer} resolution Total time of the function.
+ * @return {Object}            Return the min and max.
  */
 export const findMinMax = (dataArray, resolution) => {
   let minX = 0,
@@ -26,32 +26,39 @@ export const findMinMax = (dataArray, resolution) => {
 
   return { minX, maxX, minY, maxY };
 };
-//tira o primeiro elemento e coloca no final do array;
-export const shiftArray = array => {
-  let item = array.shift();
-  array.push(item);
-  return array;
+/**
+ * Shift the data array to make the movement.
+ * @param  {Array} data The data on a certain time.
+ * @return {Array}       The shifted data.
+ */
+export const shiftArray = data => {
+  let item = data.shift();
+  data.push(item);
+  return data;
 };
-
-export const createTimeArray = resolution => {
+/**
+ * Create an array with the total time of the function to draw the xy coordinates.
+ * @param  {Integer} totalTime Total time of the function.
+ * @return {Array}            Return the array from 0 to totalTime-1.
+ */
+export const createTimeArray = totalTime => {
   let time = [];
-  for (let i = 0; i < resolution; i++) {
-    time.push(i / resolution);
+  for (let i = 0; i < totalTime; i++) {
+    time.push(i / totalTime);
   }
   return time;
 };
 
 /**
- * getScales returns the x,y scale based on the data array to fit the graph
- * @param  {Array} data       description
- * @param  {Object} dimensions description
- * @param  {Object} block      description
- * @param  {Integer} resolution description
- * @param  {Integer} amplitude  description
- * @return {Object}            description
+ * getScales returns the x,y scale based on the data array to fit the graph.
+ * @param  {Array} data       Array to scale the y-line.
+ * @param  {Object} dimensions Has width and height properties.
+ * @param  {Object} block      Object to set tickValues.
+ * @param  {Integer} resolution Variable to scale the x-line.
+ * @param  {Integer} [amplitude]  Variable to set tickValues.
+ * @return {Object}            Return the scales.
  */
 export const getScales = (data, dimensions, block, resolution, amplitude) => {
-  let tickValues;
   let scale = {
     xLine: 0,
     yLine: 0,
@@ -84,9 +91,9 @@ export const getScales = (data, dimensions, block, resolution, amplitude) => {
   return scale;
 };
 /**
- * Hide all unwanted properties of the block
- * @param  {string} key The checked key
- * @return {boolean}     Return true or false
+ * Hide all unwanted properties of the block.
+ * @param  {string} key The checked key.
+ * @return {boolean}     Return true or false.
  */
 export const notHidden = key => {
   if (
@@ -110,4 +117,13 @@ export const notHidden = key => {
     return true;
   }
   return false;
+};
+/**
+ * The binary array uses -1 to 1 to match the BPSK equation, this change all -1
+ * to 1.
+ * @param  {Array} data The binary array.
+ * @return {Array}      Return the array with 0 and 1.
+ */
+export const valueToBinary = data => {
+  return data.map(number => (number === 1 ? 1 : 0));
 };

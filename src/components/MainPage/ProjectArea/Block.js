@@ -6,7 +6,7 @@ import Left from "material-ui-icons/ChevronLeft";
 import Right from "material-ui-icons/ChevronRight";
 import keydown from "react-keydown";
 
-import { notHidden } from "../utils";
+import { notHidden, valueToBinary } from "../utils";
 
 //redux
 import { connect } from "react-redux";
@@ -39,6 +39,9 @@ class Block extends React.Component {
   renderLines = () => {
     let { mainPage, selectLink, block } = this.props;
     let { offsetX, offsetY, blockPosition } = this.state;
+    if (!block.linked) {
+      return null;
+    }
     return block.links.map(linkPosition => {
       let linkBlock =
         mainPage.present.projects[mainPage.present.currentProject].blocks[
@@ -75,25 +78,29 @@ class Block extends React.Component {
       return (
         <div key={key}>
           <b>{_.capitalize(key)}:</b>
-          {value}
+          {valueToBinary(value)}
         </div>
       );
     }
     //Hide unwanted properties
     if (notHidden(key)) {
+      let sum = 1;
+      if (key === "frequency") {
+        sum = 6;
+      }
       return (
         <div key={key}>
           <b>{_.capitalize(key)}:</b>
           <Left
             onClick={(event, value) =>
-              this.onClickHandler(this.props.block[key] - 1, key)
+              this.onClickHandler(this.props.block[key] - sum, key)
             }
             style={iconStyle}
           />
           {value}
           <Right
             onClick={(event, value) =>
-              this.onClickHandler(this.props.block[key] + 1, key)
+              this.onClickHandler(this.props.block[key] + sum, key)
             }
             style={iconStyle}
           />

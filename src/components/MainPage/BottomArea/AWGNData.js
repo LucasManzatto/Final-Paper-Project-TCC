@@ -7,11 +7,19 @@ import { scaleLinear } from "d3-scale";
 import { axisRight } from "d3-axis";
 import { Axis } from "./axis";
 import { Line } from "./Line";
-import { findMinMax, shiftArray } from "../utils";
+import { findMinMax, shiftArray ,getScales} from "../utils";
 import { rnorm } from "randgen";
 
 class AWGNData extends React.Component {
   constructor(props) {
+    const dataCarrier = props.blocks[1].data;
+    const dataBPSK = props.blocks[2].data;
+    const binaryArrayDecoded = [];
+    dataBPSK.forEach((item, index) => {
+      if (item != dataCarrier[index]) {
+        console.log("number");
+      }
+    });
     super(props);
     this.updateData = this.updateData.bind(this);
     const blockLink1 = props.blocks[props.block.links[0]];
@@ -47,47 +55,11 @@ class AWGNData extends React.Component {
     });
     return awgnArray;
   };
-  getScales = (data, height, width, block) => {
-    const amplitude = this.props.blocks[this.state.blockLink1.links[1]]
-      .amplitude;
-    let tickValues;
-    let scale = {
-      xLine: 0,
-      yLine: 0,
-      yAxis: 0,
-      tickValues: 0
-    };
-    let paddingxAxis = 30;
-    let paddingyAxis = 20;
-    const { minX, maxX, minY, maxY } = findMinMax(data, this.props.resolution);
-
-    scale.xLine = scaleLinear()
-      .domain([minX.toFixed(2), maxX.toFixed(2)])
-      .range([paddingxAxis, width - paddingxAxis]);
-
-    scale.yLine = scaleLinear()
-      .domain([minY.toFixed(2), maxY.toFixed(2)])
-      .range([height - paddingyAxis, paddingyAxis]);
-
-    //Binary Block
-    if (block.id === 0) {
-      scale.yAxis = scaleLinear()
-        .domain([0, 1])
-        .range([height - paddingyAxis, paddingyAxis]);
-      scale.tickValues = [-1, 0, 1];
-    } else {
-      scale.yAxis = scaleLinear()
-        .domain([-amplitude / 2, amplitude / 2])
-        .range([height - paddingyAxis, paddingyAxis]);
-      scale.tickValues = [-amplitude / 2, 0, amplitude / 2];
-    }
-    return scale;
-  };
 
   render() {
-    const { height, width, block } = this.props;
-    const { data } = this.state;
-    const scale = this.getScales(data, height, width, block);
+    const { height, width, block ,blocks} = this.props;
+    const { data ,blockLink1} = this.state;
+    const scale = getScales(data, {height, width}, block,this.props.resolution, blocks[blockLink1.links[1]].amplitude);
     return (
       <g>
         <Line xScale={scale.xLine} yScale={scale.yLine} data={data} />
