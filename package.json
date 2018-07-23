@@ -21,6 +21,7 @@
     "lodash": "^4.17.10",
     "material-ui": "^1.0.0-beta.47",
     "material-ui-icons": "^1.0.0-beta.36",
+    "prop-types": "^15.6.2",
     "randgen": "^0.1.0",
     "react": "^16.4.1",
     "react-chartist": "^0.13.1",
