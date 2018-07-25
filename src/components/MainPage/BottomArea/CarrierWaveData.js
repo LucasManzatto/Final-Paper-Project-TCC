@@ -73,7 +73,7 @@ class CarrierWaveData extends React.Component {
 		const { resolution, block } = nextProps;
 		if (block.updated) {
 			let data = this.createDataArray(resolution, block.frequency, block.amplitude);
-			this.props.updateBlockValue({ id: block.id, key: "data", value: data });
+			this.props.updateBlockValue({ block: block, key: "data", value: data });
 			this.props.blockUpdated({ block, updated: false });
 			this.setState({ data });
 		}

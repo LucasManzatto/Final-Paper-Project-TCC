@@ -20,10 +20,13 @@ export const trackLocation = payload => {
 		payload
 	};
 };
-export const blockUpdated = payload => ({
-	type: consts.BLOCK_UPDATED,
-	payload
-});
+export const blockUpdated = payload => {
+	payload.block["updated"] = payload.updated;
+	return {
+		type: consts.BLOCK_UPDATED,
+		payload
+	};
+};
 export const deleteLink = payload => ({
 	type: consts.DELETE_LINK,
 	payload
@@ -45,7 +48,13 @@ export const addBlockToProject = payload => {
 	};
 };
 export const updateBlockValue = payload => {
-	payload.block[payload.key] = payload.value;
+	if (payload.key === "frequency" || payload.key === "amplitude") {
+		if (payload.value > 0) {
+			payload.block[payload.key] = payload.value;
+		}
+	} else {
+		payload.block[payload.key] = payload.value;
+	}
 	return {
 		type: consts.UPDATE_BLOCK,
 		payload

@@ -5,6 +5,9 @@ import { Line } from "react-lineto";
 import Left from "material-ui-icons/ChevronLeft";
 import Right from "material-ui-icons/ChevronRight";
 import PropTypes from "prop-types";
+import { Grid, Row, Col } from "react-flexbox-grid";
+import orange from "@material-ui/core/colors/orange";
+import Typography from "@material-ui/core/Typography";
 
 import { notHidden, valueToBinary } from "../utils";
 
@@ -13,7 +16,7 @@ import { connect } from "react-redux";
 import * as actions from "../actions";
 
 const blockHeight = 100;
-const blockWidth = 160;
+const blockWidth = 170;
 const blockStyle = {
 	height: blockHeight,
 	width: blockWidth,
@@ -22,9 +25,32 @@ const blockStyle = {
 	position: "absolute",
 	zIndex: 2
 };
+const blockStyleLeft = {
+	height: 33,
+	width: 20,
+	color: orange,
+	borderTop: "1px solid black",
+	//	borderRight: "1px solid black",
+	borderLeft: "1px solid black",
+	borderBottom: "1px solid black",
+	backgroundColor: "#ff9100",
+	position: "absolute",
+	zIndex: 1
+};
+const blockStyleRight = {
+	height: 33,
+	width: 20,
+	borderTop: "1px solid black",
+	borderRight: "1px solid black",
+	//borderLeft: "1px solid black",
+	borderBottom: "1px solid black",
+	backgroundColor: "#2196f3",
+	position: "absolute",
+	zIndex: 1
+};
 const iconStyle = {
 	position: "relative",
-	top: "6px"
+	top: "7px"
 };
 
 class Block extends React.Component {
@@ -53,6 +79,7 @@ class Block extends React.Component {
 			) {
 				borderStyle = "dashed";
 			}
+
 			return (
 				<div key={linkPosition} onClick={event => selectLink({ id: block.id, linkPosition })}>
 					<Line
@@ -60,9 +87,9 @@ class Block extends React.Component {
 						borderStyle={borderStyle}
 						borderColor="black"
 						zIndex={1}
-						x0={block.position.x + blockWidth / 2 + offsetX}
+						x0={block.position.x + 5 + offsetX}
 						y0={block.position.y + blockHeight / 2 + offsetY}
-						x1={linkBlock.position.x + blockWidth / 2 + offsetX}
+						x1={linkBlock.position.x + 185 + offsetX}
 						y1={linkBlock.position.y + blockHeight / 2 + offsetY}
 					/>
 				</div>
@@ -72,10 +99,10 @@ class Block extends React.Component {
 	showProperties = (value, key) => {
 		if (key === "binary") {
 			return (
-				<div key={key}>
-					<b>{_.capitalize(key)}:</b>
+				<Typography key={key} variant="body1">
+					{_.capitalize(key)}:
 					{valueToBinary(value)}
-				</div>
+				</Typography>
 			);
 		}
 		//Hide unwanted properties
@@ -85,22 +112,22 @@ class Block extends React.Component {
 				sum = 6;
 			}
 			return (
-				<div key={key}>
-					<b>{_.capitalize(key)}:</b>
+				<Typography key={key} variant="body1">
+					{_.capitalize(key)}:
 					<Left
-						onClick={(event, value) => this.onClickHandler(this.props.block[key] - sum, key)}
+						onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] - sum, key)}
 						style={iconStyle}
 					/>
 					{value}
 					<Right
-						onClick={(event, value) => this.onClickHandler(this.props.block[key] + sum, key)}
+						onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] + sum, key)}
 						style={iconStyle}
 					/>
-				</div>
+				</Typography>
 			);
 		}
 	};
-	onClickHandler = (value, key) => {
+	updateBlockOnClick = (value, key) => {
 		this.props.updateBlockValue({ value, key, block: this.props.block });
 		this.props.blockUpdated({ block: this.props.block, updated: true });
 	};
@@ -167,18 +194,42 @@ class Block extends React.Component {
 		const { block } = this.props;
 		const bounds = this.getBounds();
 		const position = this.getPosition(bounds);
+		const offset = block.neededLinks === 0 ? 11 : 10;
 		return (
 			<Draggable
 				//grid={[10, 10]}
 				bounds={bounds}
 				onDrag={this.handleDrag}
 				position={position}>
-				<div style={blockStyle} onClick={this.handleClick}>
-					<div style={{ textAlign: "center", fontWeight: "bold" }}>{block.name}</div>
-					{_.map(block, this.showProperties)}
-					{/* <FlatButton label="Link" primary={true}></FlatButton> */}
-					{!_.isNil(block.links) ? this.renderLines() : []}
-				</div>
+				<Row
+					style={{ height: 100, width: 200, position: "absolute", zIndex: 2 }}
+					onClick={this.handleClick}>
+					<Col xs={12}>
+						<Row>
+							{block.neededLinks === 0 ? (
+								[]
+							) : (
+								<Col xs={1} style={{ height: 100 }}>
+									<Row style={{ height: 33, width: 20 }} />
+									<Row middle="xs" style={blockStyleLeft} onClick={this.handleClick} />
+									<Row style={{ height: 33, width: 20 }} />
+								</Col>
+							)}
+							<Col xsOffset={1} xs={10} style={blockStyle}>
+								<Typography variant="subheading" gutterBottom align="center">
+									<b>{block.name}</b>
+								</Typography>
+								{_.map(block, this.showProperties)}
+								{!_.isNil(block.links) ? this.renderLines() : []}
+							</Col>
+							<Col xsOffset={offset} xs={1} style={{ height: 100 }}>
+								<Row style={{ height: 33, width: 20 }} />
+								<Row middle="xs" style={blockStyleRight} onClick={this.handleClick} />
+								<Row style={{ height: 33, width: 20 }} />
+							</Col>
+						</Row>
+					</Col>
+				</Row>
 			</Draggable>
 		);
 	};

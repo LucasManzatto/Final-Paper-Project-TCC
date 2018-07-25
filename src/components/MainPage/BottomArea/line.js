@@ -36,5 +36,5 @@ export const Line = props => {
 	//const path = lineFunction(simplify(data));
 	const path = lineFunction(fullData);
 
-	return <path d={path} style={{ stroke: "blue", strokeWidth: 3, fill: "none" }} />;
+	return <path d={path} style={{ stroke: "#2196f3", strokeWidth: 3, fill: "none" }} />;
 };

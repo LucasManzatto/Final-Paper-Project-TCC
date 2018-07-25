@@ -14,12 +14,19 @@ class BPSKData extends React.Component {
 		super(props);
 		this.updateData = this.updateData.bind(this);
 		let data = [];
-		const blockLink1 = props.blocks[props.block.links[0]];
-		const blockLink2 = props.blocks[props.block.links[1]];
+		const blockLink1 = _.clone(props.blocks[props.block.links[0]]);
+		const blockLink2 = _.clone(props.blocks[props.block.links[1]]);
+		let a;
+		if (blockLink2.frequency === 12) {
+			a = 0;
+		} else {
+			a = 1;
+		}
 		data = this.createDataArray(blockLink1.data, props.resolution, blockLink2);
 		props.updateBlockValue({ block: props.block, key: "data", value: data });
 		this.state = {
 			data,
+			blockLink1,
 			blockLink2
 		};
 	}
@@ -61,15 +68,19 @@ class BPSKData extends React.Component {
 		window.cancelAnimationFrame(this.animationId);
 	}
 	componentWillReceiveProps(nextProps) {
-		const blockLink1 = nextProps.blocks[nextProps.block.links[0]];
-		const nextProps_blockLink2 = nextProps.blocks[nextProps.block.links[1]];
+		const nextProps_blockLink1 = _.clone(nextProps.blocks[nextProps.block.links[0]]);
+		const nextProps_blockLink2 = _.clone(nextProps.blocks[nextProps.block.links[1]]);
 		const differences = difference(nextProps_blockLink2, this.state.blockLink2);
 		if (differences.hasOwnProperty("paused")) return;
 		//If there is differences update the state
 		if (nextProps_blockLink2.data !== this.state.blockLink2.data) {
-			let data = this.createDataArray(blockLink1.data, this.props.resolution, nextProps_blockLink2);
+			let data = this.createDataArray(
+				nextProps_blockLink1.data,
+				this.props.resolution,
+				nextProps_blockLink2
+			);
 			this.props.updateBlockValue({
-				id: this.props.block.id,
+				block: this.props.block,
 				key: "data",
 				value: data
 			});

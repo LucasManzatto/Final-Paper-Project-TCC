@@ -1,7 +1,7 @@
 import React from "react";
 
 import Paper from "material-ui/Paper";
-import Button from "material-ui/Button";
+import Button from "@material-ui/core/Button";
 
 import { Row, Col } from "react-flexbox-grid";
 import BlockCard from "./BlockCard";
@@ -17,14 +17,17 @@ const style = {
 const BottomArea = props => {
 	const renderBlockCards = _.map(props.blocks, block => {
 		//Se o total de link for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
-		if (block.neededLinks !== 0 && !block.linked) {
+		if ((block.neededLinks !== 0 && !block.linked) || block.links < block.neededLinks) {
 			return;
 		}
 		return (
 			<Col xs={3} key={block.id} style={{ height: "100%", textAlign: "center", paddingBottom: 30 }}>
-				<Row start="xs">
+				<Row center="xs">
 					<Col xs={6}>
-						<Button color="primary" onClick={event => props.pauseBlock({ block })}>
+						<Button
+							variant="contained"
+							color="primary"
+							onClick={event => props.pauseBlock({ block })}>
 							{block.paused ? <div>Resume</div> : <div>Pause</div>}
 						</Button>
 					</Col>

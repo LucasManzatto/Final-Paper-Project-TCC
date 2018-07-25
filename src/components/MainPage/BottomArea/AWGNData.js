@@ -12,8 +12,8 @@ import { rnorm } from "randgen";
 
 class AWGNData extends React.Component {
 	constructor(props) {
-		const dataCarrier = props.blocks[1].data;
-		const dataBPSK = props.blocks[2].data;
+		const dataCarrier = _.clone(props.blocks[1].data);
+		const dataBPSK = _.clone(props.blocks[2].data);
 		dataBPSK.forEach((item, index) => {
 			if (item !== dataCarrier[index]) {
 			}
@@ -22,7 +22,7 @@ class AWGNData extends React.Component {
 		this.updateData = this.updateData.bind(this);
 		let blockLink1 = {};
 		if (props.blocks[props.block.links[0]] != null) {
-			blockLink1 = props.blocks[props.block.links[0]];
+			blockLink1 = _.clone(props.blocks[props.block.links[0]]);
 			let data = this.createDataArray(blockLink1.data);
 			props.updateBlockValue({ block: props.block, key: "data", value: data });
 			this.state = {
@@ -84,10 +84,10 @@ class AWGNData extends React.Component {
 		window.cancelAnimationFrame(this.animationId);
 	}
 	componentWillReceiveProps(nextProps) {
-		const nextProps_blockLink1 = nextProps.blocks[nextProps.block.links[0]];
+		const nextProps_blockLink1 = _.clone(nextProps.blocks[nextProps.block.links[0]]);
 		if (!nextProps_blockLink1.linked) {
 			this.props.updateBlockValue({
-				id: this.props.block.id,
+				block: this.props.block,
 				key: "linked",
 				value: false
 			});
@@ -95,7 +95,7 @@ class AWGNData extends React.Component {
 		if (nextProps_blockLink1.data !== this.state.blockLink1.data && nextProps_blockLink1.linked) {
 			let data = this.createDataArray(nextProps_blockLink1.data);
 			this.props.updateBlockValue({
-				id: this.props.block.id,
+				block: this.props.block,
 				key: "data",
 				value: data
 			});

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -17,26 +17,26 @@ const style = {
 
 const SideBarBlock = props => {
 	const renderRequiredLinks = props.clickedBlock.requiredLinks.map((link, index) => {
-		if (link === "None") {
-			return <p key={link}>{link}</p>;
-		}
-		return <p key={link}>{link} :</p>;
+		return link === "None" ? <Typography>{link}</Typography> : <Typography>{link} :</Typography>;
 	});
 	return (
 		<Paper style={{ height: "100%" }}>
-			<Typography variant="title" className="title" style={{ textAlign: "center" }}>
-				<b>{props.clickedBlock.name}</b>
+			<Typography variant="title" gutterBottom align="center">
+				{props.clickedBlock.name}
 			</Typography>
 			<List>
 				<ListItem>
 					<ListItemText
 						style={style}
 						primary={
-							<div>
-								<div>{props.clickedBlock.description}</div> <p />
-								<b>Required Links</b>
+							<Fragment>
+								<Typography variant="body1">{props.clickedBlock.description}</Typography>
+								<p />
+								<Typography variant="subheading" gutterBottom align="center">
+									<b>Required Links</b>
+								</Typography>
 								{renderRequiredLinks}
-							</div>
+							</Fragment>
 						}
 					/>
 				</ListItem>

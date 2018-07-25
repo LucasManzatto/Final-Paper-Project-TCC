@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Paper from "@material-ui/core/Paper";
@@ -14,12 +14,12 @@ const ProjectArea = props => {
 	let width = props.containerWidth;
 	let height = props.containerHeight;
 	return (
-		<div className="tabs">
+		<Fragment>
 			<Tabs indicatorColor="primary" textColor="primary" value={0}>
 				<Tab label={props.project.name} key={props.project.id} value={props.project.id} />
 			</Tabs>
 			<ProjectTab key="0" blocks={props.project.blocks} dimensions={{ width, height }} />
-		</div>
+		</Fragment>
 	);
 };
 

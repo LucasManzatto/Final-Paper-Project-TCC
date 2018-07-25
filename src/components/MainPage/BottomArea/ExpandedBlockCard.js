@@ -79,7 +79,7 @@ class ExpandedBlockCard extends React.Component {
 		);
 		return (
 			<div>
-				<Button onClick={this.handleClickOpen} color="primary">
+				<Button variant="contained" onClick={this.handleClickOpen} color="primary">
 					Expand
 				</Button>
 				<Dialog
@@ -87,7 +87,7 @@ class ExpandedBlockCard extends React.Component {
 					open={this.state.open}
 					onClose={this.handleClose}
 					TransitionComponent={Transition}>
-					<AppBar className={classes.appBar}>
+					<AppBar className={classes.appBar} color="primary">
 						<Toolbar>
 							<IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
 								<CloseIcon />
@@ -98,11 +98,11 @@ class ExpandedBlockCard extends React.Component {
 							{showProperties}
 						</Toolbar>
 					</AppBar>
-					<Paper style={{ height: "90%" }}>
+					<Paper style={{ height: "100%" }}>
 						<Col center="xs" style={{ height: "100%", textAlign: "center" }}>
 							<div style={{ height: "5%" }} />
 							<div style={{ height: "90%" }}>
-								<BlockCard block={block} amplitude={this.props.amplitude} key={block.id} />
+								<BlockCard block={block} key={block.id} />
 							</div>
 							<div style={{ height: "5%" }} />
 						</Col>
