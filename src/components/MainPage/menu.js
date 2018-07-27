@@ -8,13 +8,13 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { blue } from "@material-ui/core/colors";
+import { blue, white } from "@material-ui/core/colors";
 
 const theme = createMuiTheme({
   palette: {
     primary: blue,
     secondary: {
-      main: "#ff9100"
+      main: "#FFFFFF"
     }
   }
 });
@@ -24,7 +24,7 @@ const styles = {
     flexGrow: 1
   },
   flex: {
-    flex: 1
+    flexGrow: 1
   },
   menuButton: {
     marginLeft: -12,
