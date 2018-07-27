@@ -6,7 +6,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "material-ui/List/ListSubheader";
-import Typography from "@material-ui/core/Typography";
 // import {grey50,blue500} from 'material-ui/styles/colors';
 import Paper from "@material-ui/core/Paper";
 
@@ -23,35 +22,35 @@ import { addBlockToProject } from "../actions";
 //     color : grey50
 // }
 const style = {
-	height: "100%"
+  height: "100%"
 };
 
 const SideBar = props => {
-	const ItemList = _.map(props.blocks, block => {
-		const onClickHandler = () => {
-			props.addBlockToProject(block);
-		};
-		return (
-			<ListItem key={block.id} button onClick={onClickHandler}>
-				<ListItemText primary={block.name} />
-			</ListItem>
-		);
-	});
-	return (
-		<Paper style={style}>
-			<List component="nav" subheader={<ListSubheader component="div">Blocks</ListSubheader>}>
-				{ItemList}
-			</List>
-		</Paper>
-	);
+  const ItemList = _.map(props.blocks, block => {
+    const onClickHandler = () => {
+      props.addBlockToProject(block);
+    };
+    return (
+      <ListItem key={block.id} button onClick={onClickHandler}>
+        <ListItemText primary={block.name} />
+      </ListItem>
+    );
+  });
+  return (
+    <Paper style={style}>
+      <List component="nav" subheader={<ListSubheader component="div">Blocks</ListSubheader>}>
+        {ItemList}
+      </List>
+    </Paper>
+  );
 };
 
 const mapStateToProps = state => {
-	return {
-		blocks: state.mainPage.present.blocks
-	};
+  return {
+    blocks: state.mainPage.present.blocks
+  };
 };
 export default connect(
-	mapStateToProps,
-	{ addBlockToProject }
+  mapStateToProps,
+  { addBlockToProject }
 )(SideBar);

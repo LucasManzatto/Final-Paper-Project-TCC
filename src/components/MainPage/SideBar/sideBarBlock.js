@@ -14,13 +14,25 @@ import { updateBlockValue, updateDropDown } from "../actions";
 const style = {
 	fontWeight: "bold"
 };
+const ID = () => {
+	return (
+		"_" +
+		Math.random()
+			.toString(36)
+			.substr(2, 9)
+	);
+};
 
 const SideBarBlock = props => {
 	const renderRequiredLinks = props.clickedBlock.requiredLinks.map((link, index) => {
-		return link === "None" ? <Typography>{link}</Typography> : <Typography>{link} :</Typography>;
+		return link === "None" ? (
+			<Typography key={ID()}>{link}</Typography>
+		) : (
+			<Typography key={ID()}>{link} :</Typography>
+		);
 	});
 	return (
-		<Paper style={{ height: "100%" }}>
+		<Paper key={props.clickedBlock.id} style={{ height: "100%" }}>
 			<Typography variant="title" gutterBottom align="center">
 				{props.clickedBlock.name}
 			</Typography>

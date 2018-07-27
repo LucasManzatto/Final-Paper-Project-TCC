@@ -12,3 +12,5 @@ export const LOGIN = "LOGIN";
 export const DELETE_LINK = "DELETE_LINK";
 export const BLOCK_UPDATED = "BLOCK_UPDATED";
 export const SELECT_LINK = "SELECT_LINK";
+export const CREATE_LINK = "CREATE_LINK";
+export const BLOCKS_TO_LINK = "BLOCKS_TO_LINK";

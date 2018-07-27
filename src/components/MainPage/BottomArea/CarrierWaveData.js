@@ -50,12 +50,17 @@ class CarrierWaveData extends React.Component {
 	}
 
 	render() {
-		const { dimensions, block } = this.props;
+		const { dimensions, block, clickedBlock } = this.props;
 		const { data } = this.state;
 		const scale = getScales(data, dimensions, block, this.props.resolution, block.amplitude);
 		return (
 			<g>
-				<Line xScale={scale.xLine} yScale={scale.yLine} data={data} />
+				<Line
+					xScale={scale.xLine}
+					yScale={scale.yLine}
+					data={data}
+					focused={block === clickedBlock ? true : false}
+				/>
 				<Axis axis={axisRight} tickValues={scale.tickValues} scale={scale.yAxis} />
 			</g>
 		);
@@ -88,7 +93,8 @@ CarrierWaveData.propTypes = {
 };
 const mapStateToProps = state => {
 	return {
-		blocks: state.mainPage.present.projects[0].blocks
+		blocks: state.mainPage.present.projects[0].blocks,
+		clickedBlock: state.mainPage.present.clickedBlock
 	};
 };
 export default connect(

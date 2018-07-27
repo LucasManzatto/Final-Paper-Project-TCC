@@ -3,8 +3,8 @@ import { line, curveLinear } from "d3-shape";
 //import simplify from 'simplify-js'
 
 export const Line = props => {
-	const { xScale, yScale, data } = props;
-
+	const { xScale, yScale, data, focused } = props;
+	const stroke = focused ? "#ff9100" : "#2196f3";
 	//if there's no data return
 	if (!data.length) {
 		return null;
@@ -36,5 +36,5 @@ export const Line = props => {
 	//const path = lineFunction(simplify(data));
 	const path = lineFunction(fullData);
 
-	return <path d={path} style={{ stroke: "#2196f3", strokeWidth: 3, fill: "none" }} />;
+	return <path d={path} style={{ stroke: stroke, strokeWidth: 3, fill: "none" }} />;
 };

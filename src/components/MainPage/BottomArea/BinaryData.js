@@ -62,12 +62,17 @@ class BinaryData extends React.Component {
 		window.cancelAnimationFrame(this.animationId);
 	}
 	render() {
-		const { dimensions, block } = this.props;
+		const { dimensions, block, clickedBlock } = this.props;
 		const { data } = this.state;
 		const scale = getScales(data, dimensions, block, this.props.resolution);
 		return (
 			<g>
-				<Line xScale={scale.xLine} yScale={scale.yLine} data={data} />
+				<Line
+					xScale={scale.xLine}
+					yScale={scale.yLine}
+					data={data}
+					focused={block === clickedBlock ? true : false}
+				/>
 				<Axis axis={axisRight} tickValues={scale.tickValues} scale={scale.yAxis} />
 			</g>
 		);
@@ -82,7 +87,7 @@ BinaryData.propTypes = {
 };
 const mapStateToProps = state => {
 	return {
-		state
+		clickedBlock: state.mainPage.present.clickedBlock
 	};
 };
 export default connect(

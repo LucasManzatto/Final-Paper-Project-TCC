@@ -4,6 +4,7 @@ import Tab from "@material-ui/core/Tab";
 import Paper from "@material-ui/core/Paper";
 import _ from "lodash";
 import Dimensions from "react-dimensions";
+import ReactCursorPosition from "react-cursor-position";
 
 //redux
 import { connect } from "react-redux";
@@ -18,7 +19,9 @@ const ProjectArea = props => {
 			<Tabs indicatorColor="primary" textColor="primary" value={0}>
 				<Tab label={props.project.name} key={props.project.id} value={props.project.id} />
 			</Tabs>
-			<ProjectTab key="0" blocks={props.project.blocks} dimensions={{ width, height }} />
+			<ReactCursorPosition>
+				<ProjectTab key="0" blocks={props.project.blocks} dimensions={{ width, height }} />
+			</ReactCursorPosition>
 		</Fragment>
 	);
 };
@@ -30,7 +33,14 @@ const projectTabStyle = {
 
 const ProjectTab = props => {
 	const renderBlocks = _.map(props.blocks, block => {
-		return <Block key={block.id} block={block} dimensions={props.dimensions} />;
+		return (
+			<Block
+				cursorPosition={props.position}
+				key={block.id}
+				block={block}
+				dimensions={props.dimensions}
+			/>
+		);
 	});
 	return (
 		<Paper className="projectTab" style={projectTabStyle}>
