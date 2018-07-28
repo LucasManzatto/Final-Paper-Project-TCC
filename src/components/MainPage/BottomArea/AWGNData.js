@@ -12,24 +12,16 @@ import { rnorm } from "randgen";
 
 class AWGNData extends React.Component {
   constructor(props) {
-    const dataCarrier = _.clone(props.blocks[1].data);
-    const dataBPSK = _.clone(props.blocks[2].data);
-    dataBPSK.forEach((item, index) => {
-      if (item !== dataCarrier[index]) {
-      }
-    });
     super(props);
     this.updateData = this.updateData.bind(this);
-    let blockLink1 = {};
-    if (props.blocks[props.block.links[0]] != null) {
-      blockLink1 = _.clone(props.blocks[props.block.links[0]]);
-      let data = this.createDataArray(blockLink1.data);
-      props.updateBlockValue({ block: props.block, key: "data", value: data });
-      this.state = {
-        data,
-        blockLink1
-      };
-    }
+    let blockLinkData = {};
+    blockLinkData = _.clone(props.blocks[props.block.links[0]]);
+    let data = this.createDataArray(blockLinkData.data);
+    props.updateBlockValue({ block: props.block, key: "data", value: data });
+    this.state = {
+      data,
+      blockLinkData
+    };
   }
 
   updateData() {
@@ -61,11 +53,15 @@ class AWGNData extends React.Component {
 
   render() {
     const { dimensions, block, blocks, clickedBlock } = this.props;
-    const { data, blockLink1 } = this.state;
+    const { data, blockLinkData } = this.state;
     let amplitude = 3;
-    if (blockLink1.links[1] != null) {
-      amplitude = blocks[blockLink1.links[1]].amplitude;
-    }
+    try {
+      if ("amplitude" in blocks[blockLinkData.links[1]])
+        amplitude = blocks[blockLinkData.links[1]].amplitude;
+      else {
+        amplitude = blocks[blockLinkData.links[0]].amplitude;
+      }
+    } catch (err) {}
     const scale = getScales(data, dimensions, block, this.props.resolution, amplitude);
     return (
       <g>
@@ -89,22 +85,22 @@ class AWGNData extends React.Component {
     window.cancelAnimationFrame(this.animationId);
   }
   componentWillReceiveProps(nextProps) {
-    const nextProps_blockLink1 = _.clone(nextProps.blocks[nextProps.block.links[0]]);
-    if (!nextProps_blockLink1.linked) {
-      this.props.updateBlockValue({
-        block: this.props.block,
-        key: "linked",
-        value: false
-      });
-    }
-    if (nextProps_blockLink1.data !== this.state.blockLink1.data && nextProps_blockLink1.linked) {
-      let data = this.createDataArray(nextProps_blockLink1.data);
+    const nextProps_blockLinkData = _.clone(nextProps.blocks[nextProps.block.links[0]]);
+    // if (!nextProps_blockLink1.linked) {
+    //   this.props.updateBlockValue({
+    //     block: this.props.block,
+    //     key: "linked",
+    //     value: false
+    //   });
+    // }
+    if (nextProps_blockLinkData.data !== this.state.blockLinkData.data) {
+      let data = this.createDataArray(nextProps_blockLinkData.data);
       this.props.updateBlockValue({
         block: this.props.block,
         key: "data",
         value: data
       });
-      this.setState({ data, blockLink1: nextProps_blockLink1 });
+      this.setState({ data, blockLinkData: nextProps_blockLinkData });
     }
   }
 }

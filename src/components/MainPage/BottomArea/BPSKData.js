@@ -14,14 +14,20 @@ class BPSKData extends React.Component {
     super(props);
     this.updateData = this.updateData.bind(this);
     let data = [];
-    const blockLink1 = _.clone(props.blocks[props.block.links[0]]);
-    const blockLink2 = _.clone(props.blocks[props.block.links[1]]);
-    data = this.createDataArray(blockLink1.data, props.resolution, blockLink2);
+    let blockLinkData, blockLinkCarrier;
+    if (props.blocks[props.block.links[0]].name === "Data") {
+      blockLinkData = _.clone(props.blocks[props.block.links[0]]);
+      blockLinkCarrier = _.clone(props.blocks[props.block.links[1]]);
+    } else {
+      blockLinkData = _.clone(props.blocks[props.block.links[1]]);
+      blockLinkCarrier = _.clone(props.blocks[props.block.links[0]]);
+    }
+    data = this.createDataArray(blockLinkData.data, props.resolution, blockLinkCarrier);
     props.updateBlockValue({ block: props.block, key: "data", value: data });
     this.state = {
       data,
-      blockLink1,
-      blockLink2
+      blockLinkData,
+      blockLinkCarrier
     };
   }
 
@@ -43,11 +49,11 @@ class BPSKData extends React.Component {
       );
     }
   }
-  createDataArray = (binaryArray, totalTime, blockLink2) => {
+  createDataArray = (binaryArray, totalTime, blockLinkCarrier) => {
     let data = [];
     let time = createTimeArray(totalTime);
     time.forEach((currentTime, index) => {
-      data.push(binaryArray[index] * blockLink2.data[index]);
+      data.push(binaryArray[index] * blockLinkCarrier.data[index]);
     });
     return data;
   };
@@ -62,23 +68,32 @@ class BPSKData extends React.Component {
     window.cancelAnimationFrame(this.animationId);
   }
   componentWillReceiveProps(nextProps) {
-    const nextProps_blockLink1 = _.clone(nextProps.blocks[nextProps.block.links[0]]);
-    const nextProps_blockLink2 = _.clone(nextProps.blocks[nextProps.block.links[1]]);
-    const differences = difference(nextProps_blockLink2, this.state.blockLink2);
+    if (nextProps.block.links < nextProps.block.neededLinks) {
+      return;
+    }
+    let nextProps_blockLinkData, nextProps_blockLinkCarrier;
+    if (this.props.blocks[nextProps.block.links[0]].name === "Data") {
+      nextProps_blockLinkData = _.clone(nextProps.blocks[nextProps.block.links[0]]);
+      nextProps_blockLinkCarrier = _.clone(nextProps.blocks[nextProps.block.links[1]]);
+    } else {
+      nextProps_blockLinkCarrier = _.clone(nextProps.blocks[nextProps.block.links[0]]);
+      nextProps_blockLinkData = _.clone(nextProps.blocks[nextProps.block.links[1]]);
+    }
+    const differences = difference(nextProps_blockLinkCarrier, this.state.blockLinkCarrier);
     if (differences.hasOwnProperty("paused")) return;
     //If there is differences update the state
-    if (nextProps_blockLink2.data !== this.state.blockLink2.data) {
+    if (nextProps_blockLinkCarrier.data !== this.state.blockLinkCarrier.data) {
       let data = this.createDataArray(
-        nextProps_blockLink1.data,
+        nextProps_blockLinkData.data,
         this.props.resolution,
-        nextProps_blockLink2
+        nextProps_blockLinkCarrier
       );
       this.props.updateBlockValue({
         block: this.props.block,
         key: "data",
         value: data
       });
-      this.setState({ data, blockLink2: nextProps_blockLink2 });
+      this.setState({ data, blockLinkCarrier: nextProps_blockLinkCarrier });
     }
   }
   render() {
@@ -89,7 +104,7 @@ class BPSKData extends React.Component {
       dimensions,
       block,
       this.props.resolution,
-      this.state.blockLink2.amplitude
+      this.state.blockLinkCarrier.amplitude
     );
     return (
       <g>

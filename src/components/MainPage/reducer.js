@@ -19,8 +19,6 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     default:
       return state;
-    // case consts.LOGIN:
-    //     return initialStateLogged;
     case consts.ADD_TO_PROJECT:
       return update(state, {
         projects: {
@@ -29,28 +27,12 @@ export default function reducer(state = initialState, action) {
           }
         }
       });
-    case consts.UPDATE_BLOCK:
-      return updateBlock(action.payload.block);
-    case consts.BLOCK_UPDATED:
-      return updateBlock(action.payload.block);
-    case consts.TRACK_LOCATION:
-      return updateBlock(action.payload.block);
-    case consts.PAUSE_BLOCK:
-      return updateBlock(action.payload.block);
-    case consts.UPDATE_CURRENT_PROJECT:
-      return update(state, {
-        currentProject: { $set: action.payload },
-        clickedBlock: { $set: {} }
-      });
-
     case consts.BLOCK_CLICKED:
       return update(state, { clickedBlock: { $set: action.payload } });
     case consts.BLOCKS_TO_LINK:
-      return update(state, { blocksToLinkArray: { $set: action.payload.blocksToLink } });
-    case consts.SELECT_LINK:
-      return update(state, {
-        selectedLink: { $set: action.payload }
-      });
+      return update(state, { blocksToLinkArray: { $set: action.payload.blocksToLinkArray } });
+    case consts.BLOCK_UPDATED:
+      return updateBlock(action.payload.block);
     case consts.CREATE_LINK:
       return updateBlock(action.payload.block);
     case consts.DELETE_LINK:
@@ -73,6 +55,21 @@ export default function reducer(state = initialState, action) {
             }
           }
         }
+      });
+    case consts.PAUSE_BLOCK:
+      return updateBlock(action.payload.block);
+    case consts.SELECT_LINK:
+      return update(state, {
+        selectedLink: { $set: action.payload }
+      });
+    case consts.TRACK_LOCATION:
+      return updateBlock(action.payload.block);
+    case consts.UPDATE_BLOCK:
+      return updateBlock(action.payload.block);
+    case consts.UPDATE_CURRENT_PROJECT:
+      return update(state, {
+        currentProject: { $set: action.payload },
+        clickedBlock: { $set: {} }
       });
   }
 }

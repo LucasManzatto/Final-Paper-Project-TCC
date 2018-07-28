@@ -10,56 +10,6 @@ const ID = () => {
   );
 };
 
-export const updateCurrentProject = payload => ({
-  type: consts.UPDATE_CURRENT_PROJECT,
-  payload
-});
-export const trackLocation = payload => {
-  payload.block.position = payload.deltaPosition;
-  return {
-    type: consts.TRACK_LOCATION,
-    payload
-  };
-};
-export const blockUpdated = payload => {
-  payload.block.updated = payload.updated;
-  return {
-    type: consts.BLOCK_UPDATED,
-    payload
-  };
-};
-export const createLink = payload => {
-  if (!_.includes(payload.block.links, payload.link)) {
-    payload.block.links.push(payload.link);
-  }
-  return {
-    type: consts.CREATE_LINK,
-    payload
-  };
-};
-export const deleteLink = payload => ({
-  type: consts.DELETE_LINK,
-  payload
-});
-export const blockClicked = payload => ({
-  type: consts.BLOCK_CLICKED,
-  payload
-});
-export const blocksToLink = payload => {
-  if (payload.blocksToLink.length >= 2) {
-    payload.blocksToLink = [];
-  }
-  payload.blocksToLink.push(payload.id);
-  return {
-    type: consts.BLOCKS_TO_LINK,
-    payload
-  };
-};
-export const selectLink = payload => ({
-  type: consts.SELECT_LINK,
-  payload
-});
-
 export const addBlockToProject = payload => {
   payload.id = ID();
   return {
@@ -67,6 +17,74 @@ export const addBlockToProject = payload => {
     payload
   };
 };
+
+export const blockClicked = payload => ({
+  type: consts.BLOCK_CLICKED,
+  payload
+});
+
+export const blockUpdated = payload => {
+  payload.block.updated = payload.updated;
+  return {
+    type: consts.BLOCK_UPDATED,
+    payload
+  };
+};
+
+export const blocksToLink = payload => {
+  //Only 2 blocks can be linked at the same time
+  if (payload.blocksToLinkArray.length >= 2) {
+    payload.blocksToLinkArray = [];
+  }
+  if (payload.type === "add") {
+    payload.blocksToLinkArray.push(payload.id);
+  } else if (payload.type === "delete") {
+    _.remove(payload.blocksToLinkArray, link => link === payload.id);
+  }
+  return {
+    type: consts.BLOCKS_TO_LINK,
+    payload
+  };
+};
+
+export const createLink = payload => {
+  //after the link is created , this block needs to be deleted from the blocksToLinkArray
+  payload.block.links.push(payload.link);
+  if (payload.block.links.length === payload.block.neededLinks) {
+    payload.block.linked = true;
+  }
+  return {
+    type: consts.CREATE_LINK,
+    payload
+  };
+};
+
+export const deleteLink = payload => ({
+  type: consts.DELETE_LINK,
+  payload
+});
+
+export const pauseBlock = payload => {
+  payload.block.paused = !payload.block.paused;
+  return {
+    type: consts.PAUSE_BLOCK,
+    payload
+  };
+};
+
+export const selectLink = payload => ({
+  type: consts.SELECT_LINK,
+  payload
+});
+
+export const trackLocation = payload => {
+  payload.block.position = payload.deltaPosition;
+  return {
+    type: consts.TRACK_LOCATION,
+    payload
+  };
+};
+
 export const updateBlockValue = payload => {
   if (payload.key === "frequency" || payload.key === "amplitude") {
     if (payload.value > 0) {
@@ -80,18 +98,18 @@ export const updateBlockValue = payload => {
     payload
   };
 };
-export const updateDropDown = payload => ({
-  type: consts.UPDATE_DROPDOWN,
+
+export const updateCurrentProject = payload => ({
+  type: consts.UPDATE_CURRENT_PROJECT,
   payload
 });
-export const pauseBlock = payload => {
-  payload.block.paused = !payload.block.paused;
-  return {
-    type: consts.PAUSE_BLOCK,
-    payload
-  };
-};
+
 export const updateData = payload => ({
   type: consts.UPDATE_DATA,
+  payload
+});
+
+export const updateDropDown = payload => ({
+  type: consts.UPDATE_DROPDOWN,
   payload
 });

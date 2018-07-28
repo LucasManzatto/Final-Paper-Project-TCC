@@ -2,8 +2,8 @@ import React, { Fragment } from "react";
 import Draggable from "react-draggable";
 import _ from "lodash";
 import { Line } from "react-lineto";
-import Left from "material-ui-icons/ChevronLeft";
-import Right from "material-ui-icons/ChevronRight";
+import Left from "@material-ui/icons/ChevronLeft";
+import Right from "@material-ui/icons/ChevronRight";
 import PropTypes from "prop-types";
 import { Row, Col } from "react-flexbox-grid";
 import orange from "@material-ui/core/colors/orange";
@@ -64,36 +64,101 @@ class Block extends React.Component {
       position: 5
     };
   }
-  DeleteLine = () => {
-    return (
-      <Line
-        borderWidth={4}
-        borderStyle="solid"
-        borderColor="black"
-        zIndex={1}
-        x0={0}
-        y0={0}
-        x1={0}
-        y1={0}
-      />
-    );
+
+  calculateOffset = element => {
+    let projectTabOffset = document.getElementsByClassName(element)[0].getBoundingClientRect();
+    let offsetX = window.pageXOffset + projectTabOffset.left;
+    let offsetY = window.pageYOffset + projectTabOffset.top;
+    this.setState({
+      projectTabOffset,
+      offsetX,
+      offsetY
+    });
   };
-  renderLineToCursor = position => {
-    let { block, cursorPosition } = this.props;
-    let { offsetX, offsetY } = this.state;
-    return (
-      <Line
-        borderWidth={4}
-        borderStyle="solid"
-        borderColor="black"
-        zIndex={1}
-        x0={block.position.x + position + offsetX}
-        y0={block.position.y + blockHeight / 2 + offsetY}
-        x1={cursorPosition.x + offsetX}
-        y1={cursorPosition.y + offsetY}
-      />
-    );
+
+  componentDidMount = () => {
+    this.props.blockClicked(this.props.block);
+    this.calculateOffset("projectTab");
   };
+
+  componentWillReceiveProps = nextProps => {
+    const blockToLink = nextProps.blocksToLinkArray.find(link => link != this.props.block.id);
+    // if this block is in the blocksToLinkArray and the blocksToLinkArray is full(2)
+    // and the blocks are not linked already the create the link
+    if (
+      nextProps.blocksToLinkArray[0] === this.props.block.id &&
+      nextProps.blocksToLinkArray.length === 2 &&
+      !_.includes(nextProps.block.links, blockToLink)
+    ) {
+      //then create the link and delete this block from the blocksToLinkArray
+      this.props.createLink({
+        block: this.props.block,
+        link: blockToLink,
+        blocksToLinkArray: nextProps.blocksToLinkArray
+      });
+      this.props.blocksToLink({
+        type: "delete",
+        id: this.props.block.id,
+        blocksToLinkArray: nextProps.blocksToLinkArray
+      });
+    }
+    if (nextProps.dimensions !== this.props.dimensions) {
+      this.renderLines();
+    }
+    this.renderLineToCursor();
+    this.calculateOffset("projectTab");
+  };
+
+  getBounds = () => ({
+    left: 0,
+    top: 0,
+    right: this.state.projectTabOffset.width - blockWidth,
+    bottom: this.state.projectTabOffset.height - blockHeight
+  });
+
+  getPosition = bounds => {
+    let position = {
+      x: this.props.block.position.x,
+      y: this.props.block.position.y
+    };
+    if (position.x > bounds.right) {
+      position.x = bounds.right;
+    }
+    if (position.y > bounds.bottom) {
+      position.y = bounds.bottom;
+    }
+    return position;
+  };
+
+  handleClick = () => {
+    if (this.props.block !== this.props.clickedBlock) {
+      this.props.blockClicked(this.props.block);
+    }
+  };
+
+  handleDrag = (e, ui) => {
+    this.handleClick();
+    const { x, y } = this.props.block.position;
+    const deltaPosition = {
+      x: x + ui.deltaX,
+      y: y + ui.deltaY
+    };
+    this.props.trackLocation({ block: this.props.block, deltaPosition });
+  };
+
+  linkBlocks = position => {
+    this.setState({ position });
+    //Can link only from the input to the output(Orange to blue, not blue to orange)
+    if (position === 195 && this.props.blocksToLinkArray.length === 0) {
+      return;
+    }
+    this.props.blocksToLink({
+      type: "add",
+      id: this.props.block.id,
+      blocksToLinkArray: this.props.blocksToLinkArray
+    });
+  };
+
   renderLines = () => {
     let { selectLink, block, projects, selectedLink, currentProject } = this.props;
     let { offsetX, offsetY } = this.state;
@@ -123,6 +188,24 @@ class Block extends React.Component {
       );
     });
   };
+
+  renderLineToCursor = position => {
+    let { block, cursorPosition } = this.props;
+    let { offsetX, offsetY } = this.state;
+    return (
+      <Line
+        borderWidth={4}
+        borderStyle="solid"
+        borderColor="black"
+        zIndex={1}
+        x0={block.position.x + position + offsetX}
+        y0={block.position.y + blockHeight / 2 + offsetY}
+        x1={cursorPosition.x + offsetX}
+        y1={cursorPosition.y + offsetY}
+      />
+    );
+  };
+
   showProperties = (value, key) => {
     if (key === "binary") {
       return (
@@ -154,80 +237,10 @@ class Block extends React.Component {
       );
     }
   };
+
   updateBlockOnClick = (value, key) => {
     this.props.updateBlockValue({ value, key, block: this.props.block });
     this.props.blockUpdated({ block: this.props.block, updated: true });
-  };
-
-  handleDrag = (e, ui) => {
-    this.handleClick();
-    const { x, y } = this.props.block.position;
-    const deltaPosition = {
-      x: x + ui.deltaX,
-      y: y + ui.deltaY
-    };
-    this.props.trackLocation({ block: this.props.block, deltaPosition });
-  };
-
-  handleClick = () => {
-    if (this.props.block !== this.props.clickedBlock) {
-      this.props.blockClicked(this.props.block);
-    }
-  };
-
-  linkBlocks = position => {
-    this.setState({ position });
-    this.props.blocksToLink({
-      id: this.props.block.id,
-      blocksToLink: this.props.blocksToLinkArray
-    });
-  };
-  calculateOffset = () => {
-    let projectTabOffset = document.getElementsByClassName("projectTab")[0].getBoundingClientRect();
-    let offsetX = window.pageXOffset + projectTabOffset.left;
-    let offsetY = window.pageYOffset + projectTabOffset.top;
-    this.setState({
-      projectTabOffset,
-      offsetX,
-      offsetY
-    });
-  };
-
-  getBounds = () => {
-    return {
-      left: 0,
-      top: 0,
-      right: this.state.projectTabOffset.width - blockWidth,
-      bottom: this.state.projectTabOffset.height - blockHeight
-    };
-  };
-  getPosition = bounds => {
-    let position = {
-      x: this.props.block.position.x,
-      y: this.props.block.position.y
-    };
-    if (position.x > bounds.right) {
-      position.x = bounds.right;
-    }
-    if (position.y > bounds.bottom) {
-      position.y = bounds.bottom;
-    }
-    return position;
-  };
-
-  componentWillReceiveProps = nextProps => {
-    if (_.includes(nextProps.blocksToLinkArray, this.props.block.id)) {
-    }
-    if (nextProps.dimensions !== this.props.dimensions) {
-      this.renderLines();
-    }
-    this.renderLineToCursor();
-    this.calculateOffset();
-  };
-
-  componentDidMount = () => {
-    this.props.blockClicked(this.props.block);
-    this.calculateOffset();
   };
 
   render = () => {
@@ -272,7 +285,7 @@ class Block extends React.Component {
           </Row>
         </Draggable>
         {!_.isNil(block.links) ? this.renderLines() : []}
-        {this.props.clickedBlock === this.props.block && this.props.blocksToLinkArray.length != 0
+        {_.includes(this.props.blocksToLinkArray, this.props.block.id)
           ? this.renderLineToCursor(this.state.position)
           : null}
       </Fragment>
