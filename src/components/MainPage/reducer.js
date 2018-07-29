@@ -35,14 +35,24 @@ export default function reducer(state = initialState, action) {
       return updateBlock(action.payload.block);
     case consts.CREATE_LINK:
       return updateBlock(action.payload.block);
+    case consts.DELETE_BLOCK:
+      return update(state, {
+        projects: {
+          [currentProject]: {
+            blocks: blocks => blocks.filter(block => block !== action.payload)
+          }
+        }
+      });
     case consts.DELETE_LINK:
       block = state.projects[currentProject].blocks[state.selectedLink.id];
       const linkPosition = state.selectedLink.linkPosition;
       let linked = block.linked;
+      let data = block.data;
       //O block deve ter linked=false quando o numero de links for menor que o numero de links necessarios
       //Se o total de links menos 1 for igual a 0, quer dizer que o bloco não está mais linkado
       if (block.links.length - 1 < block.neededLinks) {
         linked = false;
+        data = [];
       }
       return update(state, {
         projects: {
@@ -50,7 +60,8 @@ export default function reducer(state = initialState, action) {
             blocks: {
               [block.id]: {
                 links: arr => arr.filter(item => item !== linkPosition),
-                linked: { $set: linked }
+                linked: { $set: linked },
+                data: { $set: data }
               }
             }
           }

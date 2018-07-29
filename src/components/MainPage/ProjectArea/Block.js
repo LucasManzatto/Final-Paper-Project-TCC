@@ -4,10 +4,10 @@ import _ from "lodash";
 import { Line } from "react-lineto";
 import Left from "@material-ui/icons/ChevronLeft";
 import Right from "@material-ui/icons/ChevronRight";
+import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
-import { Row, Col } from "react-flexbox-grid";
-import orange from "@material-ui/core/colors/orange";
 import Typography from "@material-ui/core/Typography";
+import KeyHandler, { KEYPRESS } from "react-key-handler";
 
 import { notHidden, valueToBinary } from "../utils";
 
@@ -16,37 +16,30 @@ import { connect } from "react-redux";
 import * as actions from "../actions";
 
 const blockHeight = 100;
-const blockWidth = 170;
+const blockWidth = 160;
 const blockStyle = {
   height: blockHeight,
   width: blockWidth,
-  border: "1px solid black",
-  backgroundColor: "#f5f5f5",
-  position: "absolute",
+  border: "1px solid",
+  borderColor: "#77a6f7",
+  backgroundColor: "#d3e3fc",
   zIndex: 2
 };
 const blockStyleLeft = {
   height: 33,
-  width: 20,
-  color: orange,
-  borderTop: "1px solid black",
+  //  borderTop: "1px solid black",
   //	borderRight: "1px solid black",
-  borderLeft: "1px solid black",
-  borderBottom: "1px solid black",
-  backgroundColor: "#ff9100",
-  position: "absolute",
-  zIndex: 1
+  //borderLeft: "1px solid black",
+  //  borderBottom: "1px solid black",
+  backgroundColor: "#00887a"
 };
 const blockStyleRight = {
   height: 33,
-  width: 20,
-  borderTop: "1px solid black",
-  borderRight: "1px solid black",
+  //  borderTop: "1px solid black",
+  //  borderRight: "1px solid black",
   //borderLeft: "1px solid black",
-  borderBottom: "1px solid black",
-  backgroundColor: "#2196f3",
-  position: "absolute",
-  zIndex: 1
+  //  borderBottom: "1px solid black",
+  backgroundColor: "#77a6f7"
 };
 const iconStyle = {
   position: "relative",
@@ -82,7 +75,7 @@ class Block extends React.Component {
   };
 
   componentWillReceiveProps = nextProps => {
-    const blockToLink = nextProps.blocksToLinkArray.find(link => link != this.props.block.id);
+    const blockToLink = nextProps.blocksToLinkArray.find(link => link !== this.props.block.id);
     // if this block is in the blocksToLinkArray and the blocksToLinkArray is full(2)
     // and the blocks are not linked already the create the link
     if (
@@ -105,14 +98,17 @@ class Block extends React.Component {
     if (nextProps.dimensions !== this.props.dimensions) {
       this.renderLines();
     }
-    this.renderLineToCursor();
+
     this.calculateOffset("projectTab");
   };
 
   getBounds = () => ({
     left: 0,
     top: 0,
-    right: this.state.projectTabOffset.width - blockWidth,
+    right:
+      this.state.projectTabOffset.width -
+      blockWidth -
+      (this.props.block.neededLinks === 0 ? 16 : 32),
     bottom: this.state.projectTabOffset.height - blockHeight
   });
 
@@ -148,7 +144,7 @@ class Block extends React.Component {
 
   linkBlocks = position => {
     this.setState({ position });
-    //Can link only from the input to the output(Orange to blue, not blue to orange)
+    //Can link only from the input to the output.
     if (position === 195 && this.props.blocksToLinkArray.length === 0) {
       return;
     }
@@ -166,7 +162,7 @@ class Block extends React.Component {
       return null;
     }
     return block.links.map(linkPosition => {
-      let linkBlock = projects[currentProject].blocks[linkPosition];
+      let linkBlock = _.find(projects[currentProject].blocks, block => block.id === linkPosition);
       let borderStyle = "solid";
       if (selectedLink.id === block.id && selectedLink.linkPosition === linkPosition) {
         borderStyle = "dashed";
@@ -179,9 +175,9 @@ class Block extends React.Component {
             borderStyle={borderStyle}
             borderColor="black"
             zIndex={1}
-            x0={block.position.x + 5 + offsetX}
+            x0={block.position.x + 8 + offsetX}
             y0={block.position.y + blockHeight / 2 + offsetY}
-            x1={linkBlock.position.x + 185 + offsetX}
+            x1={linkBlock.position.x + offsetX + 170}
             y1={linkBlock.position.y + blockHeight / 2 + offsetY}
           />
         </div>
@@ -190,27 +186,31 @@ class Block extends React.Component {
   };
 
   renderLineToCursor = position => {
-    let { block, cursorPosition } = this.props;
+    let { block, cursorPosition, blocksToLinkArray } = this.props;
     let { offsetX, offsetY } = this.state;
-    return (
-      <Line
-        borderWidth={4}
-        borderStyle="solid"
-        borderColor="black"
-        zIndex={1}
-        x0={block.position.x + position + offsetX}
-        y0={block.position.y + blockHeight / 2 + offsetY}
-        x1={cursorPosition.x + offsetX}
-        y1={cursorPosition.y + offsetY}
-      />
-    );
+    if (_.includes(blocksToLinkArray, block.id) && block.links.length < block.neededLinks) {
+      return (
+        <Line
+          borderWidth={4}
+          borderStyle="solid"
+          borderColor="black"
+          zIndex={1}
+          x0={block.position.x + position + offsetX}
+          y0={block.position.y + blockHeight / 2 + offsetY}
+          x1={cursorPosition.x + offsetX}
+          y1={cursorPosition.y + offsetY}
+        />
+      );
+    } else {
+      return null;
+    }
   };
 
   showProperties = (value, key) => {
     if (key === "binary") {
       return (
         <Typography key={key} variant="body1">
-          {_.capitalize(key)}:
+          <b>{_.capitalize(key)}:</b>
           {valueToBinary(value)}
         </Typography>
       );
@@ -223,7 +223,7 @@ class Block extends React.Component {
       }
       return (
         <Typography key={key} variant="body1">
-          {_.capitalize(key)}:
+          <b>{_.capitalize(key)}:</b>
           <Left
             onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] - sum, key)}
             style={iconStyle}
@@ -247,47 +247,54 @@ class Block extends React.Component {
     const { block } = this.props;
     const bounds = this.getBounds();
     const position = this.getPosition(bounds);
-    const offset = block.neededLinks === 0 ? 11 : 10;
     return (
       <Fragment>
         <Draggable
           //grid={[10, 10]}
           bounds={bounds}
           onDrag={this.handleDrag}
-          position={position}>
-          <Row
-            style={{ height: 100, width: 200, position: "absolute", zIndex: 2 }}
-            onClick={this.handleClick}>
-            <Col xs={12}>
-              <Row>
-                {block.neededLinks === 0 ? (
-                  []
-                ) : (
-                  <Col xs={1} style={{ height: 100 }}>
-                    <Row style={{ height: 33, width: 20 }} />
-                    <Row middle="xs" style={blockStyleLeft} onClick={() => this.linkBlocks(5)} />
-                    <Row style={{ height: 33, width: 20 }} />
-                  </Col>
-                )}
-                <Col xsOffset={1} xs={10} style={blockStyle}>
-                  <Typography variant="subheading" gutterBottom align="center">
-                    <b>{block.name}</b>
-                  </Typography>
-                  {_.map(block, this.showProperties)}
-                </Col>
-                <Col xsOffset={offset} xs={1} style={{ height: 100 }}>
-                  <Row style={{ height: 33, width: 20 }} />
-                  <Row middle="xs" style={blockStyleRight} onClick={() => this.linkBlocks(195)} />
-                  <Row style={{ height: 33, width: 20 }} />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
+          position={position}
+        >
+          <Grid
+            onClick={this.handleClick}
+            container
+            style={{ height: 100, width: 192, position: "absolute", zIndex: 2 }}
+          >
+            {block.neededLinks === 0 ? null : (
+              <Grid item container direction="column" xs={1} style={{ height: 100 }}>
+                <Grid item xs={4} />
+                <Grid
+                  item
+                  container
+                  alignItems="center"
+                  style={blockStyleLeft}
+                  onClick={() => this.linkBlocks(5)}
+                />
+                <Grid item xs={4} />
+              </Grid>
+            )}
+
+            <Grid item xs={10} style={blockStyle}>
+              <Typography variant="subheading" gutterBottom align="center">
+                <b>{block.name}</b>
+              </Typography>
+              {_.map(block, this.showProperties)}
+            </Grid>
+            <Grid item container direction="column" xs={1} style={{ height: 100 }}>
+              <Grid item xs={4} />
+              <Grid
+                item
+                container
+                alignItems="center"
+                style={blockStyleRight}
+                onClick={() => this.linkBlocks(195)}
+              />
+              <Grid item xs={4} />
+            </Grid>
+          </Grid>
         </Draggable>
         {!_.isNil(block.links) ? this.renderLines() : []}
-        {_.includes(this.props.blocksToLinkArray, this.props.block.id)
-          ? this.renderLineToCursor(this.state.position)
-          : null}
+        {this.renderLineToCursor(this.state.position)}
       </Fragment>
     );
   };
@@ -311,7 +318,13 @@ const mapStateToProps = state => {
     currentProject,
     blocksToLinkArray
   } = state.mainPage.present;
-  return { clickedBlock, projects, selectedLink, currentProject, blocksToLinkArray };
+  return {
+    clickedBlock,
+    projects,
+    selectedLink,
+    currentProject,
+    blocksToLinkArray
+  };
 };
 
 export default connect(

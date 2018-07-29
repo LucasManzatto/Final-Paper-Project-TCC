@@ -3,7 +3,7 @@ import React from "react";
 import Paper from "material-ui/Paper";
 import Button from "@material-ui/core/Button";
 
-import { Row, Col } from "react-flexbox-grid";
+import Grid from "@material-ui/core/Grid";
 import BlockCard from "./BlockCard";
 import _ from "lodash";
 
@@ -16,42 +16,48 @@ const style = {
 
 const BottomArea = props => {
   const renderBlockCards = _.map(props.blocks, block => {
-    //Se o total de link for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
-    if (block.neededLinks !== 0 && !block.linked && block.links.length === 0) {
+    //Se o total de links for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
+    if (block.links.length < block.neededLinks) {
       return;
     }
     return (
-      <Col xs={3} key={block.id} style={{ height: "100%", textAlign: "center", paddingBottom: 30 }}>
-        <Row center="xs">
-          <Col xs={6}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={event => props.pauseBlock({ block })}>
-              {block.paused ? <div>Resume</div> : <div>Pause</div>}
-            </Button>
-          </Col>
-          <Col xs={6}>
-            <ExpandBlockCard block={block} />
-          </Col>
-        </Row>
-        <BlockCard block={block} key={block.id} />
-      </Col>
+      <Grid key={block.id} container item xs={3}>
+        {/* Button 1 */}
+        <Grid xs={6} container item>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={event => props.pauseBlock({ block })}
+          >
+            {block.paused ? <div>Resume</div> : <div>Pause</div>}
+          </Button>
+        </Grid>
+        {/* Button 2 */}
+        <Grid xs={6} container item justify="center">
+          <ExpandBlockCard block={block} />
+        </Grid>
+        {/* BlockCard */}
+        <Grid style={{ height: 180 }} container item xs={12} spacing={16}>
+          <Grid xs={12} item>
+            <BlockCard block={block} key={block.id} />
+          </Grid>
+        </Grid>
+      </Grid>
     );
   });
 
   return (
-    <Paper style={style}>
-      <Row start="xs" middle="xs" style={style}>
-        {renderBlockCards}
-      </Row>
+    <Paper elevation={0} square={true} style={style}>
+      <Grid container>{renderBlockCards}</Grid>
     </Paper>
   );
 };
 
 const mapStateToProps = state => {
   return {
-    blocks: state.mainPage.present.projects[state.mainPage.present.currentProject].blocks
+    blocks:
+      state.mainPage.present.projects[state.mainPage.present.currentProject]
+        .blocks
   };
 };
 

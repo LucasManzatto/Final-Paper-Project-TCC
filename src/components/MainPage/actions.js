@@ -11,7 +11,7 @@ const ID = () => {
 };
 
 export const addBlockToProject = payload => {
-  payload.id = ID();
+  //payload.id = ID();
   return {
     type: consts.ADD_TO_PROJECT,
     payload
@@ -58,6 +58,11 @@ export const createLink = payload => {
     payload
   };
 };
+
+export const deleteBlock = payload => ({
+  type: consts.DELETE_BLOCK,
+  payload
+});
 
 export const deleteLink = payload => ({
   type: consts.DELETE_LINK,

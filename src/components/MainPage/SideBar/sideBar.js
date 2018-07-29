@@ -1,12 +1,10 @@
 import React from "react";
 
 //Material
-//import {List, ListItem, makeSelectable} from 'material-ui/List';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
-// import {grey50,blue500} from 'material-ui/styles/colors';
 import Paper from "@material-ui/core/Paper";
 
 import _ from "lodash";
@@ -37,7 +35,7 @@ const SideBar = props => {
     );
   });
   return (
-    <Paper style={style}>
+    <Paper elevation={0} square={true} style={style}>
       <List component="nav" subheader={<ListSubheader component="div">Blocks</ListSubheader>}>
         {ItemList}
       </List>

@@ -1,8 +1,7 @@
 import React from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { blue } from "@material-ui/core/colors";
-
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 //Imports dos components do projeto
 import Menu from "./Menu";
 import SideBar from "./SideBar/sideBar";
@@ -10,74 +9,81 @@ import SideBarBlock from "./SideBar/sideBarBlock";
 import ProjectArea from "./ProjectArea/projectArea";
 import BottomArea from "./BottomArea/bottomArea";
 
-import { Grid, Row, Col } from "react-flexbox-grid";
 import KeyHandler, { KEYPRESS } from "react-key-handler";
-import { deleteLink } from "./actions";
+import { deleteLink, deleteBlock } from "./actions";
 
 import { connect } from "react-redux";
 import { ActionCreators } from "redux-undo";
 
-const theme = createMuiTheme({
-  palette: {
-    primary: blue,
-    secondary: {
-      main: "#ff9800"
-    }
+const styles = theme => ({
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    padding: theme.spacing.unit * 2,
+    textAlign: "center",
+    color: theme.palette.text.secondary
   }
 });
-
-const style = {
-  paddingTop: 10
-};
-
-const styleBottomArea = {
-  paddingTop: 10,
-  paddingRight: 50,
-  position: "fixed",
-  bottom: 10,
-  width: "100%"
-};
-
 //FRAGMENT
-const App = props => (
-  <MuiThemeProvider theme={theme}>
-    <CssBaseline />
-    <Grid fluid>
+const App = props => {
+  return (
+    <div style={{ paddingRight: 16, overflowY: "hidden" }}>
+      <KeyHandler
+        keyEventName={KEYPRESS}
+        keyValue="q"
+        onKeyHandle={() => props.deleteBlock(props.clickedBlock)}
+      />
       <KeyHandler keyEventName={KEYPRESS} keyValue="x" onKeyHandle={() => props.deleteLink()} />
       <KeyHandler keyEventName={KEYPRESS} keyValue="z" onKeyHandle={() => props.undo()} />
-      <Menu />
-      <Row between="xs" style={style}>
-        <Col xs={2}>
-          <SideBar />
-        </Col>
-        <Col xs={7} className="text-center">
-          <ProjectArea />
-        </Col>
-        <Col xs={2}>
-          <SideBarBlock />
-        </Col>
-      </Row>
-      <Row middle="xs" style={styleBottomArea}>
-        <Col xs={12}>
-          <BottomArea />
-        </Col>
-      </Row>
-    </Grid>
-  </MuiThemeProvider>
-);
+      <CssBaseline />
+      <Grid container justify="flex-end" spacing={16}>
+        <Grid container item xs={12} spacing={16}>
+          <Grid xs item>
+            <Menu />
+          </Grid>
+        </Grid>
+        <Grid container item xs={12} spacing={16}>
+          <Grid xs={2} item>
+            <SideBar />
+          </Grid>
+          <Grid xs={8} item>
+            <ProjectArea />
+          </Grid>
+          <Grid xs={2} item>
+            <SideBarBlock />
+          </Grid>
+        </Grid>
+        <Grid container item xs={12} spacing={16}>
+          <Grid xs={12} item>
+            <BottomArea />
+          </Grid>
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
 
 const mapDispatchToProps = dispatch => {
   return {
     deleteLink: () => {
       dispatch(deleteLink());
     },
+    deleteBlock: clickedBlock => {
+      dispatch(deleteBlock(clickedBlock));
+    },
     undo: () => {
       dispatch(ActionCreators.undo());
     }
   };
 };
+const mapStateToProps = state => {
+  return { clickedBlock: state.mainPage.present.clickedBlock };
+};
+
+const AppWithStyles = withStyles(styles)(App);
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
-)(App);
+)(AppWithStyles);

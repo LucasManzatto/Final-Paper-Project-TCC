@@ -15,7 +15,7 @@ class AWGNData extends React.Component {
     super(props);
     this.updateData = this.updateData.bind(this);
     let blockLinkData = {};
-    blockLinkData = _.clone(props.blocks[props.block.links[0]]);
+    blockLinkData = _.clone(_.find(props.blocks, block => block.id === props.block.links[0]));
     let data = this.createDataArray(blockLinkData.data);
     props.updateBlockValue({ block: props.block, key: "data", value: data });
     this.state = {
@@ -24,6 +24,43 @@ class AWGNData extends React.Component {
     };
   }
 
+  createDataArray = data => {
+    let awgnArray = [];
+    data.forEach(item => {
+      awgnArray.push(item + rnorm());
+    });
+    return awgnArray;
+  };
+  componentDidMount() {
+    this._ismounted = true;
+    this.animationId = window.requestAnimationFrame(this.updateData);
+  }
+
+  componentWillUnmount() {
+    this._ismounted = false;
+    window.cancelAnimationFrame(this.animationId);
+  }
+  componentWillReceiveProps(nextProps) {
+    const nextProps_blockLinkData = _.clone(
+      _.find(this.props.blocks, block => block.id === this.props.block.links[0])
+    );
+    // if (!nextProps_blockLink1.linked) {
+    //   this.props.updateBlockValue({
+    //     block: this.props.block,
+    //     key: "linked",
+    //     value: false
+    //   });
+    // }
+    if (nextProps_blockLinkData.data !== this.state.blockLinkData.data) {
+      let data = this.createDataArray(nextProps_blockLinkData.data);
+      this.props.updateBlockValue({
+        block: this.props.block,
+        key: "data",
+        value: data
+      });
+      this.setState({ data, blockLinkData: nextProps_blockLinkData });
+    }
+  }
   updateData() {
     const { block } = this.props;
     const { data } = this.state;
@@ -42,65 +79,33 @@ class AWGNData extends React.Component {
       );
     }
   }
-
-  createDataArray = data => {
-    let awgnArray = [];
-    data.forEach(item => {
-      awgnArray.push(item + rnorm());
-    });
-    return awgnArray;
-  };
-
   render() {
     const { dimensions, block, blocks, clickedBlock } = this.props;
     const { data, blockLinkData } = this.state;
-    let amplitude = 3;
+    let amplitude = -1;
+    let getAmplitude = _.find(blocks, block => block.id === blockLinkData.links[0]);
     try {
-      if ("amplitude" in blocks[blockLinkData.links[1]])
-        amplitude = blocks[blockLinkData.links[1]].amplitude;
+      if ("amplitude" in getAmplitude)
+        amplitude = _.find(blocks, block => block.id === blockLinkData.links[0]).amplitude;
       else {
-        amplitude = blocks[blockLinkData.links[0]].amplitude;
+        amplitude = _.find(blocks, block => block.id === blockLinkData.links[1]).amplitude;
       }
     } catch (err) {}
     const scale = getScales(data, dimensions, block, this.props.resolution, amplitude);
-    return (
-      <g>
-        <Line
-          xScale={scale.xLine}
-          yScale={scale.yLine}
-          data={data}
-          focused={block === clickedBlock ? true : false}
-        />
-        <Axis axis={axisRight} tickValues={scale.tickValues} scale={scale.yAxis} />
-      </g>
-    );
-  }
-  componentDidMount() {
-    this._ismounted = true;
-    this.animationId = window.requestAnimationFrame(this.updateData);
-  }
-
-  componentWillUnmount() {
-    this._ismounted = false;
-    window.cancelAnimationFrame(this.animationId);
-  }
-  componentWillReceiveProps(nextProps) {
-    const nextProps_blockLinkData = _.clone(nextProps.blocks[nextProps.block.links[0]]);
-    // if (!nextProps_blockLink1.linked) {
-    //   this.props.updateBlockValue({
-    //     block: this.props.block,
-    //     key: "linked",
-    //     value: false
-    //   });
-    // }
-    if (nextProps_blockLinkData.data !== this.state.blockLinkData.data) {
-      let data = this.createDataArray(nextProps_blockLinkData.data);
-      this.props.updateBlockValue({
-        block: this.props.block,
-        key: "data",
-        value: data
-      });
-      this.setState({ data, blockLinkData: nextProps_blockLinkData });
+    if (amplitude !== -1) {
+      return (
+        <g>
+          <Line
+            xScale={scale.xLine}
+            yScale={scale.yLine}
+            data={data}
+            focused={block === clickedBlock ? true : false}
+          />
+          <Axis axis={axisRight} tickValues={scale.tickValues} scale={scale.yAxis} />
+        </g>
+      );
+    } else {
+      return null;
     }
   }
 }

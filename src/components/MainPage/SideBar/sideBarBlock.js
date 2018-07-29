@@ -12,62 +12,66 @@ import { updateBlockValue, updateDropDown } from "../actions";
 //import {updateBlockValue} from '../SideBar/actions';
 
 const style = {
-	fontWeight: "bold"
+  fontWeight: "bold"
 };
 const ID = () => {
-	return (
-		"_" +
-		Math.random()
-			.toString(36)
-			.substr(2, 9)
-	);
+  return (
+    "_" +
+    Math.random()
+      .toString(36)
+      .substr(2, 9)
+  );
 };
 
 const SideBarBlock = props => {
-	const renderRequiredLinks = props.clickedBlock.requiredLinks.map((link, index) => {
-		return link === "None" ? (
-			<Typography key={ID()}>{link}</Typography>
-		) : (
-			<Typography key={ID()}>{link} :</Typography>
-		);
-	});
-	return (
-		<Paper key={props.clickedBlock.id} style={{ height: "100%" }}>
-			<Typography variant="title" gutterBottom align="center">
-				{props.clickedBlock.name}
-			</Typography>
-			<List>
-				<ListItem>
-					<ListItemText
-						style={style}
-						primary={
-							<Fragment>
-								<Typography variant="body1">{props.clickedBlock.description}</Typography>
-								<p />
-								<Typography variant="subheading" gutterBottom align="center">
-									<b>Required Links</b>
-								</Typography>
-								{renderRequiredLinks}
-							</Fragment>
-						}
-					/>
-				</ListItem>
-				{/* <ListItem>
+  const renderRequiredLinks = props.clickedBlock.requiredLinks.map((link, index) => {
+    return link === "None" ? (
+      <Typography key={ID()}>{link}</Typography>
+    ) : (
+      <Typography key={ID()}>{link} :</Typography>
+    );
+  });
+  return (
+    <Paper
+      elevation={0}
+      square={true}
+      key={props.clickedBlock.id}
+      style={{ height: "100%", paddingTop: 16 }}>
+      <Typography variant="title" gutterBottom align="center">
+        {props.clickedBlock.name}
+      </Typography>
+      <List>
+        <ListItem>
+          <ListItemText
+            style={style}
+            primary={
+              <Fragment>
+                <Typography variant="body1">{props.clickedBlock.description}</Typography>
+                <p />
+                <Typography variant="subheading" gutterBottom align="center">
+                  <b>Required Links</b>
+                </Typography>
+                {renderRequiredLinks}
+              </Fragment>
+            }
+          />
+        </ListItem>
+        {/* <ListItem>
                     <ListItemText
                       primary="Formula:"
                     />
                 </ListItem> */}
-			</List>
-		</Paper>
-	);
+      </List>
+    </Paper>
+  );
 };
 
 const mapStateToProps = state => {
-	return {
-		clickedBlock: state.mainPage.present.clickedBlock
-	};
+  return {
+    clickedBlock: state.mainPage.present.clickedBlock
+  };
 };
 export default connect(
-	mapStateToProps,
-	{ updateBlockValue, updateDropDown }
+  mapStateToProps,
+  { updateBlockValue, updateDropDown }
 )(SideBarBlock);
