@@ -59,15 +59,25 @@ export const createLink = payload => {
   };
 };
 
-export const deleteBlock = payload => ({
-  type: consts.DELETE_BLOCK,
-  payload
-});
+export const deleteBlock = payload => {
+  return {
+    type: consts.DELETE_BLOCK,
+    payload
+  };
+};
 
-export const deleteLink = payload => ({
-  type: consts.DELETE_LINK,
-  payload
-});
+export const deleteLink = payload => {
+  console.log(payload);
+  payload.block.links = payload.block.links.filter(link => link !== payload.link);
+  if (payload.block.links.length < payload.block.neededLinks) {
+    payload.block.linked = false;
+    payload.block.data = [];
+  }
+  return {
+    type: consts.DELETE_LINK,
+    payload
+  };
+};
 
 export const pauseBlock = payload => {
   payload.block.paused = !payload.block.paused;

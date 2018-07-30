@@ -1,13 +1,13 @@
-import React, { Fragment } from "react";
-import Draggable from "react-draggable";
 import _ from "lodash";
 import { Line } from "react-lineto";
-import Left from "@material-ui/icons/ChevronLeft";
-import Right from "@material-ui/icons/ChevronRight";
+import Draggable from "react-draggable";
 import Grid from "@material-ui/core/Grid";
-import PropTypes from "prop-types";
-import Typography from "@material-ui/core/Typography";
 import KeyHandler, { KEYPRESS } from "react-key-handler";
+import Left from "@material-ui/icons/ChevronLeft";
+import PropTypes from "prop-types";
+import React, { Fragment } from "react";
+import Right from "@material-ui/icons/ChevronRight";
+import Typography from "@material-ui/core/Typography";
 
 import { notHidden, valueToBinary } from "../utils";
 
@@ -76,6 +76,19 @@ class Block extends React.Component {
 
   componentWillReceiveProps = nextProps => {
     const blockToLink = nextProps.blocksToLinkArray.find(link => link !== this.props.block.id);
+    const blocks = this.props.projects[this.props.currentProject].blocks;
+    const nextProps_blocks = nextProps.projects[this.props.currentProject].blocks;
+    if (nextProps_blocks.length !== blocks.length) {
+      nextProps.block.links.map((link, index) => {
+        let linkBlock = _.find(
+          nextProps.projects[this.props.currentProject].blocks,
+          block => block.id === link
+        );
+        if (linkBlock === undefined) {
+          this.props.deleteLink({ block: nextProps.block, link });
+        }
+      });
+    }
     // if this block is in the blocksToLinkArray and the blocksToLinkArray is full(2)
     // and the blocks are not linked already the create the link
     if (
@@ -102,6 +115,10 @@ class Block extends React.Component {
     this.calculateOffset("projectTab");
   };
 
+  /**
+   * Get the bounds of the project area
+   * @return {Object} Return the bottom,top,left and right bounds of project area
+   */
   getBounds = () => ({
     left: 0,
     top: 0,
@@ -112,7 +129,12 @@ class Block extends React.Component {
     bottom: this.state.projectTabOffset.height - blockHeight
   });
 
-  getPosition = bounds => {
+  /**
+   * Get the position to render the block based on the project area bounds
+   * @param  {Object} bounds The bounds of the project area
+   * @return {Object}        Return the x,y position of the block
+   */
+  getPosition(bounds) {
     let position = {
       x: this.props.block.position.x,
       y: this.props.block.position.y
@@ -124,7 +146,7 @@ class Block extends React.Component {
       position.y = bounds.bottom;
     }
     return position;
-  };
+  }
 
   handleClick = () => {
     if (this.props.block !== this.props.clickedBlock) {

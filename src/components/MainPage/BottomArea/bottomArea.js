@@ -1,15 +1,12 @@
-import React from "react";
-
-import Paper from "material-ui/Paper";
-import Button from "@material-ui/core/Button";
-
-import Grid from "@material-ui/core/Grid";
-import BlockCard from "./BlockCard";
 import _ from "lodash";
-
 import { connect } from "react-redux";
 import { pauseBlock } from "../actions";
+import BlockCard from "./BlockCard";
+import Button from "@material-ui/core/Button";
 import ExpandBlockCard from "./ExpandedBlockCard";
+import Grid from "@material-ui/core/Grid";
+import Paper from "material-ui/Paper";
+import React from "react";
 const style = {
   height: 200
 };
@@ -55,9 +52,7 @@ const BottomArea = props => {
 
 const mapStateToProps = state => {
   return {
-    blocks:
-      state.mainPage.present.projects[state.mainPage.present.currentProject]
-        .blocks
+    blocks: state.mainPage.present.projects[state.mainPage.present.currentProject].blocks
   };
 };
 

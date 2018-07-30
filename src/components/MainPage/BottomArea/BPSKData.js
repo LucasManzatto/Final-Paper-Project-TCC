@@ -1,11 +1,11 @@
-import React from "react";
+import _ from "lodash";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import _ from "lodash";
-import { blockUpdated, updateBlockValue } from "../actions";
+import React from "react";
 
-import { axisRight } from "d3-axis";
 import { Axis } from "./axis";
+import { axisRight } from "d3-axis";
+import { blockUpdated, updateBlockValue } from "../actions";
 import { Line } from "./Line";
 import { shiftArray, createTimeArray, getScales, difference } from "../utils";
 

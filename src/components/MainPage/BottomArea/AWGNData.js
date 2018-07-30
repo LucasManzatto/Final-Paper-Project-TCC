@@ -1,14 +1,13 @@
-import React from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import _ from "lodash";
-import { blockUpdated, updateBlockValue } from "../actions";
-
-import { axisRight } from "d3-axis";
 import { Axis } from "./axis";
+import { axisRight } from "d3-axis";
+import { blockUpdated, updateBlockValue } from "../actions";
+import { connect } from "react-redux";
 import { Line } from "./Line";
-import { shiftArray, getScales } from "../utils";
 import { rnorm } from "randgen";
+import { shiftArray, getScales } from "../utils";
+import PropTypes from "prop-types";
+import React from "react";
 
 class AWGNData extends React.Component {
   constructor(props) {
@@ -112,9 +111,9 @@ class AWGNData extends React.Component {
 AWGNData.propTypes = {
   block: PropTypes.object,
   blockUpdated: PropTypes.func,
-  updateBlockValue: PropTypes.func,
   dimensions: PropTypes.object,
-  resolution: PropTypes.number
+  resolution: PropTypes.number,
+  updateBlockValue: PropTypes.func
 };
 const mapStateToProps = state => {
   return {

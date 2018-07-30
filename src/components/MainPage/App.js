@@ -1,19 +1,21 @@
 import React from "react";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { withStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
 //Imports dos components do projeto
+import { withStyles } from "@material-ui/core/styles";
+import BottomArea from "./BottomArea/bottomArea";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Grid from "@material-ui/core/Grid";
+import ProjectArea from "./ProjectArea/projectArea";
+import _ from "lodash";
+
 import Menu from "./Menu";
 import SideBar from "./SideBar/sideBar";
 import SideBarBlock from "./SideBar/sideBarBlock";
-import ProjectArea from "./ProjectArea/projectArea";
-import BottomArea from "./BottomArea/bottomArea";
 
-import KeyHandler, { KEYPRESS } from "react-key-handler";
 import { deleteLink, deleteBlock } from "./actions";
+import KeyHandler, { KEYPRESS } from "react-key-handler";
 
-import { connect } from "react-redux";
 import { ActionCreators } from "redux-undo";
+import { connect } from "react-redux";
 
 const styles = theme => ({
   root: {
@@ -34,7 +36,16 @@ const App = props => {
         keyValue="q"
         onKeyHandle={() => props.deleteBlock(props.clickedBlock)}
       />
-      <KeyHandler keyEventName={KEYPRESS} keyValue="x" onKeyHandle={() => props.deleteLink()} />
+      <KeyHandler
+        keyEventName={KEYPRESS}
+        keyValue="x"
+        onKeyHandle={() =>
+          props.deleteLink({
+            block: _.find(props.blocks, block => block.id === props.selectedLink.id),
+            link: props.selectedLink.linkPosition
+          })
+        }
+      />
       <KeyHandler keyEventName={KEYPRESS} keyValue="z" onKeyHandle={() => props.undo()} />
       <CssBaseline />
       <Grid container justify="flex-end" spacing={16}>
@@ -66,8 +77,8 @@ const App = props => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    deleteLink: () => {
-      dispatch(deleteLink());
+    deleteLink: payload => {
+      dispatch(deleteLink(payload));
     },
     deleteBlock: clickedBlock => {
       dispatch(deleteBlock(clickedBlock));
@@ -78,7 +89,11 @@ const mapDispatchToProps = dispatch => {
   };
 };
 const mapStateToProps = state => {
-  return { clickedBlock: state.mainPage.present.clickedBlock };
+  return {
+    clickedBlock: state.mainPage.present.clickedBlock,
+    selectedLink: state.mainPage.present.selectedLink,
+    blocks: state.mainPage.present.projects[0].blocks
+  };
 };
 
 const AppWithStyles = withStyles(styles)(App);
