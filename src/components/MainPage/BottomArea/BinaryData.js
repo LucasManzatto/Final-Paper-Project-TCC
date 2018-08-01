@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { blockUpdated, updateBlockValue } from "../actions";
+import * as selectors from "../selectors";
 
 import { axisRight } from "d3-axis";
 import { Axis } from "./axis";
@@ -14,7 +15,12 @@ class BinaryData extends React.Component {
     super(props);
     this.updateData = this.updateData.bind(this);
     let data = this.createDataArray(props);
-    props.updateBlockValue({ block: props.block, key: "data", value: data });
+    props.updateBlockValue({
+      block: props.block,
+      key: "data",
+      value: data,
+      indexOfBlock: props.indexOfBlock
+    });
     this.state = { data };
   }
 
@@ -90,9 +96,10 @@ BinaryData.propTypes = {
   dimensions: PropTypes.object,
   resolution: PropTypes.number
 };
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
   return {
-    clickedBlock: state.mainPage.present.clickedBlock
+    clickedBlock: state.mainPage.present.clickedBlock,
+    indexOfBlock: selectors.getIndexOfBlockSelector(state, props)
   };
 };
 export default connect(

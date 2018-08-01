@@ -8,6 +8,7 @@ import { rnorm } from "randgen";
 import { shiftArray, getScales } from "../utils";
 import PropTypes from "prop-types";
 import React from "react";
+import * as selectors from "../selectors";
 
 class AWGNData extends React.Component {
   constructor(props) {
@@ -16,7 +17,12 @@ class AWGNData extends React.Component {
     let blockLinkData = {};
     blockLinkData = _.clone(_.find(props.blocks, block => block.id === props.block.links[0]));
     let data = this.createDataArray(blockLinkData.data);
-    props.updateBlockValue({ block: props.block, key: "data", value: data });
+    props.updateBlockValue({
+      block: props.block,
+      key: "data",
+      value: data,
+      indexOfBlock: props.indexOfBlock
+    });
     this.state = {
       data,
       blockLinkData
@@ -55,7 +61,8 @@ class AWGNData extends React.Component {
       this.props.updateBlockValue({
         block: this.props.block,
         key: "data",
-        value: data
+        value: data,
+        indexOfBlock: this.props.indexOfBlock
       });
       this.setState({ data, blockLinkData: nextProps_blockLinkData });
     }
@@ -115,10 +122,11 @@ AWGNData.propTypes = {
   resolution: PropTypes.number,
   updateBlockValue: PropTypes.func
 };
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
   return {
     blocks: state.mainPage.present.projects[0].blocks,
-    clickedBlock: state.mainPage.present.clickedBlock
+    clickedBlock: state.mainPage.present.clickedBlock,
+    indexOfBlock: selectors.getIndexOfBlockSelector(state, props)
   };
 };
 export default connect(

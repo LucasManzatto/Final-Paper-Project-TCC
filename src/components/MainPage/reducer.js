@@ -21,9 +21,10 @@ export default function reducer(state = initialState, action) {
       return state;
     case consts.ADD_TO_PROJECT:
       return update(state, {
+        idCounter: { $set: action.payload.idCounter + 1 },
         projects: {
           [currentProject]: {
-            blocks: { $push: [action.payload] }
+            blocks: { $push: [action.payload.block] }
           }
         }
       });
@@ -34,7 +35,19 @@ export default function reducer(state = initialState, action) {
     case consts.BLOCK_UPDATED:
       return updateBlock(action.payload.block);
     case consts.CREATE_LINK:
-      return updateBlock(action.payload.block);
+      const arrayIndex = state.projects[currentProject].blocks.indexOf(action.payload.block);
+      return update(state, {
+        projects: {
+          [currentProject]: {
+            blocks: {
+              [arrayIndex]: {
+                links: { $push: [action.payload.link] },
+                linked: { $set: action.payload.linked }
+              }
+            }
+          }
+        }
+      });
     case consts.DELETE_BLOCK:
       return update(state, {
         projects: {
@@ -50,6 +63,18 @@ export default function reducer(state = initialState, action) {
     case consts.SELECT_LINK:
       return update(state, {
         selectedLink: { $set: action.payload }
+      });
+    case consts.SET_BLOCK_VALUE:
+      return update(state, {
+        projects: {
+          [currentProject]: {
+            blocks: {
+              [action.payload.indexOfBlock]: {
+                [action.payload.key]: { $set: action.payload.value }
+              }
+            }
+          }
+        }
       });
     case consts.TRACK_LOCATION:
       return updateBlock(action.payload.block);

@@ -40,6 +40,7 @@ export const findMinMax = (dataArray, resolution) => {
   });
   return { minX, maxX, minY, maxY };
 };
+
 /**
  * Shift the data array to make the movement.
  * @param  {Array} data The data on a certain time.
@@ -50,6 +51,7 @@ export const shiftArray = data => {
   data.push(item);
   return data;
 };
+
 /**
  * Create an array with the total time of the function to draw the xy coordinates.
  * @param  {number} totalTime Total time of the function.
@@ -62,6 +64,16 @@ export const createTimeArray = totalTime => {
   }
   return time;
 };
+
+const ID = () => {
+  return (
+    "_" +
+    Math.random()
+      .toString(36)
+      .substr(2, 9)
+  );
+};
+
 /**
  * getScales returns the x,y scale based on the data array to fit the graph.
  * @param  {Array} data       Array to scale the y-line.
@@ -126,7 +138,8 @@ export const notHidden = key => {
     key !== "updated" &&
     key !== "description" &&
     key !== "data" &&
-    key !== "requiredLinks"
+    key !== "requiredLinks" &&
+    key !== "priority"
   ) {
     return true;
   }

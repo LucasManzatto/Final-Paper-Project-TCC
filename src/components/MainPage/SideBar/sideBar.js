@@ -24,16 +24,18 @@ const style = {
 };
 
 const SideBar = props => {
+  const onClickHandler = block => {
+    props.addBlockToProject({ block, idCounter: props.idCounter });
+  };
+
   const ItemList = _.map(props.blocks, block => {
-    const onClickHandler = () => {
-      props.addBlockToProject(block);
-    };
     return (
-      <ListItem key={block.id} button onClick={onClickHandler}>
+      <ListItem key={block.name} button onClick={() => onClickHandler(block)}>
         <ListItemText primary={block.name} />
       </ListItem>
     );
   });
+
   return (
     <Paper elevation={0} square={true} style={style}>
       <List component="nav" subheader={<ListSubheader component="div">Blocks</ListSubheader>}>
@@ -45,7 +47,8 @@ const SideBar = props => {
 
 const mapStateToProps = state => {
   return {
-    blocks: state.mainPage.present.blocks
+    blocks: state.mainPage.present.blocks,
+    idCounter: state.mainPage.present.idCounter
   };
 };
 export default connect(

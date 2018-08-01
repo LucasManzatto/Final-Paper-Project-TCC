@@ -1,20 +1,19 @@
 import * as consts from "../../constants";
+import u from "updeep";
 import _ from "lodash";
 
-const ID = () => {
-  return (
-    "_" +
-    Math.random()
-      .toString(36)
-      .substr(2, 9)
-  );
-};
-
 export const addBlockToProject = payload => {
-  //payload.id = ID();
+  let new_payload = u(
+    {
+      block: {
+        id: payload.idCounter
+      }
+    },
+    payload
+  );
   return {
     type: consts.ADD_TO_PROJECT,
-    payload
+    payload: new_payload
   };
 };
 
@@ -32,26 +31,36 @@ export const blockUpdated = payload => {
 };
 
 export const blocksToLink = payload => {
+  let new_payload = u(
+    {
+      blocksToLinkArray: addLink(payload.blocksToLinkArray, payload.id, payload.type)
+    },
+    payload
+  );
+  function addLink(blocksToLinkArray, link, type) {
+    if (blocksToLinkArray.length >= 2) {
+      return [];
+    } else {
+      if (type === "add") {
+        return [].concat(blocksToLinkArray, [link]);
+      } else if (type === "delete") {
+        return _.remove(blocksToLinkArray, links => links === link);
+      }
+    }
+  }
   //Only 2 blocks can be linked at the same time
-  if (payload.blocksToLinkArray.length >= 2) {
-    payload.blocksToLinkArray = [];
-  }
-  if (payload.type === "add") {
-    payload.blocksToLinkArray.push(payload.id);
-  } else if (payload.type === "delete") {
-    _.remove(payload.blocksToLinkArray, link => link === payload.id);
-  }
   return {
     type: consts.BLOCKS_TO_LINK,
-    payload
+    payload: new_payload
   };
 };
 
 export const createLink = payload => {
   //after the link is created , this block needs to be deleted from the blocksToLinkArray
-  payload.block.links.push(payload.link);
-  if (payload.block.links.length === payload.block.neededLinks) {
-    payload.block.linked = true;
+  if (payload.block.links.length + 1 === payload.block.neededLinks) {
+    payload.linked = true;
+  } else {
+    payload.linked = false;
   }
   return {
     type: consts.CREATE_LINK,
@@ -67,7 +76,6 @@ export const deleteBlock = payload => {
 };
 
 export const deleteLink = payload => {
-  console.log(payload);
   payload.block.links = payload.block.links.filter(link => link !== payload.link);
   if (payload.block.links.length < payload.block.neededLinks) {
     payload.block.linked = false;
@@ -75,7 +83,7 @@ export const deleteLink = payload => {
   }
   return {
     type: consts.DELETE_LINK,
-    payload
+    payload: payload
   };
 };
 
@@ -83,7 +91,7 @@ export const pauseBlock = payload => {
   payload.block.paused = !payload.block.paused;
   return {
     type: consts.PAUSE_BLOCK,
-    payload
+    payload: payload
   };
 };
 
@@ -96,21 +104,36 @@ export const trackLocation = payload => {
   payload.block.position = payload.deltaPosition;
   return {
     type: consts.TRACK_LOCATION,
-    payload
+    payload: payload
   };
 };
 
 export const updateBlockValue = payload => {
-  if (payload.key === "frequency" || payload.key === "amplitude") {
-    if (payload.value > 0) {
-      payload.block[payload.key] = payload.value;
-    }
-  } else {
-    payload.block[payload.key] = payload.value;
-  }
+  let new_payload;
+  // if (payload.key === "frequency" || payload.key === "amplitude") {
+  //   if (payload.value > 0) {
+  //     new_payload = u(
+  //       {
+  //         block: {
+  //           [payload.key]: payload.value
+  //         }
+  //       },
+  //       payload
+  //     );
+  //   }
+  // } else {
+  //   new_payload = u(
+  //     {
+  //       block: {
+  //         [payload.key]: payload.value
+  //       }
+  //     },
+  //     payload
+  //   );
+  // }
   return {
-    type: consts.UPDATE_BLOCK,
-    payload
+    type: consts.SET_BLOCK_VALUE,
+    payload: payload
   };
 };
 

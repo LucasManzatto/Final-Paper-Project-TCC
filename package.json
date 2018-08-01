@@ -55,6 +55,7 @@
     "reselect": "^3.0.1",
     "simplify-js": "^1.2.3",
     "typeface-roboto": "0.0.54",
+    "updeep": "^1.0.0",
     "zingchart": "^2.7.2",
     "zingchart-react": "^1.0.6"
   },

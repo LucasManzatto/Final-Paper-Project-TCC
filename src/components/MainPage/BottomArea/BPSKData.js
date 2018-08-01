@@ -8,6 +8,7 @@ import { axisRight } from "d3-axis";
 import { blockUpdated, updateBlockValue } from "../actions";
 import { Line } from "./Line";
 import { shiftArray, createTimeArray, getScales, difference } from "../utils";
+import * as selectors from "../selectors";
 
 class BPSKData extends React.Component {
   constructor(props) {
@@ -21,7 +22,12 @@ class BPSKData extends React.Component {
     let blockLinkData = this.findLink("Data", blocks, block.links);
     let blockLinkCarrier = this.findLink("Carrier Wave", blocks, block.links);
     data = this.createDataArray(blockLinkData.data, resolution, blockLinkCarrier);
-    props.updateBlockValue({ block, key: "data", value: data });
+    props.updateBlockValue({
+      block: props.block,
+      key: "data",
+      value: data,
+      indexOfBlock: props.indexOfBlock
+    });
     this.state = {
       data,
       blockLinkData,
@@ -73,9 +79,10 @@ class BPSKData extends React.Component {
         nextProps_blockLinkCarrier
       );
       this.props.updateBlockValue({
-        block,
+        block: this.props.block,
         key: "data",
-        value: data
+        value: data,
+        indexOfBlock: this.props.indexOfBlock
       });
       this.setState({ data, blockLinkCarrier: nextProps_blockLinkCarrier });
     }
@@ -130,10 +137,11 @@ BPSKData.propTypes = {
   resolution: PropTypes.number
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
   return {
     blocks: state.mainPage.present.projects[0].blocks,
-    clickedBlock: state.mainPage.present.clickedBlock
+    clickedBlock: state.mainPage.present.clickedBlock,
+    indexOfBlock: selectors.getIndexOfBlockSelector(state, props)
   };
 };
 export default connect(

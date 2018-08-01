@@ -7,18 +7,20 @@ import ExpandBlockCard from "./ExpandedBlockCard";
 import Grid from "@material-ui/core/Grid";
 import Paper from "material-ui/Paper";
 import React from "react";
+
+import * as selectors from "../selectors";
 const style = {
   height: 200
 };
 
 const BottomArea = props => {
-  const renderBlockCards = _.map(props.blocks, block => {
+  let renderBlockCards = _.map(props.blocks, block => {
     //Se o total de links for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
     if (block.links.length < block.neededLinks) {
       return;
     }
     return (
-      <Grid key={block.id} container item xs={3}>
+      <Grid priority={block.neededLinks} key={block.id} container item xs={3}>
         {/* Button 1 */}
         <Grid xs={6} container item>
           <Button
@@ -42,7 +44,7 @@ const BottomArea = props => {
       </Grid>
     );
   });
-
+  //renderBlockCards = _.orderBy(renderBlockCards, ["props"], ["asc"]);
   return (
     <Paper elevation={0} square={true} style={style}>
       <Grid container>{renderBlockCards}</Grid>
@@ -50,9 +52,16 @@ const BottomArea = props => {
   );
 };
 
+function compare(a, b) {
+  if (a.last_nom < b.last_nom) return -1;
+  if (a.last_nom > b.last_nom) return 1;
+  return 0;
+}
+
 const mapStateToProps = state => {
   return {
-    blocks: state.mainPage.present.projects[state.mainPage.present.currentProject].blocks
+    blocks: selectors.projectBlocksSelector(state),
+    blocksSorted: selectors.getPrioritySelector(state)
   };
 };
 

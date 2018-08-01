@@ -10,6 +10,7 @@ import Right from "@material-ui/icons/ChevronRight";
 import Typography from "@material-ui/core/Typography";
 
 import { notHidden, valueToBinary } from "../utils";
+import * as selectors from "../selectors";
 
 //redux
 import { connect } from "react-redux";
@@ -261,8 +262,18 @@ class Block extends React.Component {
   };
 
   updateBlockOnClick = (value, key) => {
-    this.props.updateBlockValue({ value, key, block: this.props.block });
-    this.props.blockUpdated({ block: this.props.block, updated: true });
+    this.props.updateBlockValue({
+      value,
+      key,
+      block: this.props.block,
+      indexOfBlock: this.props.indexOfBlock
+    });
+    this.props.updateBlockValue({
+      value: true,
+      key: "updated",
+      block: this.props.block,
+      indexOfBlock: this.props.indexOfBlock
+    });
   };
 
   render = () => {
@@ -329,10 +340,11 @@ Block.propTypes = {
   block: PropTypes.object.isRequired,
   dimensions: PropTypes.object.isRequired,
   createLink: PropTypes.func.isRequired,
-  blocksToLink: PropTypes.func.isRequired
+  blocksToLink: PropTypes.func.isRequired,
+  blocksToLinkArray: PropTypes.array.isRequired
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
   const {
     clickedBlock,
     projects,
@@ -340,12 +352,14 @@ const mapStateToProps = state => {
     currentProject,
     blocksToLinkArray
   } = state.mainPage.present;
+
   return {
     clickedBlock,
     projects,
     selectedLink,
     currentProject,
-    blocksToLinkArray
+    blocksToLinkArray,
+    indexOfBlock: selectors.getIndexOfBlockSelector(state, props)
   };
 };
 

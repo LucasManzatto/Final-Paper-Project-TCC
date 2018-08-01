@@ -11,6 +11,7 @@ import Menu from "./Menu";
 import SideBar from "./SideBar/sideBar";
 import SideBarBlock from "./SideBar/sideBarBlock";
 
+import * as selectors from "./selectors";
 import { deleteLink, deleteBlock } from "./actions";
 import KeyHandler, { KEYPRESS } from "react-key-handler";
 
@@ -92,7 +93,7 @@ const mapStateToProps = state => {
   return {
     clickedBlock: state.mainPage.present.clickedBlock,
     selectedLink: state.mainPage.present.selectedLink,
-    blocks: state.mainPage.present.projects[0].blocks
+    blocks: selectors.projectBlocksSelector(state)
   };
 };
 
