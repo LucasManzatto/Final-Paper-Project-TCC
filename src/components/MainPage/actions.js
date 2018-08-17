@@ -109,10 +109,20 @@ export const trackLocation = payload => {
 };
 
 export const updateBlockValue = payload => {
-  // if (payload.key === "frequency" || payload.key === "amplitude")
+  let new_payload = payload;
+  if (payload.key === "frequency" || payload.key === "amplitude") {
+    if (payload.value <= 0) {
+      new_payload = u(
+        {
+          value: 0
+        },
+        payload
+      );
+    }
+  }
   return {
     type: consts.SET_BLOCK_VALUE,
-    payload: payload
+    payload: new_payload
   };
 };
 

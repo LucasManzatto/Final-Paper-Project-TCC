@@ -96,7 +96,8 @@ class Block extends React.Component {
     if (
       nextProps.blocksToLinkArray[0] === this.props.block.id &&
       nextProps.blocksToLinkArray.length === 2 &&
-      !_.includes(nextProps.block.links, blockToLink)
+      !_.includes(nextProps.block.links, blockToLink) &&
+      nextProps.block.links.length + 1 <= nextProps.block.neededLinks
     ) {
       //then create the link and delete this block from the blocksToLinkArray
       this.props.createLink({
@@ -156,23 +157,8 @@ class Block extends React.Component {
   };
 
   handleDrag = (e, ui) => {
-    this.handleClick();
-    const { x, y } = this.state.blockPosition;
-    const deltaPosition = {
-      x: x + ui.deltaX,
-      y: y + ui.deltaY
-    };
-    // this.props.updateBlockValue({
-    //   value: deltaPosition,
-    //   key: "position",
-    //   block: this.props.block,
-    //   indexOfBlock: this.props.indexOfBlock
-    // });
-    this.setState({ blockPosition: deltaPosition });
-    //this.props.trackLocation({ block: this.props.block, deltaPosition });
-  };
-  handleStop = (e, ui) => {
-    const { x, y } = this.state.blockPosition;
+    //this.handleClick();
+    const { x, y } = this.props.block.position;
     const deltaPosition = {
       x: x + ui.deltaX,
       y: y + ui.deltaY
@@ -183,14 +169,32 @@ class Block extends React.Component {
       block: this.props.block,
       indexOfBlock: this.props.indexOfBlock
     });
+    //this.setState({ blockPosition: deltaPosition });
+    //this.props.trackLocation({ block: this.props.block, deltaPosition });
   };
+  // handleStop = (e, ui) => {
+  //   //const { x, y } = this.state.blockPosition;
+  //   const { x, y } = this.props.block.position;
+  //   const deltaPosition = {
+  //     x: x + ui.deltaX,
+  //     y: y + ui.deltaY
+  //   };
+  //   this.props.updateBlockValue({
+  //     value: deltaPosition,
+  //     key: "position",
+  //     block: this.props.block,
+  //     indexOfBlock: this.props.indexOfBlock
+  //   });
+  // };
 
   linkBlocks = position => {
     this.setState({ position });
     //Can link only from the input to the output and cannot link fully linked blocks
+    //Need to check if a block is already fully linked but other block wants to link with
+    //it in the output
     if (
       (position === 195 && this.props.blocksToLinkArray.length === 0) ||
-      (this.props.block.links.length >= this.props.block.neededLinks &&
+      (this.props.block.links.length > this.props.block.neededLinks &&
         this.props.block.neededLinks !== 0)
     ) {
       return;
@@ -223,8 +227,8 @@ class Block extends React.Component {
             borderStyle={borderStyle}
             borderColor="black"
             zIndex={1}
-            x0={blockPosition.x + 8 + offsetX}
-            y0={blockPosition.y + blockHeight / 2 + offsetY}
+            x0={block.position.x + 8 + offsetX}
+            y0={block.position.y + blockHeight / 2 + offsetY}
             x1={linkBlock.position.x + offsetX + 170}
             y1={linkBlock.position.y + blockHeight / 2 + offsetY}
           />
@@ -311,10 +315,10 @@ class Block extends React.Component {
     return (
       <Fragment>
         <Draggable
-          //grid={[10, 10]}
+          grid={[10, 10]}
           bounds={bounds}
           onDrag={this.handleDrag}
-          onStop={this.handleStop}
+          // onStop={this.handleStop}
           position={position}
         >
           <Grid

@@ -50,6 +50,7 @@ export default function reducer(state = initialState, action) {
       });
     case consts.DELETE_BLOCK:
       return update(state, {
+        clickedBlock: {},
         projects: {
           [currentProject]: {
             blocks: blocks => blocks.filter(block => block !== action.payload)

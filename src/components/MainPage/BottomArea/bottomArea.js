@@ -58,7 +58,7 @@ function compare(a, b) {
   return 0;
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
   return {
     blocks: selectors.projectBlocksSelector(state),
     blocksSorted: selectors.getPrioritySelector(state)
