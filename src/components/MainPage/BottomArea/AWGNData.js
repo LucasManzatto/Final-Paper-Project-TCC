@@ -14,9 +14,8 @@ class AWGNData extends React.Component {
   constructor(props) {
     super(props);
     this.updateData = this.updateData.bind(this);
-    let blockLinkData = {};
-    blockLinkData = _.clone(_.find(props.blocks, block => block.id === props.block.links[0]));
-    let data = this.createDataArray(blockLinkData.data);
+    const blockLinkData = props.linkedBlocks[0];
+    const data = this.createDataArray(blockLinkData.data);
     props.updateBlockValue({
       block: props.block,
       key: "data",
@@ -46,16 +45,7 @@ class AWGNData extends React.Component {
     window.cancelAnimationFrame(this.animationId);
   }
   componentWillReceiveProps(nextProps) {
-    const nextProps_blockLinkData = _.clone(
-      _.find(this.props.blocks, block => block.id === this.props.block.links[0])
-    );
-    // if (!nextProps_blockLink1.linked) {
-    //   this.props.updateBlockValue({
-    //     block: this.props.block,
-    //     key: "linked",
-    //     value: false
-    //   });
-    // }
+    const nextProps_blockLinkData = nextProps.linkedBlocks[0];
     if (nextProps_blockLinkData.data !== this.state.blockLinkData.data) {
       let data = this.createDataArray(nextProps_blockLinkData.data);
       this.props.updateBlockValue({
@@ -88,31 +78,20 @@ class AWGNData extends React.Component {
   render() {
     const { dimensions, block, blocks, clickedBlock } = this.props;
     const { data, blockLinkData } = this.state;
-    let amplitude = -1;
-    let getAmplitude = _.find(blocks, block => block.id === blockLinkData.links[0]);
-    try {
-      if ("amplitude" in getAmplitude)
-        amplitude = _.find(blocks, block => block.id === blockLinkData.links[0]).amplitude;
-      else {
-        amplitude = _.find(blocks, block => block.id === blockLinkData.links[1]).amplitude;
-      }
-    } catch (err) {}
+    let amplitude = 1;
+    if ("amplitude" in blockLinkData) amplitude = blockLinkData.amplitude;
     const scale = getScales(data, dimensions, block, this.props.resolution, amplitude);
-    if (amplitude !== -1) {
-      return (
-        <g>
-          <Line
-            xScale={scale.xLine}
-            yScale={scale.yLine}
-            data={data}
-            focused={block === clickedBlock ? true : false}
-          />
-          <Axis axis={axisRight} tickValues={scale.tickValues} scale={scale.yAxis} />
-        </g>
-      );
-    } else {
-      return null;
-    }
+    return (
+      <g>
+        <Line
+          xScale={scale.xLine}
+          yScale={scale.yLine}
+          data={data}
+          //focused={block === clickedBlock ? true : false}
+        />
+        <Axis axis={axisRight} tickValues={scale.tickValues} scale={scale.yAxis} />
+      </g>
+    );
   }
 }
 AWGNData.propTypes = {
@@ -126,6 +105,7 @@ const mapStateToProps = (state, props) => {
   return {
     blocks: state.mainPage.present.projects[0].blocks,
     clickedBlock: state.mainPage.present.clickedBlock,
+    linkedBlocks: selectors.linkedBlocksSelector(state, props),
     indexOfBlock: selectors.getIndexOfBlockSelector(state, props)
   };
 };

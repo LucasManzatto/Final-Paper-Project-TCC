@@ -55,7 +55,8 @@ class Block extends React.Component {
       offsetX: 0,
       offsetY: 0,
       mouseClicked: false,
-      position: 5
+      position: 5,
+      blockPosition: props.block.position
     };
   }
 
@@ -111,9 +112,8 @@ class Block extends React.Component {
     }
     if (nextProps.dimensions !== this.props.dimensions) {
       this.renderLines();
+      this.calculateOffset("projectTab");
     }
-
-    this.calculateOffset("projectTab");
   };
 
   /**
@@ -157,30 +157,55 @@ class Block extends React.Component {
 
   handleDrag = (e, ui) => {
     this.handleClick();
-    const { x, y } = this.props.block.position;
+    const { x, y } = this.state.blockPosition;
     const deltaPosition = {
       x: x + ui.deltaX,
       y: y + ui.deltaY
     };
-    this.props.trackLocation({ block: this.props.block, deltaPosition });
+    // this.props.updateBlockValue({
+    //   value: deltaPosition,
+    //   key: "position",
+    //   block: this.props.block,
+    //   indexOfBlock: this.props.indexOfBlock
+    // });
+    this.setState({ blockPosition: deltaPosition });
+    //this.props.trackLocation({ block: this.props.block, deltaPosition });
+  };
+  handleStop = (e, ui) => {
+    const { x, y } = this.state.blockPosition;
+    const deltaPosition = {
+      x: x + ui.deltaX,
+      y: y + ui.deltaY
+    };
+    this.props.updateBlockValue({
+      value: deltaPosition,
+      key: "position",
+      block: this.props.block,
+      indexOfBlock: this.props.indexOfBlock
+    });
   };
 
   linkBlocks = position => {
     this.setState({ position });
-    //Can link only from the input to the output.
-    if (position === 195 && this.props.blocksToLinkArray.length === 0) {
+    //Can link only from the input to the output and cannot link fully linked blocks
+    if (
+      (position === 195 && this.props.blocksToLinkArray.length === 0) ||
+      (this.props.block.links.length >= this.props.block.neededLinks &&
+        this.props.block.neededLinks !== 0)
+    ) {
       return;
+    } else {
+      this.props.blocksToLink({
+        type: "add",
+        id: this.props.block.id,
+        blocksToLinkArray: this.props.blocksToLinkArray
+      });
     }
-    this.props.blocksToLink({
-      type: "add",
-      id: this.props.block.id,
-      blocksToLinkArray: this.props.blocksToLinkArray
-    });
   };
 
   renderLines = () => {
-    let { selectLink, block, projects, selectedLink, currentProject } = this.props;
-    let { offsetX, offsetY } = this.state;
+    let { selectLink, block, projects, selectedLink, currentProject, linkedBlocks } = this.props;
+    let { offsetX, offsetY, blockPosition } = this.state;
     if (block.neededLinks === 0) {
       return null;
     }
@@ -198,8 +223,8 @@ class Block extends React.Component {
             borderStyle={borderStyle}
             borderColor="black"
             zIndex={1}
-            x0={block.position.x + 8 + offsetX}
-            y0={block.position.y + blockHeight / 2 + offsetY}
+            x0={blockPosition.x + 8 + offsetX}
+            y0={blockPosition.y + blockHeight / 2 + offsetY}
             x1={linkBlock.position.x + offsetX + 170}
             y1={linkBlock.position.y + blockHeight / 2 + offsetY}
           />
@@ -211,6 +236,7 @@ class Block extends React.Component {
   renderLineToCursor = position => {
     let { block, cursorPosition, blocksToLinkArray } = this.props;
     let { offsetX, offsetY } = this.state;
+    //render line only when the block is not fully linked
     if (_.includes(blocksToLinkArray, block.id) && block.links.length < block.neededLinks) {
       return (
         <Line
@@ -229,36 +255,38 @@ class Block extends React.Component {
     }
   };
 
-  showProperties = (value, key) => {
-    if (key === "binary") {
-      return (
-        <Typography key={key} variant="body1">
-          <b>{_.capitalize(key)}:</b>
-          {valueToBinary(value)}
-        </Typography>
-      );
-    }
-    //Hide unwanted properties
-    if (notHidden(key)) {
-      let sum = 1;
-      if (key === "frequency") {
-        sum = 6;
+  showProperties = block => {
+    return _.map(block, (value, key) => {
+      if (key === "binary") {
+        return (
+          <Typography key={key} variant="body1">
+            <b>{_.capitalize(key)}:</b>
+            {valueToBinary(value)}
+          </Typography>
+        );
       }
-      return (
-        <Typography key={key} variant="body1">
-          <b>{_.capitalize(key)}:</b>
-          <Left
-            onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] - sum, key)}
-            style={iconStyle}
-          />
-          {value}
-          <Right
-            onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] + sum, key)}
-            style={iconStyle}
-          />
-        </Typography>
-      );
-    }
+      //Hide unwanted properties
+      if (notHidden(key)) {
+        let sum = 1;
+        if (key === "frequency") {
+          sum = 6;
+        }
+        return (
+          <Typography key={key} variant="body1">
+            <b>{_.capitalize(key)}:</b>
+            <Left
+              onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] - sum, key)}
+              style={iconStyle}
+            />
+            {value}
+            <Right
+              onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] + sum, key)}
+              style={iconStyle}
+            />
+          </Typography>
+        );
+      }
+    });
   };
 
   updateBlockOnClick = (value, key) => {
@@ -286,6 +314,7 @@ class Block extends React.Component {
           //grid={[10, 10]}
           bounds={bounds}
           onDrag={this.handleDrag}
+          onStop={this.handleStop}
           position={position}
         >
           <Grid
@@ -311,7 +340,7 @@ class Block extends React.Component {
               <Typography variant="subheading" gutterBottom align="center">
                 <b>{block.name}</b>
               </Typography>
-              {_.map(block, this.showProperties)}
+              {this.showProperties(block)}
             </Grid>
             <Grid item container direction="column" xs={1} style={{ height: 100 }}>
               <Grid item xs={4} />
@@ -359,6 +388,7 @@ const mapStateToProps = (state, props) => {
     selectedLink,
     currentProject,
     blocksToLinkArray,
+    linkedBlocks: selectors.linkedBlocksSelector(state, props),
     indexOfBlock: selectors.getIndexOfBlockSelector(state, props)
   };
 };
