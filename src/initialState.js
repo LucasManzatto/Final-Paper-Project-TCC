@@ -1,4 +1,6 @@
 export const initialState = {
+  isAuthenticated: false,
+  user: "",
   currentProject: 0,
   idCounter: 4,
   selectedLink: {

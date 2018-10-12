@@ -28,6 +28,7 @@ const SideBar = props => {
     props.addBlockToProject({ block, idCounter: props.idCounter });
   };
 
+  //Cria a lista de items
   const ItemList = _.map(props.blocks, block => {
     return (
       <ListItem key={block.name} button onClick={() => onClickHandler(block)}>

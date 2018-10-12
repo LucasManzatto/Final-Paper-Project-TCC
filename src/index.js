@@ -2,12 +2,14 @@ import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./components/MainPage/App";
+import LoginPage from "./components/LoginPage/LoginPage.js";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import registerServiceWorker from "./registerServiceWorker";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import reducers from "./rootReducer";
 import "typeface-roboto";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 // const theme = createMuiTheme({
 //   palette: {
@@ -43,9 +45,15 @@ ReactDOM.render(
       store={createStore(
         reducers,
         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-      )}>
+      )}
+    >
       <MuiThemeProvider theme={theme2}>
-        <App />
+        <Router>
+          <div>
+            <Route exact path="/" component={LoginPage} />
+            <Route path="/Home" component={App} />
+          </div>
+        </Router>
       </MuiThemeProvider>
     </Provider>
   </Fragment>,

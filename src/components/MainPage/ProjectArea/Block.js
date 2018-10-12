@@ -137,10 +137,7 @@ class Block extends React.Component {
    * @return {Object}        Return the x,y position of the block
    */
   getPosition(bounds) {
-    let position = {
-      x: this.props.block.position.x,
-      y: this.props.block.position.y
-    };
+    let { position } = this.props.block;
     if (position.x > bounds.right) {
       position.x = bounds.right;
     }
