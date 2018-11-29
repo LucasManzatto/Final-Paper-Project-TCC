@@ -14,8 +14,8 @@ const style = {
 };
 
 const BottomArea = props => {
+  //Se o total de links for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
   let renderBlockCards = _.map(props.blocks, block => {
-    //Se o total de links for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
     if (block.links.length < block.neededLinks) {
       return;
     }
@@ -51,12 +51,6 @@ const BottomArea = props => {
     </Paper>
   );
 };
-
-function compare(a, b) {
-  if (a.last_nom < b.last_nom) return -1;
-  if (a.last_nom > b.last_nom) return 1;
-  return 0;
-}
 
 const mapStateToProps = (state, props) => {
   return {

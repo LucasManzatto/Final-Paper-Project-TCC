@@ -22,6 +22,7 @@
     "lodash": "^4.17.10",
     "material-ui": "^1.0.0-beta.47",
     "material-ui-icons": "^1.0.0-beta.36",
+    "mongodb-stitch-browser-sdk": "^4.0.15-0",
     "mongoose": "^5.3.2",
     "prop-types": "^15.6.2",
     "randgen": "^0.1.0",

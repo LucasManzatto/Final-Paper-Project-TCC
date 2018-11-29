@@ -185,21 +185,22 @@ class Block extends React.Component {
   // };
 
   linkBlocks = position => {
+    const {blocksToLinkArray,block} = this.props;
     this.setState({ position });
     //Can link only from the input to the output and cannot link fully linked blocks
     //Need to check if a block is already fully linked but other block wants to link with
     //it in the output
+    //Nao deixar linkar quando o bloco que voce quer linkar nao esta linkado e nao tem Data
     if (
-      (position === 195 && this.props.blocksToLinkArray.length === 0) ||
-      (this.props.block.links.length > this.props.block.neededLinks &&
-        this.props.block.neededLinks !== 0)
+      (position === 195 && (blocksToLinkArray.length === 0  || block.data.length === 0)) ||
+      (block.links.length > block.neededLinks && block.neededLinks !== 0)
     ) {
       return;
     } else {
       this.props.blocksToLink({
         type: "add",
-        id: this.props.block.id,
-        blocksToLinkArray: this.props.blocksToLinkArray
+        id: block.id,
+        blocksToLinkArray
       });
     }
   };
@@ -220,7 +221,7 @@ class Block extends React.Component {
       return (
         <div key={linkPosition} onClick={event => selectLink({ id: block.id, linkPosition })}>
           <Line
-            borderWidth={4}
+            borderWidth={3}
             borderStyle={borderStyle}
             borderColor="black"
             zIndex={1}
@@ -241,7 +242,7 @@ class Block extends React.Component {
     if (_.includes(blocksToLinkArray, block.id) && block.links.length < block.neededLinks) {
       return (
         <Line
-          borderWidth={4}
+          borderWidth={3}
           borderStyle="solid"
           borderColor="black"
           zIndex={1}

@@ -3,7 +3,9 @@ import Dimensions from "react-dimensions";
 
 import BinaryData from "./BinaryData";
 import BPSKData from "./BPSKData";
+import FSKData from "./FSKData";
 import AWGNData from "./AWGNData";
+import ASKData from "./ASKData";
 import CarrierWaveData from "./CarrierWaveData";
 
 const BlockCard = props => {
@@ -23,10 +25,16 @@ const BlockCard = props => {
     if (block.name === "Carrier Wave") {
       data = <CarrierWaveData dimensions={{ width, height }} resolution={1200} block={block} />;
     }
-    if (block.name === "BPSK" && block.links.length >= block.neededLinks) {
+    if (block.name === "BPSK" && block.linked) {
       data = <BPSKData dimensions={{ width, height }} resolution={1200} block={block} />;
     }
-    if (block.name === "AWGN" && block.links.length >= block.neededLinks) {
+    if (block.name === "FSK" && block.linked) {
+      data = <FSKData dimensions={{ width, height }} resolution={1200} block={block} />;
+    }
+    if (block.name === "ASK" && block.linked) {
+      data = <ASKData dimensions={{ width, height }} resolution={1200} block={block} />;
+    }
+    if (block.name === "AWGN" && block.linked) {
       data = <AWGNData dimensions={{ width, height }} resolution={1200} block={block} />;
     }
     return (

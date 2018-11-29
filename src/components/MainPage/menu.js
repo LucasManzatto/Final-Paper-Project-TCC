@@ -34,7 +34,7 @@ function Menu(props) {
           <Typography variant="title" color="inherit" className={classes.flex}>
             TCC
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit">Lucas</Button>
         </Toolbar>
       </AppBar>
     </div>

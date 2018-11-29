@@ -75,12 +75,13 @@ export const deleteBlock = payload => {
   };
 };
 
+//Quando um link é deletado, é necessário sempre apagar a data
+// porque quando um link é deletado o bloco num está com todos os links e não deve ter
+// nenhuma data
 export const deleteLink = payload => {
   payload.block.links = payload.block.links.filter(link => link !== payload.link);
-  if (payload.block.links.length < payload.block.neededLinks) {
-    payload.block.linked = false;
-    payload.block.data = [];
-  }
+  payload.block.linked = false;
+  payload.block.data = [];
   return {
     type: consts.DELETE_LINK,
     payload: payload

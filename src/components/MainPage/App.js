@@ -1,6 +1,7 @@
 import React from "react";
 //Imports dos components do projeto
-import { withStyles } from "@material-ui/core/styles";
+import {Redirect, withRouter} from "react-router-dom";
+import {withStyles} from "@material-ui/core/styles";
 import BottomArea from "./BottomArea/bottomArea";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
@@ -12,11 +13,12 @@ import SideBar from "./SideBar/sideBar";
 import SideBarBlock from "./SideBar/sideBarBlock";
 
 import * as selectors from "./selectors";
-import { deleteLink, deleteBlock } from "./actions";
-import KeyHandler, { KEYPRESS } from "react-key-handler";
+import {deleteLink, deleteBlock} from "./actions";
+import KeyHandler, {KEYPRESS} from "react-key-handler";
 
-import { ActionCreators } from "redux-undo";
-import { connect } from "react-redux";
+import {ActionCreators} from "redux-undo";
+import {connect} from "react-redux";
+import {Stitch, RemoteMongoClient, AnonymousCredential} from "mongodb-stitch-browser-sdk";
 
 const styles = theme => ({
   root: {
@@ -28,52 +30,58 @@ const styles = theme => ({
     color: theme.palette.text.secondary
   }
 });
-//FRAGMENT
 const App = props => {
-  return (
-    <div style={{ paddingRight: 16, overflowY: "hidden" }}>
-      <KeyHandler
-        keyEventName={KEYPRESS}
-        keyValue="q"
-        onKeyHandle={() => props.deleteBlock(props.clickedBlock)}
-      />
-      <KeyHandler
-        keyEventName={KEYPRESS}
-        keyValue="x"
-        onKeyHandle={() =>
-          props.deleteLink({
-            block: _.find(props.blocks, block => block.id === props.selectedLink.id),
-            link: props.selectedLink.linkPosition
-          })
-        }
-      />
-      <KeyHandler keyEventName={KEYPRESS} keyValue="z" onKeyHandle={() => props.undo()} />
-      <CssBaseline />
-      <Grid container justify="flex-end" spacing={16}>
-        <Grid container item xs={12} spacing={16}>
-          <Grid xs item>
-            <Menu />
+  if (props.isAuthenticated) {
+    return (
+      <div style={{
+        paddingRight: 16,
+        overflowY: "hidden"
+      }}>
+        <KeyHandler
+          keyEventName={KEYPRESS}
+          keyValue="q"
+          onKeyHandle={() => props.deleteBlock(props.clickedBlock)}/>
+        <KeyHandler
+          keyEventName={KEYPRESS}
+          keyValue="x"
+          onKeyHandle={() => props.deleteLink({
+          block: _.find(props.blocks, block => block.id === props.selectedLink.id),
+          link: props.selectedLink.linkPosition
+        })}/>
+
+        <KeyHandler
+          keyEventName={KEYPRESS}
+          keyValue="z"
+          onKeyHandle={() => props.undo()}/>
+        <CssBaseline/>
+        <Grid container justify="flex-end" spacing={16}>
+          <Grid container item xs={12} spacing={16}>
+            <Grid xs item>
+              <Menu/>
+            </Grid>
+          </Grid>
+          <Grid container item xs={12} spacing={16}>
+            <Grid xs={2} item>
+              <SideBar/>
+            </Grid>
+            <Grid xs={8} item>
+              <ProjectArea/>
+            </Grid>
+            <Grid xs={2} item>
+              <SideBarBlock/>
+            </Grid>
+          </Grid>
+          <Grid container item xs={12} spacing={16}>
+            <Grid xs={12} item>
+              <BottomArea/>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid container item xs={12} spacing={16}>
-          <Grid xs={2} item>
-            <SideBar />
-          </Grid>
-          <Grid xs={8} item>
-            <ProjectArea />
-          </Grid>
-          <Grid xs={2} item>
-            <SideBarBlock />
-          </Grid>
-        </Grid>
-        <Grid container item xs={12} spacing={16}>
-          <Grid xs={12} item>
-            <BottomArea />
-          </Grid>
-        </Grid>
-      </Grid>
-    </div>
-  );
+      </div>
+    );
+  } else {
+    return <Redirect to="/"/>
+  }
 };
 
 const mapDispatchToProps = dispatch => {
@@ -91,15 +99,13 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
+    isAuthenticated: state.mainPage.present.isAuthenticated,
     clickedBlock: state.mainPage.present.clickedBlock,
     selectedLink: state.mainPage.present.selectedLink,
     blocks: selectors.projectBlocksSelector(state)
   };
 };
 
-const AppWithStyles = withStyles(styles)(App);
+const AppWithStyles = withRouter(withStyles(styles)(App));
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AppWithStyles);
+export default connect(mapStateToProps, mapDispatchToProps)(AppWithStyles);
