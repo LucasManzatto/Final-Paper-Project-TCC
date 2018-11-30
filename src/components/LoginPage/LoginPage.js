@@ -1,28 +1,19 @@
 import React from "react";
 import {
-  BrowserRouter as Router,
-  Route,
-  Link,
   withRouter
 } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import App from "C:/Users/Lucas/Documents/GitHub/tcc/src/components/MainPage/App.js";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
-import { Auth } from "aws-amplify";
 
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import CardHeader from "@material-ui/core/CardHeader";
-import FormControl from "@material-ui/core/FormControl";
 
 const styles = theme => ({
   // textField: {
@@ -64,7 +55,7 @@ class LoginPage extends React.Component {
   };
   handleSubmit = async event => {
     event.preventDefault();
-    if (this.state.usuario == "admin" && this.state.senha == "admin") {
+    if (this.state.usuario === "admin" && this.state.senha === "admin") {
       this.props.history.push("/Home");
     } else {
       alert("Usuário ou senha inválidos.");

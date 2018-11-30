@@ -2,7 +2,6 @@ import _ from "lodash";
 import { Line } from "react-lineto";
 import Draggable from "react-draggable";
 import Grid from "@material-ui/core/Grid";
-import KeyHandler, { KEYPRESS } from "react-key-handler";
 import Left from "@material-ui/icons/ChevronLeft";
 import PropTypes from "prop-types";
 import React, { Fragment } from "react";
@@ -81,7 +80,7 @@ class Block extends React.Component {
     const blocks = this.props.projects[this.props.currentProject].blocks;
     const nextProps_blocks = nextProps.projects[this.props.currentProject].blocks;
     if (nextProps_blocks.length !== blocks.length) {
-      nextProps.block.links.map((link, index) => {
+      nextProps.block.links.map(link => {
         let linkBlock = _.find(
           nextProps.projects[this.props.currentProject].blocks,
           block => block.id === link
@@ -206,8 +205,8 @@ class Block extends React.Component {
   };
 
   renderLines = () => {
-    let { selectLink, block, projects, selectedLink, currentProject, linkedBlocks } = this.props;
-    let { offsetX, offsetY, blockPosition } = this.state;
+    let { selectLink, block, projects, selectedLink, currentProject } = this.props;
+    let { offsetX, offsetY} = this.state;
     if (block.neededLinks === 0) {
       return null;
     }

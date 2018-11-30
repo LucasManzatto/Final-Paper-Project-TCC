@@ -18,9 +18,8 @@ import KeyHandler, {KEYPRESS} from "react-key-handler";
 
 import {ActionCreators} from "redux-undo";
 import {connect} from "react-redux";
-import {Stitch, RemoteMongoClient, AnonymousCredential} from "mongodb-stitch-browser-sdk";
-
-const styles = theme => ({
+import {createDb} from 'C:/Users/Lucas/Documents/GitHub/tcc/src/firebase.js'
+  const styles = theme => ({
   root: {
     flexGrow: 1
   },
@@ -30,6 +29,7 @@ const styles = theme => ({
     color: theme.palette.text.secondary
   }
 });
+//createDb();
 const App = props => {
   if (props.isAuthenticated) {
     return (

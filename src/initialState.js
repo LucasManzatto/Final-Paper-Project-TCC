@@ -1,6 +1,6 @@
 export const initialState = {
   isAuthenticated: true,
-  user: "Duvewet",
+  user: 'Duvewet',
   currentProject: 0,
   idCounter: 4,
   selectedLink: {
@@ -11,9 +11,9 @@ export const initialState = {
   blocksToLinkArray: [],
   clickedBlock: {
     id: 2,
-    name: "BPSK",
+    name: 'BPSK',
     links: [],
-    type: "bpsk",
+    type: 'bpsk',
     position: {
       x: 200,
       y: 120
@@ -23,20 +23,32 @@ export const initialState = {
     updated: false,
     neededLinks: 2,
     data: [],
-    requiredLinks: ["Data", "Carrier Wave"],
-    description: "Binary Phase Shift Keying (BPSK) is a two phase modulation scheme, where the 0’s and 1’s in a binary message are represented by two different phase states in the carrier signal: θ=0° for binary 1 and θ=180° for binary 0."
+    requiredLinks: [
+      'Data', 'Carrier Wave'
+    ],
+    description: 'Binary Phase Shift Keying (BPSK) is a two phase modulation scheme, where the 0’s' +
+        ' and 1’s in a binary message are represented by two different phase states in th' +
+        'e carrier signal: θ=0° for binary 1 and θ=180° for binary 0.'
   },
   projects: {
     0: {
       id: 0,
-      name: "Project 1",
-      blocks: [{
-          binary: [1, 1, 1, -1, 1, -1],
+      name: 'Project 1',
+      blocks: [
+        {
+          binary: [
+            1,
+            1,
+            1,
+            -1,
+            1,
+            -1
+          ],
           data: [],
           id: 0,
           linked: false,
           links: [],
-          name: "Data",
+          name: 'Data',
           neededLinks: 0,
           paused: false,
           position: {
@@ -44,18 +56,17 @@ export const initialState = {
             y: 480
           },
           priority: 1,
-          requiredLinks: ["None"],
-          type: "square",
+          requiredLinks: ['None'],
+          type: 'square',
           updated: false
-        },
-        {
+        }, {
           amplitude: 3,
           data: [],
           frequency: 12,
           id: 1,
           linked: false,
           links: [],
-          name: "Carrier Wave",
+          name: 'Carrier Wave',
           neededLinks: 0,
           paused: false,
           position: {
@@ -63,33 +74,26 @@ export const initialState = {
             y: 400
           },
           priority: 1,
-          requiredLinks: ["None"],
-          type: "sine",
+          requiredLinks: ['None'],
+          type: 'sine',
           updated: false,
-          description: "A carrier wave, carrier signal, or just carrier, is a waveform (usually sinusoidal) that is modulated (modified) with an input signal for the purpose of conveying information."
+          description: 'A carrier wave, carrier signal, or just carrier, is a waveform (usually sinusoid' +
+              'al) that is modulated (modified) with an input signal for the purpose of conveyi' +
+              'ng information.'
         },
-        // {
-        //   data: [],
-        //   id: 2,
-        //   linked: false,
-        //   links: [],
-        //   name: "BPSK",
-        //   neededLinks: 2,
-        //   paused: false,
-        //   position: { x: 200, y: 120 },
-        //   priority: 2,
-        //   requiredLinks: ["Data", "Carrier Wave"],
-        //   type: "bpsk",
-        //   updated: false,
-        //   description:
-        //     "Binary Phase Shift Keying (BPSK) is a two phase modulation scheme, where the 0’s and 1’s in a binary message are represented by two different phase states in the carrier signal: θ=0° for binary 1 and θ=180° for binary 0."
-        // },
+        // {   data: [],   id: 2,   linked: false,   links: [],   name: "BPSK",
+        // neededLinks: 2,   paused: false,   position: { x: 200, y: 120 },   priority:
+        // 2,   requiredLinks: ["Data", "Carrier Wave"],   type: "bpsk",   updated:
+        // false,   description:     "Binary Phase Shift Keying (BPSK) is a two phase
+        // modulation scheme, where the 0’s and 1’s in a binary message are represented
+        // by two different phase states in the carrier signal: θ=0° for binary 1 and
+        // θ=180° for binary 0." },
         {
           data: [],
           id: 4,
           linked: false,
           links: [],
-          name: "ASK",
+          name: 'ASK',
           neededLinks: 2,
           paused: false,
           position: {
@@ -97,17 +101,20 @@ export const initialState = {
             y: 120
           },
           priority: 2,
-          requiredLinks: ["Data", "Carrier Wave"],
-          type: "ask",
+          requiredLinks: [
+            'Data', 'Carrier Wave'
+          ],
+          type: 'ask',
           updated: false,
-          description: "Binary Phase Shift Keying (BPSK) is a two phase modulation scheme, where the 0’s and 1’s in a binary message are represented by two different phase states in the carrier signal: θ=0° for binary 1 and θ=180° for binary 0."
-        },
-        {
+          description: 'Binary Phase Shift Keying (BPSK) is a two phase modulation scheme, where the 0’s' +
+              ' and 1’s in a binary message are represented by two different phase states in th' +
+              'e carrier signal: θ=0° for binary 1 and θ=180° for binary 0.'
+        }, {
           data: [],
           id: 5,
           linked: false,
           links: [],
-          name: "FSK",
+          name: 'FSK',
           neededLinks: 2,
           paused: false,
           position: {
@@ -115,17 +122,20 @@ export const initialState = {
             y: 120
           },
           priority: 2,
-          requiredLinks: ["Data", "Carrier Wave"],
-          type: "fsk",
+          requiredLinks: [
+            'Data', 'Carrier Wave'
+          ],
+          type: 'fsk',
           updated: false,
-          description: "In Frequency Shify Keying (FSK) the frequency of the Carrier Wave is varied in accordance with baseband digital input. Binary 1 and 0 is represented by two different carrier frequencies."
-        },
-        {
+          description: 'In Frequency Shify Keying (FSK) the frequency of the Carrier Wave is varied in a' +
+              'ccordance with baseband digital input. Binary 1 and 0 is represented by two diff' +
+              'erent carrier frequencies.'
+        }, {
           data: [],
           id: 3,
           linked: false,
           links: [],
-          name: "AWGN",
+          name: 'AWGN',
           neededLinks: 1,
           paused: false,
           position: {
@@ -133,23 +143,24 @@ export const initialState = {
             y: 0
           },
           priority: 3,
-          requiredLinks: ["Data"],
-          type: "awgn",
+          requiredLinks: ['Data'],
+          type: 'awgn',
           updated: false,
-          description: "Additive white Gaussian noise (AWGN) is a basic noise model used in Information theory to mimic the effect of many random processes that occur in nature."
+          description: 'Additive white Gaussian noise (AWGN) is a basic noise model used in Information ' +
+              'theory to mimic the effect of many random processes that occur in nature.'
         }
       ]
     },
     1: {
       id: 1,
-      name: "Project 2",
+      name: 'Project 2',
       blocks: {
         1: {
           id: 1,
-          name: "Carrier Wave",
+          name: 'Carrier Wave',
           frequency: 4,
           amplitude: 4,
-          type: "sine",
+          type: 'sine',
           position: {
             x: 0,
             y: 300
@@ -159,12 +170,20 @@ export const initialState = {
       }
     }
   },
-  blocks: [{
-      binary: [1, 1, 1, -1, 1, -1],
+  blocks: [
+    {
+      binary: [
+        1,
+        1,
+        1,
+        -1,
+        1,
+        -1
+      ],
       data: [],
       linked: false,
       links: [],
-      name: "Data",
+      name: 'Data',
       neededLinks: 0,
       paused: false,
       position: {
@@ -172,17 +191,16 @@ export const initialState = {
         y: 480
       },
       priority: 1,
-      requiredLinks: ["None"],
-      type: "square",
+      requiredLinks: ['None'],
+      type: 'square',
       updated: false
-    },
-    {
+    }, {
       amplitude: 3,
       data: [],
       frequency: 12,
       linked: false,
       links: [],
-      name: "Carrier Wave",
+      name: 'Carrier Wave',
       neededLinks: 0,
       paused: false,
       position: {
@@ -190,16 +208,17 @@ export const initialState = {
         y: 400
       },
       priority: 1,
-      requiredLinks: ["None"],
-      type: "sine",
+      requiredLinks: ['None'],
+      type: 'sine',
       updated: false,
-      description: "A carrier wave, carrier signal, or just carrier, is a waveform (usually sinusoidal) that is modulated (modified) with an input signal for the purpose of conveying information."
-    },
-    {
+      description: 'A carrier wave, carrier signal, or just carrier, is a waveform (usually sinusoid' +
+          'al) that is modulated (modified) with an input signal for the purpose of conveyi' +
+          'ng information.'
+    }, {
       data: [],
       linked: false,
       links: [],
-      name: "BPSK",
+      name: 'BPSK',
       neededLinks: 2,
       paused: false,
       position: {
@@ -207,16 +226,19 @@ export const initialState = {
         y: 120
       },
       priority: 2,
-      requiredLinks: ["Data", "Carrier Wave"],
-      type: "bpsk",
+      requiredLinks: [
+        'Data', 'Carrier Wave'
+      ],
+      type: 'bpsk',
       updated: false,
-      description: "Binary Phase Shift Keying (BPSK) is a two phase modulation scheme, where the 0’s and 1’s in a binary message are represented by two different phase states in the carrier signal: θ=0° for binary 1 and θ=180° for binary 0."
-    },
-    {
+      description: 'Binary Phase Shift Keying (BPSK) is a two phase modulation scheme, where the 0’s' +
+          ' and 1’s in a binary message are represented by two different phase states in th' +
+          'e carrier signal: θ=0° for binary 1 and θ=180° for binary 0.'
+    }, {
       data: [],
       linked: false,
       links: [],
-      name: "AWGN",
+      name: 'AWGN',
       neededLinks: 1,
       paused: false,
       position: {
@@ -224,16 +246,16 @@ export const initialState = {
         y: 0
       },
       priority: 3,
-      requiredLinks: ["Data"],
-      type: "awgn",
+      requiredLinks: ['Data'],
+      type: 'awgn',
       updated: false,
-      description: "Additive white Gaussian noise (AWGN) is a basic noise model used in Information theory to mimic the effect of many random processes that occur in nature."
-    },
-    {
+      description: 'Additive white Gaussian noise (AWGN) is a basic noise model used in Information ' +
+          'theory to mimic the effect of many random processes that occur in nature.'
+    }, {
       data: [],
       linked: false,
       links: [],
-      name: "FSK",
+      name: 'FSK',
       neededLinks: 2,
       paused: false,
       position: {
@@ -241,10 +263,14 @@ export const initialState = {
         y: 120
       },
       priority: 2,
-      requiredLinks: ["Data", "Carrier Wave"],
-      type: "fsk",
+      requiredLinks: [
+        'Data', 'Carrier Wave'
+      ],
+      type: 'fsk',
       updated: false,
-      description: "In Frequency Shify Keying (FSK) the frequency of the Carrier Wave is varied in accordance with baseband digital input. Binary 1 and 0 is represented by two different carrier frequencies."
-    },
+      description: 'In Frequency Shify Keying (FSK) the frequency of the Carrier Wave is varied in a' +
+          'ccordance with baseband digital input. Binary 1 and 0 is represented by two diff' +
+          'erent carrier frequencies.'
+    }
   ]
-};
+}
