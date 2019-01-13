@@ -19,7 +19,7 @@ import KeyHandler, {KEYPRESS} from "react-key-handler";
 import {ActionCreators} from "redux-undo";
 import {connect} from "react-redux";
 import {createDb} from 'C:/Users/Lucas/Documents/GitHub/tcc/src/firebase.js'
-  const styles = theme => ({
+const styles = theme => ({
   root: {
     flexGrow: 1
   },

@@ -42,15 +42,14 @@ export const createLink = payload => {
   // blocksToLinkArray
   if (payload.block.links.length + 1 === payload.block.neededLinks) {
     payload.linked = true
+    payload.render = true
   } else {
     payload.linked = false
   }
   return { type: consts.CREATE_LINK, payload }
 }
 
-export const deleteBlock = payload => {
-  return { type: consts.DELETE_BLOCK, payload }
-}
+export const deleteBlock = payload => ({ type: consts.DELETE_BLOCK, payload })
 
 // Quando um link é deletado, é necessário sempre apagar a data porque quando um
 // link é deletado o bloco num está com todos os links e não deve ter nenhuma
@@ -62,6 +61,7 @@ export const deleteLink = payload => {
     .filter(link => link !== payload.link)
   payload.block.linked = false
   payload.block.data = []
+  payload.block.render = false
   return { type: consts.DELETE_LINK, payload: payload }
 }
 

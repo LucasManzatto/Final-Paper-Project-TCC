@@ -116,29 +116,15 @@ export const getScales = (data, dimensions, block, resolution, amplitude) => {
  */
 export const notHidden = key => {
   if (
-    key !== 'id' &&
-    key !== 'position' &&
-    key !== 'type' &&
-    key !== 'paused' &&
-    key !== 'name' &&
-    key !== 'carrierWave' &&
-    key !== 'source' &&
-    key !== 'absolutePosition' &&
-    key !== 'linked' &&
-    key !== 'samples' &&
-    key !== 'bpsk' &&
-    key !== 'links' &&
-    key !== 'neededLinks' &&
-    key !== 'updated' &&
-    key !== 'description' &&
-    key !== 'data' &&
-    key !== 'requiredLinks' &&
-    key !== 'priority'
+    key === 'frequency' ||
+    key === 'amplitude' ||
+    key === 'binary'
   ) {
     return true
   }
   return false
 }
+
 /**
  * The binary array uses -1 to 1 to match the BPSK equation, this change all -1
  * to 1.

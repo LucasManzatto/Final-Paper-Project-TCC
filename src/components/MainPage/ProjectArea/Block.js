@@ -146,14 +146,15 @@ class Block extends React.Component {
     return position;
   }
 
+  //Quando o bloco é clicado , o botão clicado atual é atualizado no state
   handleClick = () => {
     if (this.props.block !== this.props.clickedBlock) {
       this.props.blockClicked(this.props.block);
     }
   };
 
+  //Pega a posicão relativa x,y do bloco e atualiza de acordo com o tamanho da tela
   handleDrag = (e, ui) => {
-    //this.handleClick();
     const { x, y } = this.props.block.position;
     const deltaPosition = {
       x: x + ui.deltaX,
@@ -165,23 +166,8 @@ class Block extends React.Component {
       block: this.props.block,
       indexOfBlock: this.props.indexOfBlock
     });
-    //this.setState({ blockPosition: deltaPosition });
-    //this.props.trackLocation({ block: this.props.block, deltaPosition });
   };
-  // handleStop = (e, ui) => {
-  //   //const { x, y } = this.state.blockPosition;
-  //   const { x, y } = this.props.block.position;
-  //   const deltaPosition = {
-  //     x: x + ui.deltaX,
-  //     y: y + ui.deltaY
-  //   };
-  //   this.props.updateBlockValue({
-  //     value: deltaPosition,
-  //     key: "position",
-  //     block: this.props.block,
-  //     indexOfBlock: this.props.indexOfBlock
-  //   });
-  // };
+
 
   linkBlocks = position => {
     const {blocksToLinkArray,block} = this.props;

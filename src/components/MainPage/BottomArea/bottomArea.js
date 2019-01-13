@@ -1,28 +1,29 @@
-import _ from "lodash";
-import { connect } from "react-redux";
-import { pauseBlock } from "../actions";
-import BlockCard from "./BlockCard";
-import Button from "@material-ui/core/Button";
-import ExpandBlockCard from "./ExpandedBlockCard";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import React from "react";
+import _ from 'lodash'
+import { connect } from 'react-redux'
+import { pauseBlock } from '../actions'
+import BlockCard from './BlockCard'
+import Button from '@material-ui/core/Button'
+import ExpandBlockCard from './ExpandedBlockCard'
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
+import React from 'react'
+import Typography from '@material-ui/core/Typography'
 
-import * as selectors from "../selectors";
+import * as selectors from '../selectors'
 const style = {
   height: 200
-};
+}
 
 const BottomArea = props => {
-  //Se o total de links for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
+  // Se o total de links for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
   let renderBlockCards = _.map(props.blocks, block => {
-    if (block.links.length < block.neededLinks) {
-      return;
+    if (!block.render) {
+      return
     }
     return (
       <Grid priority={block.neededLinks} key={block.id} container item xs={3}>
         {/* Button 1 */}
-        <Grid xs={6} container item>
+        <Grid xs={4} container item>
           <Button
             variant="contained"
             color="primary"
@@ -31,8 +32,13 @@ const BottomArea = props => {
             {block.paused ? <div>Resume</div> : <div>Pause</div>}
           </Button>
         </Grid>
+        <Grid xs={4} container item>
+          <Typography variant="subheading" align="center">
+            <b>{block.name}</b>
+          </Typography>
+        </Grid>
         {/* Button 2 */}
-        <Grid xs={6} container item justify="center">
+        <Grid xs={4} container item justify="center">
           <ExpandBlockCard block={block} />
         </Grid>
         {/* BlockCard */}
@@ -42,24 +48,24 @@ const BottomArea = props => {
           </Grid>
         </Grid>
       </Grid>
-    );
-  });
-  //renderBlockCards = _.orderBy(renderBlockCards, ["props"], ["asc"]);
+    )
+  })
+  // renderBlockCards = _.orderBy(renderBlockCards, ["props"], ["asc"]);
   return (
     <Paper elevation={0} square={true} style={style}>
       <Grid container>{renderBlockCards}</Grid>
     </Paper>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state, props) => {
   return {
     blocks: selectors.projectBlocksSelector(state),
     blocksSorted: selectors.getPrioritySelector(state)
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   { pauseBlock }
-)(BottomArea);
+)(BottomArea)

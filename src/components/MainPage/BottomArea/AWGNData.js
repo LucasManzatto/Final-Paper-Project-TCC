@@ -14,7 +14,7 @@ class AWGNData extends React.Component {
   constructor(props) {
     super(props);
     this.updateData = this.updateData.bind(this);
-    const blockLinkData = props.linkedBlocks[0];
+    const blockLinkData = _.clone(props.linkedBlocks[0]);
     const data = this.createDataArray(blockLinkData.data);
     props.updateBlockValue({
       block: props.block,
@@ -30,9 +30,11 @@ class AWGNData extends React.Component {
 
   createDataArray = data => {
     let awgnArray = [];
-    data.forEach(item => {
-      awgnArray.push(item + rnorm());
-    });
+    if(!_.isEmpty(data)){
+      data.forEach(item => {
+        awgnArray.push(item + rnorm());
+      });
+    }
     return awgnArray;
   };
   componentDidMount() {
@@ -44,19 +46,21 @@ class AWGNData extends React.Component {
     this._ismounted = false;
     window.cancelAnimationFrame(this.animationId);
   }
-  componentWillReceiveProps(nextProps) {
-    const nextProps_blockLinkData = nextProps.linkedBlocks[0];
-    if (nextProps_blockLinkData.data !== this.state.blockLinkData.data) {
-      let data = this.createDataArray(nextProps_blockLinkData.data);
-      this.props.updateBlockValue({
-        block: this.props.block,
-        key: "data",
-        value: data,
-        indexOfBlock: this.props.indexOfBlock
-      });
-      this.setState({ data, blockLinkData: nextProps_blockLinkData });
-    }
+  componentDidUpdate(prevProps){
+      const blockLinkData = prevProps.linkedBlocks[0];
+      if(blockLinkData.data !== this.state.blockLinkData.data){
+        console.log("entrou")
+        let data = this.createDataArray(blockLinkData.data);
+        this.props.updateBlockValue({
+          block: this.props.block,
+          key: "data",
+          value: data,
+          indexOfBlock: this.props.indexOfBlock
+        });
+      this.setState({ data, blockLinkData});
+      }
   }
+  
   updateData() {
     const { block } = this.props;
     const { data } = this.state;

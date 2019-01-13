@@ -57,6 +57,7 @@ export const initialState = {
           },
           priority: 1,
           requiredLinks: ['None'],
+          render: true,
           type: 'square',
           updated: false
         }, {
@@ -74,6 +75,7 @@ export const initialState = {
             y: 400
           },
           priority: 1,
+          render: true,
           requiredLinks: ['None'],
           type: 'sine',
           updated: false,
@@ -101,6 +103,7 @@ export const initialState = {
             y: 120
           },
           priority: 2,
+          render: false,
           requiredLinks: [
             'Data', 'Carrier Wave'
           ],
@@ -122,6 +125,7 @@ export const initialState = {
             y: 120
           },
           priority: 2,
+          render: false,
           requiredLinks: [
             'Data', 'Carrier Wave'
           ],
@@ -143,6 +147,7 @@ export const initialState = {
             y: 0
           },
           priority: 3,
+          render: false,
           requiredLinks: ['Data'],
           type: 'awgn',
           updated: false,

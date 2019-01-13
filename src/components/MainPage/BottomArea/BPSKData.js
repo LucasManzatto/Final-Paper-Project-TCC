@@ -61,6 +61,26 @@ class BPSKData extends React.Component {
     this._ismounted = false;
     window.cancelAnimationFrame(this.animationId);
   }
+
+  // componentDidUpdate(prevProps){
+  //   const { blocks, block } = this.props;
+  //   const { blockLinkCarrier } = this.state;
+  //   let blockLinkData = this.findLink("Data", blocks, block.links);
+  //   let blockLinkCarrier = this.findLink("Carrier Wave", blocks, block.links);
+
+
+  //   if(blockLinkData.data !== this.state.blockLinkData.data){
+  //     console.log("entrou")
+  //     let data = this.createDataArray(blockLinkData.data);
+  //     this.props.updateBlockValue({
+  //       block: this.props.block,
+  //       key: "data",
+  //       value: data,
+  //       indexOfBlock: this.props.indexOfBlock
+  //     });
+  //   this.setState({ data, blockLinkData});
+  //   }
+  // }
   componentWillReceiveProps(nextProps) {
     const { blocks, block } = this.props;
     const { blockLinkCarrier } = this.state;
@@ -69,9 +89,7 @@ class BPSKData extends React.Component {
     }
     let nextProps_blockLinkData = this.findLink("Data", blocks, block.links);
     let nextProps_blockLinkCarrier = this.findLink("Carrier Wave", blocks, block.links);
-    const differences = difference(nextProps_blockLinkCarrier, blockLinkCarrier);
-    if (differences.hasOwnProperty("paused")) return;
-    //If there is differences update the state
+    
     if (nextProps_blockLinkCarrier.data !== blockLinkCarrier.data) {
       let data = this.createDataArray(
         nextProps_blockLinkData.data,

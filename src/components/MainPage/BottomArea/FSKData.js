@@ -78,8 +78,6 @@ class FSKData extends React.Component {
     }
     let nextProps_blockLinkData = this.findLink("Data", blocks, block.links);
     let nextProps_blockLinkCarrier = this.findLink("Carrier Wave", blocks, block.links);
-    const differences = difference(nextProps_blockLinkCarrier, blockLinkCarrier);
-    if (differences.hasOwnProperty("paused")) return;
     //If there is differences update the state
     if (nextProps_blockLinkCarrier.data !== blockLinkCarrier.data) {
       let data = this.createDataArray(
