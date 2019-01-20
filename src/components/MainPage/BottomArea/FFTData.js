@@ -9,37 +9,16 @@ import { axisRight } from 'd3-axis'
 import { Axis } from './axis'
 import { Line } from './Line'
 import { shiftArray, createTimeArray, getScales } from '../utils'
-
-import ft from 'fourier-transform'
+import ft from 'fourier-transform';
 import oscillator from 'audio-oscillator'
-import * as dsp from 'dsp.js'
 
-class CarrierWaveData extends React.Component {
-
+class FFTData extends React.Component {
   constructor (props) {
     super(props)
     this.updateData = this.updateData.bind(this)
     const { resolution, block } = this.props
     //let data = this.createDataArray(resolution, block.frequency, block.amplitude)
-    var bufferSize = 2048
-    var sampleRate = 44100.0
-    var nthHarmonic = 8
-    var frequency = 344.53
-    var sine = new dsp.Oscillator(dsp.Oscillator.Sine, frequency, 10, bufferSize, sampleRate)
-    sine.generate()
-    let harmonic = new dsp.Oscillator(dsp.Oscillator.Sine, frequency * nthHarmonic, 10 / nthHarmonic, bufferSize, sampleRate);
-    harmonic.generate()
-    sine.add(harmonic)
-    var signal = sine.signal
-    var fft = new dsp.FFT(2048, 44100)
-    // var spectrum = fft.spectrum
-
-    var sampleRate = 44100
-    var lp12 = new dsp.IIRFilter(dsp.DSP.LOWPASS, 22050, 0, sampleRate)
-    lp12.set(2500, 0.3)
-    //signal = lp12.func.process(signal)
-
-    let data = [].slice.call(signal)
+    let data = createFFT(resolution)
     props.updateBlockValue({
       block: props.block,
       key: 'data',
@@ -47,6 +26,11 @@ class CarrierWaveData extends React.Component {
       indexOfBlock: props.indexOfBlock
     })
     this.state = { data }
+  }
+
+  createFFT (resolution) {
+    const fft = ft(oscillator.sine(resolution, 440))
+    console.log(fft)
   }
 
   updateData () {
@@ -124,7 +108,7 @@ class CarrierWaveData extends React.Component {
     }
   }
 }
-CarrierWaveData.propTypes = {
+FFTData.propTypes = {
   block: PropTypes.object,
   blockUpdated: PropTypes.func,
   updateBlockValue: PropTypes.func,
@@ -141,4 +125,4 @@ const mapStateToProps = (state, props) => {
 export default connect(
   mapStateToProps,
   { blockUpdated, updateBlockValue }
-)(CarrierWaveData)
+)(FFTData)

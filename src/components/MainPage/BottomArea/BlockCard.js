@@ -23,7 +23,7 @@ const BlockCard = props => {
       data = <BinaryData dimensions={{ width, height }} resolution={1200} block={block} />
     }
     if (block.name === 'Carrier Wave') {
-      data = <CarrierWaveData dimensions={{ width, height }} resolution={1200} block={block} />
+      data = <CarrierWaveData dimensions={{ width, height }} resolution={1024} block={block} />
     }
     if (block.name === 'BPSK' && block.linked) {
       data = <BPSKData dimensions={{ width, height }} resolution={1200} block={block} />

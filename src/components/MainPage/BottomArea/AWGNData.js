@@ -46,6 +46,7 @@ class AWGNData extends React.Component {
     this._ismounted = false;
     window.cancelAnimationFrame(this.animationId);
   }
+  
   componentDidUpdate(prevProps){
       const blockLinkData = prevProps.linkedBlocks[0];
       if(blockLinkData.data !== this.state.blockLinkData.data){
