@@ -1,386 +1,317 @@
-import _ from "lodash";
-import { Line } from "react-lineto";
-import Draggable from "react-draggable";
-import Grid from "@material-ui/core/Grid";
-import Left from "@material-ui/icons/ChevronLeft";
-import PropTypes from "prop-types";
-import React, { Fragment } from "react";
-import Right from "@material-ui/icons/ChevronRight";
-import Typography from "@material-ui/core/Typography";
+import _ from 'lodash';
+import { Line } from 'react-lineto';
+import Draggable from 'react-draggable';
+import Grid from '@material-ui/core/Grid';
+import Left from '@material-ui/icons/ChevronLeft';
+import PropTypes from 'prop-types';
+import React, { Fragment } from 'react';
+import Right from '@material-ui/icons/ChevronRight';
+import Typography from '@material-ui/core/Typography';
 
-import { notHidden, valueToBinary } from "../utils";
-import * as selectors from "../selectors";
+import { notHidden, valueToBinary } from '../utils';
+import * as selectors from '../selectors';
 
 //redux
-import { connect } from "react-redux";
-import * as actions from "../actions";
+import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 const blockHeight = 100;
 const blockWidth = 160;
 const blockStyle = {
-  height: blockHeight,
-  width: blockWidth,
-  border: "1px solid",
-  borderColor: "#77a6f7",
-  backgroundColor: "#d3e3fc",
-  zIndex: 2
+	height: blockHeight,
+	width: blockWidth,
+	border: '1px solid',
+	borderColor: '#77a6f7',
+	backgroundColor: '#d3e3fc',
+	zIndex: 2
 };
 const blockStyleLeft = {
-  height: 33,
-  //  borderTop: "1px solid black",
-  //	borderRight: "1px solid black",
-  //borderLeft: "1px solid black",
-  //  borderBottom: "1px solid black",
-  backgroundColor: "#00887a"
+	height: 33,
+	//  borderTop: "1px solid black",
+	//	borderRight: "1px solid black",
+	//borderLeft: "1px solid black",
+	//  borderBottom: "1px solid black",
+	backgroundColor: '#00887a'
 };
 const blockStyleRight = {
-  height: 33,
-  //  borderTop: "1px solid black",
-  //  borderRight: "1px solid black",
-  //borderLeft: "1px solid black",
-  //  borderBottom: "1px solid black",
-  backgroundColor: "#77a6f7"
+	height: 33,
+	//  borderTop: "1px solid black",
+	//  borderRight: "1px solid black",
+	//borderLeft: "1px solid black",
+	//  borderBottom: "1px solid black",
+	backgroundColor: '#77a6f7'
 };
 const iconStyle = {
-  position: "relative",
-  top: "7px"
+	position: 'relative',
+	top: '7px'
 };
 
 class Block extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      projectTabOffset: 0,
-      offsetX: 0,
-      offsetY: 0,
-      mouseClicked: false,
-      position: 5,
-      blockPosition: props.block.position
-    };
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			projectTabOffset: 0,
+			offsetX: 0,
+			offsetY: 0,
+			mouseClicked: false,
+			position: 5,
+			blockPosition: props.block.position
+		};
+	}
+	componentDidMount = () => {
+		this.props.blockClicked(this.props.block);
+		this.calculateOffset('projectTab');
+	};
 
-  calculateOffset = element => {
-    let projectTabOffset = document.getElementsByClassName(element)[0].getBoundingClientRect();
-    let offsetX = window.pageXOffset + projectTabOffset.left;
-    let offsetY = window.pageYOffset + projectTabOffset.top;
-    this.setState({
-      projectTabOffset,
-      offsetX,
-      offsetY
-    });
-  };
+	calculateOffset = (element) => {
+		let projectTabOffset = document.getElementsByClassName(element)[0].getBoundingClientRect();
+		let offsetX = window.pageXOffset + projectTabOffset.left;
+		let offsetY = window.pageYOffset + projectTabOffset.top;
+		this.setState({
+			projectTabOffset,
+			offsetX,
+			offsetY
+		});
+	};
 
-  componentDidMount = () => {
-    this.props.blockClicked(this.props.block);
-    this.calculateOffset("projectTab");
-  };
+	getBounds = () => ({
+		left: 0,
+		top: 0,
+		right: this.state.projectTabOffset.width - blockWidth - (this.props.block.neededLinks === 0 ? 16 : 32),
+		bottom: this.state.projectTabOffset.height - blockHeight
+	});
 
-  componentWillReceiveProps = nextProps => {
-    const blockToLink = nextProps.blocksToLinkArray.find(link => link !== this.props.block.id);
-    const blocks = this.props.projects[this.props.currentProject].blocks;
-    const nextProps_blocks = nextProps.projects[this.props.currentProject].blocks;
-    if (nextProps_blocks.length !== blocks.length) {
-      nextProps.block.links.map(link => {
-        let linkBlock = _.find(
-          nextProps.projects[this.props.currentProject].blocks,
-          block => block.id === link
-        );
-        if (linkBlock === undefined) {
-          this.props.deleteLink({ block: nextProps.block, link });
-        }
-      });
-    }
-    // if this block is in the blocksToLinkArray and the blocksToLinkArray is full(2)
-    // and the blocks are not linked already the create the link
-    if (
-      nextProps.blocksToLinkArray[0] === this.props.block.id &&
-      nextProps.blocksToLinkArray.length === 2 &&
-      !_.includes(nextProps.block.links, blockToLink) &&
-      nextProps.block.links.length + 1 <= nextProps.block.neededLinks
-    ) {
-      //then create the link and delete this block from the blocksToLinkArray
-      this.props.createLink({
-        block: this.props.block,
-        link: blockToLink,
-        blocksToLinkArray: nextProps.blocksToLinkArray
-      });
-      this.props.blocksToLink({
-        type: "delete",
-        id: this.props.block.id,
-        blocksToLinkArray: nextProps.blocksToLinkArray
-      });
-    }
-    if (nextProps.dimensions !== this.props.dimensions) {
-      this.renderLines();
-      this.calculateOffset("projectTab");
-    }
-  };
+	getPosition(bounds) {
+		let { position } = this.props.block;
+		if (position.x > bounds.right) {
+			position.x = bounds.right;
+		}
+		if (position.y > bounds.bottom) {
+			position.y = bounds.bottom;
+		}
+		return position;
+	}
 
-  /**
-   * Get the bounds of the project area
-   * @return {Object} Return the bottom,top,left and right bounds of project area
-   */
-  getBounds = () => ({
-    left: 0,
-    top: 0,
-    right:
-      this.state.projectTabOffset.width -
-      blockWidth -
-      (this.props.block.neededLinks === 0 ? 16 : 32),
-    bottom: this.state.projectTabOffset.height - blockHeight
-  });
+	handleClick = () => {
+		if (this.props.block !== this.props.clickedBlock) {
+			this.props.blockClicked(this.props.block);
+		}
+	};
 
-  /**
-   * Get the position to render the block based on the project area bounds
-   * @param  {Object} bounds The bounds of the project area
-   * @return {Object}        Return the x,y position of the block
-   */
-  getPosition(bounds) {
-    let { position } = this.props.block;
-    if (position.x > bounds.right) {
-      position.x = bounds.right;
-    }
-    if (position.y > bounds.bottom) {
-      position.y = bounds.bottom;
-    }
-    return position;
-  }
+	handleDrag = (e, ui) => {
+		const { x, y } = this.props.block.position;
+		const deltaPosition = {
+			x: x + ui.deltaX,
+			y: y + ui.deltaY
+		};
+		this.props.moveBlock({
+			value: deltaPosition,
+			block: this.props.block,
+			indexOfBlock: this.props.indexOfBlock
+		});
+	};
 
-  //Quando o bloco é clicado , o botão clicado atual é atualizado no state
-  handleClick = () => {
-    if (this.props.block !== this.props.clickedBlock) {
-      this.props.blockClicked(this.props.block);
-    }
-  };
+	linkBlocks = (position) => {
+		const { blocksToLinkArray, block } = this.props;
+		this.setState({ position });
+		//Can link only from the input to the output and cannot link fully linked blocks
+		//Need to check if a block is already fully linked but other block wants to link with
+		//it in the output
+		//Nao deixar linkar quando o bloco que voce quer linkar nao esta linkado e nao tem Data
+		if (
+			(position === 195 && (blocksToLinkArray.length === 0 || block.data.length === 0)) ||
+			(block.links.length > block.neededLinks && block.neededLinks !== 0)
+		) {
+			return;
+		} else {
+			if (!this.blocksToLinkArrayIsFull() && !_.includes(blocksToLinkArray, this.props.block)) {
+				this.props.blocksToLink({ block });
+			}
+		}
+	};
+	blocksToLinkArrayIsFull = () => this.props.blocksToLinkArray.length >= 2;
 
-  //Pega a posicão relativa x,y do bloco e atualiza de acordo com o tamanho da tela
-  handleDrag = (e, ui) => {
-    const { x, y } = this.props.block.position;
-    const deltaPosition = {
-      x: x + ui.deltaX,
-      y: y + ui.deltaY
-    };
-    this.props.updateBlockValue({
-      value: deltaPosition,
-      key: "position",
-      block: this.props.block,
-      indexOfBlock: this.props.indexOfBlock
-    });
-  };
+	renderLines = () => {
+		let { selectLink, block, projects, selectedLink, currentProject } = this.props;
+		let { offsetX, offsetY } = this.state;
 
+		if (block.neededLinks === 0) {
+			return null;
+		}
+		return block.links.map((linkPosition) => {
+			let linkBlock = _.find(projects[currentProject].blocks, (block) => block.id === linkPosition);
+			let borderStyle = 'solid';
+			if (selectedLink.id === block.id && selectedLink.linkPosition === linkPosition) {
+				borderStyle = 'dashed';
+			}
 
-  linkBlocks = position => {
-    const {blocksToLinkArray,block} = this.props;
-    this.setState({ position });
-    //Can link only from the input to the output and cannot link fully linked blocks
-    //Need to check if a block is already fully linked but other block wants to link with
-    //it in the output
-    //Nao deixar linkar quando o bloco que voce quer linkar nao esta linkado e nao tem Data
-    if (
-      (position === 195 && (blocksToLinkArray.length === 0  || block.data.length === 0)) ||
-      (block.links.length > block.neededLinks && block.neededLinks !== 0)
-    ) {
-      return;
-    } else {
-      this.props.blocksToLink({
-        type: "add",
-        id: block.id,
-        blocksToLinkArray
-      });
-    }
-  };
+			return (
+				<div key={linkPosition} onClick={(event) => selectLink({ id: block.id, linkPosition })}>
+					<Line
+						borderWidth={3}
+						borderStyle={borderStyle}
+						borderColor="black"
+						zIndex={1}
+						x0={block.position.x + 8 + offsetX}
+						y0={block.position.y + blockHeight / 2 + offsetY}
+						x1={linkBlock.position.x + offsetX + 170}
+						y1={linkBlock.position.y + blockHeight / 2 + offsetY}
+					/>
+				</div>
+			);
+		});
+	};
 
-  renderLines = () => {
-    let { selectLink, block, projects, selectedLink, currentProject } = this.props;
-    let { offsetX, offsetY} = this.state;
-    if (block.neededLinks === 0) {
-      return null;
-    }
-    return block.links.map(linkPosition => {
-      let linkBlock = _.find(projects[currentProject].blocks, block => block.id === linkPosition);
-      let borderStyle = "solid";
-      if (selectedLink.id === block.id && selectedLink.linkPosition === linkPosition) {
-        borderStyle = "dashed";
-      }
+	renderLineToCursor = (position) => {
+		let { block, cursorPosition } = this.props;
+		let { offsetX, offsetY } = this.state;
+		//render line only when the block is not fully linked and is not already linking
+		if (this.isLinking(block)) {
+			return (
+				<Line
+					borderWidth={3}
+					borderStyle="solid"
+					borderColor="black"
+					zIndex={1}
+					x0={block.position.x + position + offsetX}
+					y0={block.position.y + blockHeight / 2 + offsetY}
+					x1={cursorPosition.x + offsetX}
+					y1={cursorPosition.y + offsetY}
+				/>
+			);
+		} else return null;
+	};
 
-      return (
-        <div key={linkPosition} onClick={event => selectLink({ id: block.id, linkPosition })}>
-          <Line
-            borderWidth={3}
-            borderStyle={borderStyle}
-            borderColor="black"
-            zIndex={1}
-            x0={block.position.x + 8 + offsetX}
-            y0={block.position.y + blockHeight / 2 + offsetY}
-            x1={linkBlock.position.x + offsetX + 170}
-            y1={linkBlock.position.y + blockHeight / 2 + offsetY}
-          />
-        </div>
-      );
-    });
-  };
+	isLinking = (block) => _.includes(this.props.blocksToLinkArray, block);
 
-  renderLineToCursor = position => {
-    let { block, cursorPosition, blocksToLinkArray } = this.props;
-    let { offsetX, offsetY } = this.state;
-    //render line only when the block is not fully linked
-    if (_.includes(blocksToLinkArray, block.id) && block.links.length < block.neededLinks) {
-      return (
-        <Line
-          borderWidth={3}
-          borderStyle="solid"
-          borderColor="black"
-          zIndex={1}
-          x0={block.position.x + position + offsetX}
-          y0={block.position.y + blockHeight / 2 + offsetY}
-          x1={cursorPosition.x + offsetX}
-          y1={cursorPosition.y + offsetY}
-        />
-      );
-    } else {
-      return null;
-    }
-  };
+	showProperties = (block) => {
+		return _.map(block, (value, key) => {
+			if (key === 'binary') {
+				return (
+					<Typography key={key} variant="body1">
+						<b>{_.capitalize(key)}:</b>
+						{valueToBinary(value)}
+					</Typography>
+				);
+			}
+			//Hide unwanted properties
+			if (notHidden(key)) {
+				let sum = 1;
+				if (key === 'frequency') {
+					sum = 6;
+				}
+				return (
+					<Typography key={key} variant="body1">
+						<b>{_.capitalize(key)}:</b>
+						<Left
+							onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] - sum, key)}
+							style={iconStyle}
+						/>
+						{value}
+						<Right
+							onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] + sum, key)}
+							style={iconStyle}
+						/>
+					</Typography>
+				);
+			}
+		});
+	};
 
-  showProperties = block => {
-    return _.map(block, (value, key) => {
-      if (key === "binary") {
-        return (
-          <Typography key={key} variant="body1">
-            <b>{_.capitalize(key)}:</b>
-            {valueToBinary(value)}
-          </Typography>
-        );
-      }
-      //Hide unwanted properties
-      if (notHidden(key)) {
-        let sum = 1;
-        if (key === "frequency") {
-          sum = 6;
-        }
-        return (
-          <Typography key={key} variant="body1">
-            <b>{_.capitalize(key)}:</b>
-            <Left
-              onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] - sum, key)}
-              style={iconStyle}
-            />
-            {value}
-            <Right
-              onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] + sum, key)}
-              style={iconStyle}
-            />
-          </Typography>
-        );
-      }
-    });
-  };
+	updateBlockOnClick = (value, key) => {
+		this.props.updateBlockValue({
+			value,
+			key,
+			block: this.props.block
+		});
+		this.props.updateBlockValue({
+			value: true,
+			key: 'updated',
+			block: this.props.block
+		});
+	};
 
-  updateBlockOnClick = (value, key) => {
-    this.props.updateBlockValue({
-      value,
-      key,
-      block: this.props.block,
-      indexOfBlock: this.props.indexOfBlock
-    });
-    this.props.updateBlockValue({
-      value: true,
-      key: "updated",
-      block: this.props.block,
-      indexOfBlock: this.props.indexOfBlock
-    });
-  };
+	render = () => {
+		const { block } = this.props;
+		const bounds = this.getBounds();
+		const position = this.getPosition(bounds);
+		return (
+			<Fragment>
+				<Draggable
+					grid={[ 10, 10 ]}
+					bounds={bounds}
+					onDrag={this.handleDrag}
+					// onStop={this.handleStop}
+					position={position}
+				>
+					<Grid
+						onClick={this.handleClick}
+						container
+						style={{ height: 100, width: 192, position: 'absolute', zIndex: 2 }}
+					>
+						{block.neededLinks === 0 ? null : (
+							<Grid item container direction="column" xs={1} style={{ height: 100 }}>
+								<Grid item xs={4} />
+								<Grid
+									item
+									container
+									alignItems="center"
+									style={blockStyleLeft}
+									onClick={() => this.linkBlocks(5)}
+								/>
+								<Grid item xs={4} />
+							</Grid>
+						)}
 
-  render = () => {
-    const { block } = this.props;
-    const bounds = this.getBounds();
-    const position = this.getPosition(bounds);
-    return (
-      <Fragment>
-        <Draggable
-          grid={[10, 10]}
-          bounds={bounds}
-          onDrag={this.handleDrag}
-          // onStop={this.handleStop}
-          position={position}
-        >
-          <Grid
-            onClick={this.handleClick}
-            container
-            style={{ height: 100, width: 192, position: "absolute", zIndex: 2 }}
-          >
-            {block.neededLinks === 0 ? null : (
-              <Grid item container direction="column" xs={1} style={{ height: 100 }}>
-                <Grid item xs={4} />
-                <Grid
-                  item
-                  container
-                  alignItems="center"
-                  style={blockStyleLeft}
-                  onClick={() => this.linkBlocks(5)}
-                />
-                <Grid item xs={4} />
-              </Grid>
-            )}
-
-            <Grid item xs={10} style={blockStyle}>
-              <Typography variant="subheading" gutterBottom align="center">
-                <b>{block.name}</b>
-              </Typography>
-              {this.showProperties(block)}
-            </Grid>
-            <Grid item container direction="column" xs={1} style={{ height: 100 }}>
-              <Grid item xs={4} />
-              <Grid
-                item
-                container
-                alignItems="center"
-                style={blockStyleRight}
-                onClick={() => this.linkBlocks(195)}
-              />
-              <Grid item xs={4} />
-            </Grid>
-          </Grid>
-        </Draggable>
-        {!_.isNil(block.links) ? this.renderLines() : []}
-        {this.renderLineToCursor(this.state.position)}
-      </Fragment>
-    );
-  };
+						<Grid item xs={10} style={blockStyle}>
+							<Typography variant="subheading" gutterBottom align="center">
+								<b>{block.name}</b>
+							</Typography>
+							{this.showProperties(block)}
+						</Grid>
+						<Grid item container direction="column" xs={1} style={{ height: 100 }}>
+							<Grid item xs={4} />
+							<Grid
+								item
+								container
+								alignItems="center"
+								style={blockStyleRight}
+								onClick={() => this.linkBlocks(195)}
+							/>
+							<Grid item xs={4} />
+						</Grid>
+					</Grid>
+				</Draggable>
+				{!_.isNil(block.links) ? this.renderLines() : []}
+				{this.renderLineToCursor(this.state.position)}
+			</Fragment>
+		);
+	};
 }
 
 Block.propTypes = {
-  selectLink: PropTypes.func.isRequired,
-  trackLocation: PropTypes.func.isRequired,
-  blockClicked: PropTypes.func.isRequired,
-  block: PropTypes.object.isRequired,
-  dimensions: PropTypes.object.isRequired,
-  createLink: PropTypes.func.isRequired,
-  blocksToLink: PropTypes.func.isRequired,
-  blocksToLinkArray: PropTypes.array.isRequired
+	selectLink: PropTypes.func.isRequired,
+	trackLocation: PropTypes.func.isRequired,
+	blockClicked: PropTypes.func.isRequired,
+	block: PropTypes.object.isRequired,
+	dimensions: PropTypes.object.isRequired,
+	createLink: PropTypes.func.isRequired,
+	blocksToLink: PropTypes.func.isRequired,
+	blocksToLinkArray: PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state, props) => {
-  const {
-    clickedBlock,
-    projects,
-    selectedLink,
-    currentProject,
-    blocksToLinkArray
-  } = state.mainPage.present;
+	const { clickedBlock, projects, selectedLink, currentProject, blocksToLinkArray } = state.mainPage.present;
 
-  return {
-    clickedBlock,
-    projects,
-    selectedLink,
-    currentProject,
-    blocksToLinkArray,
-    linkedBlocks: selectors.linkedBlocksSelector(state, props),
-    indexOfBlock: selectors.getIndexOfBlockSelector(state, props)
-  };
+	return {
+		clickedBlock,
+		projects,
+		selectedLink,
+		currentProject,
+		blocksToLinkArray,
+		linkedBlocks: selectors.linkedBlocksSelector(state, props),
+		indexOfBlock: selectors.getIndexOfBlockSelector(state, props)
+	};
 };
 
-export default connect(
-  mapStateToProps,
-  actions
-)(Block);
+export default connect(mapStateToProps, actions)(Block);

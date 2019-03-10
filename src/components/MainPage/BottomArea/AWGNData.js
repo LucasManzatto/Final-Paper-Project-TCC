@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { Axis } from "./axis";
 import { axisRight } from "d3-axis";
-import { blockUpdated, updateBlockValue } from "../actions";
+import { updateBlockValue } from "../actions";
 import { connect } from "react-redux";
 import { Line } from "./Line";
 import { rnorm } from "randgen";
@@ -50,7 +50,6 @@ class AWGNData extends React.Component {
   componentDidUpdate(prevProps){
       const blockLinkData = prevProps.linkedBlocks[0];
       if(blockLinkData.data !== this.state.blockLinkData.data){
-        console.log("entrou")
         let data = this.createDataArray(blockLinkData.data);
         this.props.updateBlockValue({
           block: this.props.block,
@@ -101,7 +100,6 @@ class AWGNData extends React.Component {
 }
 AWGNData.propTypes = {
   block: PropTypes.object,
-  blockUpdated: PropTypes.func,
   dimensions: PropTypes.object,
   resolution: PropTypes.number,
   updateBlockValue: PropTypes.func
@@ -116,5 +114,5 @@ const mapStateToProps = (state, props) => {
 };
 export default connect(
   mapStateToProps,
-  { blockUpdated, updateBlockValue }
+  { updateBlockValue }
 )(AWGNData);

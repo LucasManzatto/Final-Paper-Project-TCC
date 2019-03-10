@@ -5,7 +5,7 @@ import React from "react";
 
 import { Axis } from "./axis";
 import { axisRight } from "d3-axis";
-import { blockUpdated, updateBlockValue } from "../actions";
+import { updateBlockValue } from "../actions";
 import { Line } from "./Line";
 import { shiftArray, createTimeArray, getScales, difference } from "../utils";
 import * as selectors from "../selectors";
@@ -138,7 +138,6 @@ class FSKData extends React.Component {
 
 FSKData.propTypes = {
   block: PropTypes.object,
-  blockUpdated: PropTypes.func,
   updateBlockValue: PropTypes.func,
   dimensions: PropTypes.object,
   resolution: PropTypes.number
@@ -153,5 +152,5 @@ const mapStateToProps = (state, props) => {
 };
 export default connect(
   mapStateToProps,
-  { blockUpdated, updateBlockValue }
+  { updateBlockValue }
 )(FSKData);

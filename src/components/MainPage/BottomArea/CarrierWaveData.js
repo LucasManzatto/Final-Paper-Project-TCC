@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import { blockUpdated, updateBlockValue } from '../actions'
+import {updateBlockValue } from '../actions'
 import * as selectors from '../selectors'
 
 import { axisRight } from 'd3-axis'
@@ -20,26 +20,8 @@ class CarrierWaveData extends React.Component {
     super(props)
     this.updateData = this.updateData.bind(this)
     const { resolution, block } = this.props
-    //let data = this.createDataArray(resolution, block.frequency, block.amplitude)
-    var bufferSize = 2048
-    var sampleRate = 44100.0
-    var nthHarmonic = 8
-    var frequency = 344.53
-    var sine = new dsp.Oscillator(dsp.Oscillator.Sine, frequency, 10, bufferSize, sampleRate)
-    sine.generate()
-    let harmonic = new dsp.Oscillator(dsp.Oscillator.Sine, frequency * nthHarmonic, 10 / nthHarmonic, bufferSize, sampleRate);
-    harmonic.generate()
-    sine.add(harmonic)
-    var signal = sine.signal
-    var fft = new dsp.FFT(2048, 44100)
-    // var spectrum = fft.spectrum
+    let data = this.createDataArray(resolution, block.frequency, block.amplitude)
 
-    var sampleRate = 44100
-    var lp12 = new dsp.IIRFilter(dsp.DSP.LOWPASS, 22050, 0, sampleRate)
-    lp12.set(2500, 0.3)
-    //signal = lp12.func.process(signal)
-
-    let data = [].slice.call(signal)
     props.updateBlockValue({
       block: props.block,
       key: 'data',
@@ -69,6 +51,31 @@ class CarrierWaveData extends React.Component {
   }
 
   createDataArray (totalTime, frequency, amplitude) {
+
+    // var bufferSize = totalTime
+    // var sampleRate = 44100
+    // frequency *= frequency*2
+    // var frequency = 344
+    // var sine = new dsp.Oscillator(dsp.Oscillator.Sine, frequency, amplitude, bufferSize, sampleRate)
+    // sine.generate()
+    // var signal = sine.signal
+    // let data = [].slice.call(signal)
+    // var nthHarmonic = 8
+    // let harmonic = new dsp.Oscillator(dsp.Oscillator.Sine, frequency * nthHarmonic, 10 / nthHarmonic, bufferSize, sampleRate);
+    // harmonic.generate()
+    // sine.add(harmonic)
+
+
+
+    //var fft = new dsp.FFT(2048, 44100)
+    // var spectrum = fft.spectrum
+    //var sampleRate = 44100
+    //var lp12 = new dsp.IIRFilter(dsp.DSP.LOWPASS, 22050, 0, sampleRate)
+    //lp12.set(2500, 0.3)
+    //signal = lp12.func.process(signal)
+
+
+
     let data = []
     let time = createTimeArray(totalTime)
     const angularFrequency = 2 * Math.PI * frequency
@@ -126,7 +133,6 @@ class CarrierWaveData extends React.Component {
 }
 CarrierWaveData.propTypes = {
   block: PropTypes.object,
-  blockUpdated: PropTypes.func,
   updateBlockValue: PropTypes.func,
   dimensions: PropTypes.object,
   resolution: PropTypes.number
@@ -140,5 +146,5 @@ const mapStateToProps = (state, props) => {
 }
 export default connect(
   mapStateToProps,
-  { blockUpdated, updateBlockValue }
+  {updateBlockValue }
 )(CarrierWaveData)

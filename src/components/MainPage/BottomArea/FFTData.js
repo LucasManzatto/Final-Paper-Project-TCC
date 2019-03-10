@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import { blockUpdated, updateBlockValue } from '../actions'
+import { updateBlockValue } from '../actions'
 import * as selectors from '../selectors'
 
 import { axisRight } from 'd3-axis'
@@ -110,7 +110,6 @@ class FFTData extends React.Component {
 }
 FFTData.propTypes = {
   block: PropTypes.object,
-  blockUpdated: PropTypes.func,
   updateBlockValue: PropTypes.func,
   dimensions: PropTypes.object,
   resolution: PropTypes.number
@@ -124,5 +123,5 @@ const mapStateToProps = (state, props) => {
 }
 export default connect(
   mapStateToProps,
-  { blockUpdated, updateBlockValue }
+  { updateBlockValue }
 )(FFTData)

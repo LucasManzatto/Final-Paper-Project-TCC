@@ -2,7 +2,7 @@ export const initialState = {
   isAuthenticated: true,
   user: 'Duvewet',
   currentProject: 0,
-  idCounter: 4,
+  idCounter: 5,
   selectedLink: {
     id: 2,
     linkPosition: 0
@@ -92,7 +92,7 @@ export const initialState = {
         // θ=180° for binary 0." },
         {
           data: [],
-          id: 4,
+          id: 2,
           linked: false,
           links: [],
           name: 'ASK',
@@ -114,7 +114,7 @@ export const initialState = {
               'e carrier signal: θ=0° for binary 1 and θ=180° for binary 0.'
         }, {
           data: [],
-          id: 5,
+          id: 3,
           linked: false,
           links: [],
           name: 'FSK',
@@ -136,7 +136,7 @@ export const initialState = {
               'erent carrier frequencies.'
         }, {
           data: [],
-          id: 3,
+          id: 4,
           linked: false,
           links: [],
           name: 'AWGN',

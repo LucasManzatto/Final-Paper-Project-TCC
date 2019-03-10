@@ -27,7 +27,7 @@ const BottomArea = props => {
           <Button
             variant="contained"
             color="primary"
-            onClick={event => props.pauseBlock({ block })}
+            onClick={event => props.pauseBlock({ block})}
           >
             {block.paused ? <div>Resume</div> : <div>Pause</div>}
           </Button>
@@ -61,7 +61,7 @@ const BottomArea = props => {
 const mapStateToProps = (state, props) => {
   return {
     blocks: selectors.projectBlocksSelector(state),
-    blocksSorted: selectors.getPrioritySelector(state)
+    //blocksSorted: selectors.getPrioritySelector(state)
   }
 }
 
