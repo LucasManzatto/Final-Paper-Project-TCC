@@ -26,7 +26,7 @@ const middleware = [ ...getDefaultMiddleware(), logger ];
 const store = configureStore({
 	reducer,
 	middleware,
-	devTools: process.env.NODE_ENV !== 'production',
+	devTools: process.env.NODE_ENV !== 'production'
 });
 
 // const theme = createMuiTheme({   palette: {     background: { default:
@@ -56,10 +56,7 @@ ReactDOM.render(
 		<Provider store={store}>
 			<MuiThemeProvider theme={theme2}>
 				<Router>
-					<div>
-						<Route exact path="/" component={App} />
-						{/* <Route path="/Home" component={App} /> */}
-					</div>
+						<Route path="/" component={App} />
 				</Router>
 			</MuiThemeProvider>
 		</Provider>
