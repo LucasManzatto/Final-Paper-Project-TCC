@@ -110,5 +110,6 @@ const mapStateToProps = (state) => {
 };
 
 const AppWithStyles = withRouter(withStyles(styles)(App));
+const AppWithStylesWithoutRouter = withStyles(styles)(App);
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppWithStyles);
+export default connect(mapStateToProps, mapDispatchToProps)(AppWithStylesWithoutRouter);

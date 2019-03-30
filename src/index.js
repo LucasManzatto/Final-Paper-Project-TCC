@@ -55,9 +55,10 @@ ReactDOM.render(
 	<Fragment>
 		<Provider store={store}>
 			<MuiThemeProvider theme={theme2}>
-				<Router>
+				<App />
+				{/* <Router>
 						<Route path="/Home" component={App} />
-				</Router>
+				</Router> */}
 			</MuiThemeProvider>
 		</Provider>
 	</Fragment>,
