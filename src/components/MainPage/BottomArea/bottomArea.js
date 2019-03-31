@@ -23,7 +23,7 @@ const BottomArea = props => {
     return (
       <Grid priority={block.neededLinks} key={block.id} container item xs={3}>
         {/* Button 1 */}
-        <Grid xs={4} container item>
+        <Grid xs={3} container item>
           <Button
             variant="contained"
             color="primary"
@@ -32,13 +32,13 @@ const BottomArea = props => {
             {block.paused ? <div>Resume</div> : <div>Pause</div>}
           </Button>
         </Grid>
-        <Grid xs={4} container item>
-          <Typography variant="subheading" align="center">
+        <Grid xs={6} container item >
+          <Typography variant="subheading" align="center" style={{marginTop:5,width:'90%'}}>
             <b>{block.name}</b>
           </Typography>
         </Grid>
         {/* Button 2 */}
-        <Grid xs={4} container item justify="center">
+        <Grid xs={3} container item justify="center">
           <ExpandBlockCard block={block} />
         </Grid>
         {/* BlockCard */}

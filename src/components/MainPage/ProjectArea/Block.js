@@ -20,11 +20,20 @@ const blockWidth = 160;
 const blockStyle = {
 	height: blockHeight,
 	width: blockWidth,
-	border: '1px solid',
+	borderStyle : 'solid',
+	borderWidth : '1px 0px 1px 1px',
 	borderColor: '#77a6f7',
 	backgroundColor: '#d3e3fc',
 	zIndex: 2
 };
+const closeStyle = {
+	height: blockHeight,
+	borderStyle : 'solid',
+	borderWidth : '1px 1px 1px 0px',
+	borderColor: '#77a6f7',
+	backgroundColor: '#d3e3fc',
+	zIndex: 2
+}
 const blockStyleLeft = {
 	height: 33,
 	//  borderTop: "1px solid black",
@@ -250,6 +259,7 @@ class Block extends React.Component {
 						style={{ height: 100, width: 192, position: 'absolute', zIndex: 2 }}
 					>
 						{block.neededLinks === 0 ? null : (
+							// INPUT
 							<Grid item container direction="column" xs={1} style={{ height: 100 }}>
 								<Grid item xs={4} />
 								<Grid
@@ -262,13 +272,20 @@ class Block extends React.Component {
 								<Grid item xs={4} />
 							</Grid>
 						)}
-
-						<Grid item xs={10} style={blockStyle}>
+						{/* NAME AND PROPERTIES */}
+						<Grid item xs={9} style={blockStyle}>
 							<Typography variant="subheading" gutterBottom align="center">
 								<b>{block.name}</b>
 							</Typography>
 							{this.showProperties(block)}
 						</Grid>
+						{/* DELETE THE BLOCK */}
+						<Grid item xs={1} style={closeStyle}>
+							<Typography variant="subheading" gutterBottom align="start">
+								<button onClick={() => this.props.deleteBlock({block})} style={{all : 'unset'}}>X</button>
+							</Typography>
+						</Grid>
+						{/* OUTPUT */}
 						<Grid item container direction="column" xs={1} style={{ height: 100 }}>
 							<Grid item xs={4} />
 							<Grid

@@ -14,6 +14,7 @@ const reducer = createReducer(initialState, {
 		const newBlock = _.clone(action.payload.block);
 		newBlock['id'] = state.idCounter++;
 		state.projects[state.currentProject].blocks.push(newBlock);
+		state.projects[state.currentProject].blocks = _.sortBy(state.projects[state.currentProject].blocks, ['priority'])
 	},
 	// ATUALIZA O BLOCO CLICADO
 	[actions.blockClicked]: (state, action) => {
@@ -39,8 +40,18 @@ const reducer = createReducer(initialState, {
 	},
 	// DELETA O BLOCO DO PROJETO
 	[actions.deleteBlock]: (state, action) => {
-		let blocks = state.projects[state.currentProject].blocks;
-		blocks = blocks.filter((block) => block.id !== action.payload.id);
+		const block = action.payload.block;
+		const blockIndex = findBlockIndex(state.projects[state.currentProject].blocks, block);
+		state.projects[state.currentProject].blocks.map((bl) => {
+			bl.links = bl.links.filter((link) => link !== block.id);
+			if (bl.links.length < bl.neededLinks) {
+				bl.linked = false;
+				bl.data = [];
+				bl.render = false;
+			}
+			return bl;
+		});
+		state.projects[state.currentProject].blocks.splice(blockIndex, 1);
 	},
 	// DELETA UM LINK DO BLOCO
 	[actions.deleteLink]: (state, action) => {
