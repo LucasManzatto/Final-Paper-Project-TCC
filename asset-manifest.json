@@ -1,16 +1,16 @@
 {
   "main.css": "/tcc/static/css/main.06d18eec.chunk.css",
-  "main.js": "/tcc/static/js/main.745c511b.chunk.js",
-  "main.js.map": "/tcc/static/js/main.745c511b.chunk.js.map",
+  "main.js": "/tcc/static/js/main.6e4812bb.chunk.js",
+  "main.js.map": "/tcc/static/js/main.6e4812bb.chunk.js.map",
   "static/css/1.33783b46.chunk.css": "/tcc/static/css/1.33783b46.chunk.css",
-  "static/js/1.080e1435.chunk.js": "/tcc/static/js/1.080e1435.chunk.js",
-  "static/js/1.080e1435.chunk.js.map": "/tcc/static/js/1.080e1435.chunk.js.map",
+  "static/js/1.0d32e835.chunk.js": "/tcc/static/js/1.0d32e835.chunk.js",
+  "static/js/1.0d32e835.chunk.js.map": "/tcc/static/js/1.0d32e835.chunk.js.map",
   "runtime~main.js": "/tcc/static/js/runtime~main.957ecebc.js",
   "runtime~main.js.map": "/tcc/static/js/runtime~main.957ecebc.js.map",
-  "static/media/index.css": "/tcc/static/media/roboto-latin-900italic.bc833e72.woff",
+  "static/media/index.css": "/tcc/static/media/roboto-latin-900italic.7b770d6c.woff2",
   "static/css/main.06d18eec.chunk.css.map": "/tcc/static/css/main.06d18eec.chunk.css.map",
   "static/css/1.33783b46.chunk.css.map": "/tcc/static/css/1.33783b46.chunk.css.map",
   "index.html": "/tcc/index.html",
-  "precache-manifest.4aeb30072ba200c188a162433635eb91.js": "/tcc/precache-manifest.4aeb30072ba200c188a162433635eb91.js",
+  "precache-manifest.1e1593292ddff07a0f06c4f6a34c2c2b.js": "/tcc/precache-manifest.1e1593292ddff07a0f06c4f6a34c2c2b.js",
   "service-worker.js": "/tcc/service-worker.js"
 }
