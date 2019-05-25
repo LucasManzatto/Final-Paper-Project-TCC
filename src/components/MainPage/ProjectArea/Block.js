@@ -52,7 +52,8 @@ const blockStyleRight = {
 };
 const iconStyle = {
 	position: 'relative',
-	top: '7px'
+	top: '7px',
+	cursor: 'pointer'
 };
 
 class Block extends React.Component {
@@ -260,7 +261,7 @@ class Block extends React.Component {
 					>
 						{block.neededLinks === 0 ? null : (
 							// INPUT
-							<Grid item container direction="column" xs={1} style={{ height: 100 }}>
+							<Grid item container direction="column" xs={1} style={{ height: 100 , cursor: 'pointer'}}>
 								<Grid item xs={4} />
 								<Grid
 									item
@@ -282,11 +283,11 @@ class Block extends React.Component {
 						{/* DELETE THE BLOCK */}
 						<Grid item xs={1} style={closeStyle}>
 							<Typography variant="subheading" gutterBottom align="start">
-								<button onClick={() => this.props.deleteBlock({block})} style={{all : 'unset'}}>X</button>
+								<button onClick={() => this.props.deleteBlock({block})} style={{all : 'unset' ,cursor: 'pointer'}}>X</button>
 							</Typography>
 						</Grid>
 						{/* OUTPUT */}
-						<Grid item container direction="column" xs={1} style={{ height: 100 }}>
+						<Grid item container direction="column" xs={1} style={{ height: 100 , cursor: 'pointer'}}>
 							<Grid item xs={4} />
 							<Grid
 								item
