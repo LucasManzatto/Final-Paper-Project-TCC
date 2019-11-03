@@ -6,7 +6,7 @@ import React from "react";
 import { Axis } from "./axis";
 import { axisRight } from "d3-axis";
 import { updateBlockValue } from "../actions";
-import { Line } from "./Line";
+import { Line } from "./line";
 import { shiftArray, createTimeArray, getScales, difference } from "../utils";
 import * as selectors from "../selectors";
 

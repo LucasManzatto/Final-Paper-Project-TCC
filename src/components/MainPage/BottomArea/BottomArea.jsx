@@ -8,6 +8,9 @@ import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import React from 'react'
 import Typography from '@material-ui/core/Typography'
+import PauseIcon from '@material-ui/icons/Pause';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import AspectRatioIcon from '@material-ui/icons/AspectRatio';
 
 import * as selectors from '../selectors'
 const style = {
@@ -21,24 +24,21 @@ const BottomArea = props => {
       return
     }
     return (
-      <Grid priority={block.neededLinks} key={block.id} container item xs={3}>
+      <Grid priority={block.neededLinks} key={block.id} container item xs={12} sm={4} md={3}>
         {/* Button 1 */}
-        <Grid xs={3} container item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={event => props.pauseBlock({ block})}
-          >
-            {block.paused ? <div>Resume</div> : <div>Pause</div>}
-          </Button>
+        <Grid xs={2} container item style={{display:'flex', alignItems: 'center', cursor:'pointer'}}>
+          {block.paused ? 
+            <PlayArrowIcon onClick={event => props.pauseBlock({ block})} /> : 
+            <PauseIcon onClick={event => props.pauseBlock({ block})} />
+          }
         </Grid>
-        <Grid xs={6} container item >
+        <Grid xs={8} container item >
           <Typography variant="subheading" align="center" style={{marginTop:5,width:'90%'}}>
             <b>{block.name}</b>
           </Typography>
         </Grid>
         {/* Button 2 */}
-        <Grid xs={3} container item justify="center">
+        <Grid xs={2} container item justify="center">
           <ExpandBlockCard block={block} />
         </Grid>
         {/* BlockCard */}
@@ -50,7 +50,6 @@ const BottomArea = props => {
       </Grid>
     )
   })
-  // renderBlockCards = _.orderBy(renderBlockCards, ["props"], ["asc"]);
   return (
     <Paper elevation={0} square={true} style={style}>
       <Grid container>{renderBlockCards}</Grid>

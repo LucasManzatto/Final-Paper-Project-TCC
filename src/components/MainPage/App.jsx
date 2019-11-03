@@ -3,15 +3,16 @@ import React from 'react';
 // Imports dos components do projeto
 import { Redirect, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import BottomArea from './BottomArea/bottomArea';
+import BottomArea from './BottomArea/BottomArea';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import ProjectArea from './ProjectArea/projectArea';
+import ProjectArea from './ProjectArea/ProjectArea';
 import _ from 'lodash';
+import Hidden from '@material-ui/core/Hidden';
 
-import Menu from './Menu';
-import SideBar from './SideBar/sideBar';
-import SideBarBlock from './SideBar/sideBarBlock';
+import Menu from './menu';
+import SideBar from './SideBar/SideBar';
+import SideBarBlock from './SideBar/SideBarBlock';
 
 import * as selectors from './selectors';
 import { deleteLink, deleteBlock } from './actions';
@@ -19,7 +20,7 @@ import KeyHandler, { KEYPRESS } from 'react-key-handler';
 
 import { ActionCreators } from 'redux-undo';
 import { connect } from 'react-redux';
-import { createDb } from 'C:/Users/Lucas/Documents/GitHub/tcc/src/firebase.js';
+// import { createDb } from 'C:/Users/Lucas/Documents/GitHub/tcc/src/firebase.js';
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1
@@ -37,7 +38,6 @@ const App = (props) => {
 			<div
 				style={{
 					paddingRight: 16,
-					overflowY: 'hidden'
 				}}
 			>
 				<KeyHandler
@@ -64,15 +64,24 @@ const App = (props) => {
 						</Grid>
 					</Grid>
 					<Grid container item xs={12} spacing={16}>
-						<Grid xs={2} item>
-							<SideBar />
-						</Grid>
-						<Grid xs={8} item>
+						<Hidden mdUp>
+							<Grid sm={12} md={2} item style={{overflow:'auto',paddingRight:0,paddingLeft:0, marginRight:8,marginLeft:8}}>
+								<SideBar />
+							</Grid>
+						</Hidden>
+						<Hidden mdDown>
+							<Grid sm={12} md={2} item >
+								<SideBar />
+							</Grid>
+						</Hidden>
+						<Grid xs={12} sm={12} md={8} item>
 							<ProjectArea />
 						</Grid>
-						<Grid xs={2} item>
-							<SideBarBlock />
-						</Grid>
+						<Hidden smDown>
+							<Grid md={2} item>
+								<SideBarBlock />
+							</Grid>
+						</Hidden>
 					</Grid>
 					<Grid container item xs={12} spacing={16}>
 						<Grid xs={12} item>

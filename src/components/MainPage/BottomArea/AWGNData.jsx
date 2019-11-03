@@ -3,7 +3,7 @@ import { Axis } from "./axis";
 import { axisRight } from "d3-axis";
 import { updateBlockValue } from "../actions";
 import { connect } from "react-redux";
-import { Line } from "./Line";
+import { Line } from "./line";
 import { rnorm } from "randgen";
 import { shiftArray, getScales } from "../utils";
 import PropTypes from "prop-types";

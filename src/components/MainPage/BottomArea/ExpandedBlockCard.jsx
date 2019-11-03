@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import Paper from "@material-ui/core/Paper";
+import AspectRatioIcon from '@material-ui/icons/AspectRatio';
 
 import { Col } from "react-flexbox-grid";
 
@@ -78,10 +79,8 @@ class ExpandedBlockCard extends React.Component {
       <div />
     );
     return (
-      <div>
-        <Button variant="contained" onClick={this.handleClickOpen} color="primary">
-          Expand
-        </Button>
+      <div style={{display: 'flex', alignItems: 'center',cursor:'pointer'}}>
+        <AspectRatioIcon onClick={this.handleClickOpen}/>
         <Dialog
           fullScreen
           open={this.state.open}

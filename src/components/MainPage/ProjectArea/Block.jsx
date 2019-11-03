@@ -7,6 +7,11 @@ import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import Right from '@material-ui/icons/ChevronRight';
 import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import InfoIcon from '@material-ui/icons/Info';
+import Popover from '@material-ui/core/Popover';
+import Fade from '@material-ui/core/Fade';
+import Paper from '@material-ui/core/Paper';
 
 import { notHidden, valueToBinary } from '../utils';
 import * as selectors from '../selectors';
@@ -14,40 +19,25 @@ import * as selectors from '../selectors';
 //redux
 import { connect } from 'react-redux';
 import * as actions from '../actions';
+import SideBarBlock from '../SideBar/SideBarBlock'
 
 const blockHeight = 100;
 const blockWidth = 160;
 const blockStyle = {
-	height: blockHeight,
-	width: blockWidth,
-	borderStyle : 'solid',
-	borderWidth : '1px 0px 1px 1px',
+	borderStyle: 'solid',
+	borderWidth: '1px 1px 1px 1px',
 	borderColor: '#77a6f7',
 	backgroundColor: '#d3e3fc',
 	zIndex: 2
 };
-const closeStyle = {
-	height: blockHeight,
-	borderStyle : 'solid',
-	borderWidth : '1px 1px 1px 0px',
-	borderColor: '#77a6f7',
-	backgroundColor: '#d3e3fc',
-	zIndex: 2
-}
-const blockStyleLeft = {
-	height: 33,
-	//  borderTop: "1px solid black",
-	//	borderRight: "1px solid black",
-	//borderLeft: "1px solid black",
-	//  borderBottom: "1px solid black",
+const blockStyleInput = {
+	cursor: 'pointer',
+	maxWidth: '100%',
 	backgroundColor: '#00887a'
 };
-const blockStyleRight = {
-	height: 33,
-	//  borderTop: "1px solid black",
-	//  borderRight: "1px solid black",
-	//borderLeft: "1px solid black",
-	//  borderBottom: "1px solid black",
+const blockStyleOutput = {
+	cursor: 'pointer',
+	maxWidth: '100%',
 	backgroundColor: '#77a6f7'
 };
 const iconStyle = {
@@ -55,6 +45,15 @@ const iconStyle = {
 	top: '7px',
 	cursor: 'pointer'
 };
+
+const blockTopRow = {
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center'
+}
+
+const OUTPUT = 195
+const INPUT = 5
 
 class Block extends React.Component {
 	constructor(props) {
@@ -65,7 +64,8 @@ class Block extends React.Component {
 			offsetY: 0,
 			mouseClicked: false,
 			position: 5,
-			blockPosition: props.block.position
+			blockPosition: props.block.position,
+			anchorEl: null
 		};
 	}
 	componentDidMount = () => {
@@ -102,10 +102,20 @@ class Block extends React.Component {
 		return position;
 	}
 
-	handleClick = () => {
+	handleClick = event => {
 		if (this.props.block !== this.props.clickedBlock) {
 			this.props.blockClicked(this.props.block);
 		}
+		if(window.innerWidth < 960) {
+			this.setState({
+				anchorEl: event.currentTarget,
+			})
+		}
+	};
+	handleClose = () => {
+		this.setState({
+			anchorEl: null,
+		});
 	};
 
 	handleDrag = (e, ui) => {
@@ -129,7 +139,7 @@ class Block extends React.Component {
 		//it in the output
 		//Nao deixar linkar quando o bloco que voce quer linkar nao esta linkado e nao tem Data
 		if (
-			(position === 195 && (blocksToLinkArray.length === 0 || block.data.length === 0)) ||
+			(position === OUTPUT && (blocksToLinkArray.length === 0 || block.data.length === 0)) ||
 			(block.links.length > block.neededLinks && block.neededLinks !== 0)
 		) {
 			return;
@@ -139,6 +149,9 @@ class Block extends React.Component {
 			}
 		}
 	};
+
+	hasInput = block => block.neededLinks ? block.neededLinks > 0 : false
+
 	blocksToLinkArrayIsFull = () => this.props.blocksToLinkArray.length >= 2;
 
 	renderLines = () => {
@@ -198,7 +211,7 @@ class Block extends React.Component {
 		return _.map(block, (value, key) => {
 			if (key === 'binary') {
 				return (
-					<Typography key={key} variant="body1">
+					<Typography key={key} variant="body1" style={{ marginLeft: 4 }}>
 						<b>{_.capitalize(key)}:</b>
 						{valueToBinary(value)}
 					</Typography>
@@ -211,15 +224,15 @@ class Block extends React.Component {
 					sum = 6;
 				}
 				return (
-					<Typography key={key} variant="body1">
+					<Typography key={key} variant="body1" style={{ marginLeft: 4 }}>
 						<b>{_.capitalize(key)}:</b>
 						<Left
-							onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] - sum, key)}
+							onClick={() => this.updateBlockOnClick(this.props.block[key] - sum, key)}
 							style={iconStyle}
 						/>
 						{value}
 						<Right
-							onClick={(event, value) => this.updateBlockOnClick(this.props.block[key] + sum, key)}
+							onClick={() => this.updateBlockOnClick(this.props.block[key] + sum, key)}
 							style={iconStyle}
 						/>
 					</Typography>
@@ -248,57 +261,80 @@ class Block extends React.Component {
 		return (
 			<Fragment>
 				<Draggable
-					grid={[ 10, 10 ]}
+					grid={[10, 10]}
 					bounds={bounds}
 					onDrag={this.handleDrag}
 					// onStop={this.handleStop}
 					position={position}
 				>
 					<Grid
-						onClick={this.handleClick}
 						container
 						style={{ height: 100, width: 192, position: 'absolute', zIndex: 2 }}
 					>
-						{block.neededLinks === 0 ? null : (
+						{this.hasInput(block) && (
 							// INPUT
-							<Grid item container direction="column" xs={1} style={{ height: 100 , cursor: 'pointer'}}>
+							<Grid item container direction="column" xs={1}>
 								<Grid item xs={4} />
 								<Grid
 									item
-									container
-									alignItems="center"
-									style={blockStyleLeft}
-									onClick={() => this.linkBlocks(5)}
+									xs={4}
+									style={blockStyleInput}
+									onClick={() => this.linkBlocks(INPUT)}
 								/>
 								<Grid item xs={4} />
 							</Grid>
 						)}
 						{/* NAME AND PROPERTIES */}
-						<Grid item xs={9} style={blockStyle}>
-							<Typography variant="subheading" gutterBottom align="center">
-								<b>{block.name}</b>
-							</Typography>
-							{this.showProperties(block)}
-						</Grid>
-						{/* DELETE THE BLOCK */}
-						<Grid item xs={1} style={closeStyle}>
-							<Typography variant="subheading" gutterBottom align="start">
-								<button onClick={() => this.props.deleteBlock({block})} style={{all : 'unset' ,cursor: 'pointer'}}>X</button>
-							</Typography>
+						<Grid item container xs={10} style={blockStyle} direction="column">
+							{/* BLOCK INFO */}
+							<Grid item container xs={3} style={{ maxWidth: '100%' }}>
+								<Grid item xs={2} style={blockTopRow}>
+									<InfoIcon style={{ fontSize: 'larger', cursor: 'pointer' }} onClick={this.handleClick} />
+								</Grid>
+								<Grid item xs={8} style={blockTopRow}>
+									<Typography variant="subheading" gutterBottom align="center" style={{ margin: '0px' }}>
+										<b>{block.name}</b>
+									</Typography>
+								</Grid>
+								{/* DELETE THE BLOCK */}
+								<Grid item xs={2} style={blockTopRow}>
+									<CloseIcon style={{ fontSize: 'larger', cursor: 'pointer' }} onClick={() => this.props.deleteBlock({ block })} />
+								</Grid>
+							</Grid>
+							<Grid item container xs={9} style={{ maxWidth: '100%' }}>
+								{/* BLOCK PROPERTIES */}
+								{this.showProperties(block)}
+							</Grid>
 						</Grid>
 						{/* OUTPUT */}
-						<Grid item container direction="column" xs={1} style={{ height: 100 , cursor: 'pointer'}}>
+						<Grid item container direction="column" xs={1}>
 							<Grid item xs={4} />
 							<Grid
 								item
-								container
-								alignItems="center"
-								style={blockStyleRight}
-								onClick={() => this.linkBlocks(195)}
+								xs={4}
+								style={blockStyleOutput}
+								onClick={() => this.linkBlocks(OUTPUT)}
 							/>
 							<Grid item xs={4} />
 						</Grid>
+						<Popover
+							id="simple-popper"
+							open={Boolean(this.state.anchorEl)}
+							anchorEl={this.state.anchorEl}
+							onClose={this.handleClose}
+							anchorOrigin={{
+								vertical: 'bottom',
+								horizontal: 'center',
+							}}
+							transformOrigin={{
+								vertical: 'top',
+								horizontal: 'center',
+							}}
+						>
+							<SideBarBlock />
+						</Popover>
 					</Grid>
+
 				</Draggable>
 				{!_.isNil(block.links) ? this.renderLines() : []}
 				{this.renderLineToCursor(this.state.position)}

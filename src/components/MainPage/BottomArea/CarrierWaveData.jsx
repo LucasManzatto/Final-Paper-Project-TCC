@@ -7,7 +7,7 @@ import * as selectors from '../selectors'
 
 import { axisRight } from 'd3-axis'
 import { Axis } from './axis'
-import { Line } from './Line'
+import { Line } from './line'
 import { shiftArray, createTimeArray, getScales } from '../utils'
 
 import ft from 'fourier-transform'

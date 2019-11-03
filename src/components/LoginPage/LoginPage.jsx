@@ -13,7 +13,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
-import firebase from 'firebase'
+// import firebase from 'firebase'
 
 const styles = theme => ({
   // textField: {   marginLeft: theme.spacing.unit,   marginRight:
@@ -38,7 +38,7 @@ const uiConfig = {
   signInFlow: 'popup',
   signInSuccessUrl: '/Home',
   // We will display Google and Facebook as auth providers.
-  signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID, firebase.auth.GoogleAuthProvider.PROVIDER_ID, firebase.auth.FacebookAuthProvider.PROVIDER_ID, firebase.auth.GithubAuthProvider.PROVIDER_ID]
+  // signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID, firebase.auth.GoogleAuthProvider.PROVIDER_ID, firebase.auth.FacebookAuthProvider.PROVIDER_ID, firebase.auth.GithubAuthProvider.PROVIDER_ID]
 }
 class LoginPage extends React.Component {
 
@@ -113,7 +113,7 @@ class LoginPage extends React.Component {
                     autoComplete="current-password"
                     onChange={this.handleChange}
                     margisn="normal"/>
-                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
+                    {/* <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/> */}
                 </CardContent>
                 <CardActions
                   style={{

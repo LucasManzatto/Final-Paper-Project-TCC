@@ -6,11 +6,11 @@ import React from "react";
 import { Axis } from "./axis";
 import { axisRight } from "d3-axis";
 import { updateBlockValue } from "../actions";
-import { Line } from "./Line";
+import { Line } from "./line";
 import { shiftArray, createTimeArray, getScales, difference } from "../utils";
 import * as selectors from "../selectors";
 
-class BPSKData extends React.Component {
+class ASKData extends React.Component {
   constructor(props) {
     super(props);
     this.updateData = this.updateData.bind(this);
@@ -45,9 +45,15 @@ class BPSKData extends React.Component {
 
   createDataArray = (binaryArray, totalTime, blockLinkCarrier) => {
     let data = [];
+    let a1 = blockLinkCarrier.amplitude, a2= blockLinkCarrier.amplitude * 2;
     let time = createTimeArray(totalTime);
     time.forEach((currentTime, index) => {
-      data.push(binaryArray[index] * blockLinkCarrier.data[index]);
+      if(binaryArray[index] === -1){
+        data.push(blockLinkCarrier.data[index] * a1);
+      }
+      else{
+        data.push(blockLinkCarrier.data[index] * a2);
+      }
     });
     return data;
   };
@@ -61,26 +67,6 @@ class BPSKData extends React.Component {
     this._ismounted = false;
     window.cancelAnimationFrame(this.animationId);
   }
-
-  // componentDidUpdate(prevProps){
-  //   const { blocks, block } = this.props;
-  //   const { blockLinkCarrier } = this.state;
-  //   let blockLinkData = this.findLink("Data", blocks, block.links);
-  //   let blockLinkCarrier = this.findLink("Carrier Wave", blocks, block.links);
-
-
-  //   if(blockLinkData.data !== this.state.blockLinkData.data){
-  //     console.log("entrou")
-  //     let data = this.createDataArray(blockLinkData.data);
-  //     this.props.updateBlockValue({
-  //       block: this.props.block,
-  //       key: "data",
-  //       value: data,
-  //       indexOfBlock: this.props.indexOfBlock
-  //     });
-  //   this.setState({ data, blockLinkData});
-  //   }
-  // }
   componentWillReceiveProps(nextProps) {
     const { blocks, block } = this.props;
     const { blockLinkCarrier } = this.state;
@@ -89,7 +75,6 @@ class BPSKData extends React.Component {
     }
     let nextProps_blockLinkData = this.findLink("Data", blocks, block.links);
     let nextProps_blockLinkCarrier = this.findLink("Carrier Wave", blocks, block.links);
-    
     if (nextProps_blockLinkCarrier.data !== blockLinkCarrier.data) {
       let data = this.createDataArray(
         nextProps_blockLinkData.data,
@@ -147,7 +132,7 @@ class BPSKData extends React.Component {
   }
 }
 
-BPSKData.propTypes = {
+ASKData.propTypes = {
   block: PropTypes.object,
   updateBlockValue: PropTypes.func,
   dimensions: PropTypes.object,
@@ -163,5 +148,5 @@ const mapStateToProps = (state, props) => {
 };
 export default connect(
   mapStateToProps,
-  { updateBlockValue }
-)(BPSKData);
+  {  updateBlockValue }
+)(ASKData);

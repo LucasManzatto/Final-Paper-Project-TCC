@@ -25,7 +25,6 @@ function Menu(props) {
   const { classes } = props;
   return (
     //<div className={classes.root}>
-    <div className={classes.root}>
       <AppBar elevation={0} square={true} position="static" color="primary">
         <Toolbar>
           <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
@@ -37,7 +36,6 @@ function Menu(props) {
           <Button color="inherit">Lucas</Button>
         </Toolbar>
       </AppBar>
-    </div>
     //	</div>
   );
 }
