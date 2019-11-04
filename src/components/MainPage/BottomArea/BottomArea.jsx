@@ -11,18 +11,22 @@ import Typography from '@material-ui/core/Typography'
 import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import AspectRatioIcon from '@material-ui/icons/AspectRatio';
+import withWidth from '@material-ui/core/withWidth';
 
 import * as selectors from '../selectors'
 let style = {
   height: 200
 }
 
-const BottomArea = props => {
-  const blocksNum = _.filter(props.blocks, block => block.render).length
-  if (window.innerWidth < 600) {
+const getHeigth = (width,blocksNum) => {
+  let style = { height: 200 }
+  if(blocksNum === 0){
+    return style
+  }
+  if (width === 'xs') {
     style = { height: blocksNum * 200 }
   }
-  else if (window.innerWidth < 960) {
+  else if (width === 'sm') {
     let rows = Math.ceil(blocksNum / 3)
     style = { height: rows * 200 }
   }
@@ -30,6 +34,12 @@ const BottomArea = props => {
     let rows = Math.ceil(blocksNum / 4)
     style = { height: rows * 200 }
   }
+  return style
+}
+
+const BottomArea = props => {
+  const blocksNum = _.filter(props.blocks, block => block.render).length
+  style = getHeigth(props.width,blocksNum)
   // Se o total de links for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
   let renderBlockCards = _.map(props.blocks, block => {
     if (!block.render) {
@@ -54,7 +64,7 @@ const BottomArea = props => {
           <ExpandBlockCard block={block} />
         </Grid>
         {/* BlockCard */}
-        <Grid style={{ height: 180 }} container item xs={12} spacing={16}>
+        <Grid style={{ height: 180 }} container item xs={12} spacing={16} style={{paddingLeft:16}}>
           <Grid xs={12} item>
             <BlockCard block={block} key={block.id} />
           </Grid>
@@ -75,7 +85,7 @@ const mapStateToProps = (state, props) => {
   }
 }
 
-export default connect(
+export default withWidth()(connect(
   mapStateToProps,
   { pauseBlock }
-)(BottomArea)
+)(BottomArea))

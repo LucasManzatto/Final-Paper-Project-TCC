@@ -14,10 +14,10 @@ const BlockCard = props => {
     const { block } = component.props
     let data
     let width = component.props.containerWidth
-    let height = component.props.containerHeight
-    const maxHeight = 870
-    if (height > maxHeight) {
-      height = maxHeight
+    let height = 164
+    const expandedHeight = 780
+    if(props.expanded){
+      height = expandedHeight
     }
     if (block.name === 'Data') {
       data = <BinaryData dimensions={{ width, height }} resolution={1200} block={block} />

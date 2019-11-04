@@ -34,58 +34,7 @@ export const initialState = {
 			id: 0,
 			name: 'Project 1',
 			totalBlocks: 0,
-			blocks: [
-				// {
-				// 	binary: [ 1, 1, 1, -1, 1, -1 ],
-				// 	data: [],
-				// 	id: 0,
-				// 	linked: false,
-				// 	links: [],
-				// 	name: 'Data',
-				// 	neededLinks: 0,
-				// 	paused: false,
-				// 	position: {
-				// 		x: 200,
-				// 		y: 480
-				// 	},
-				// 	priority: 1,
-				// 	requiredLinks: [ 'None' ],
-				// 	render: true,
-				// 	type: 'square',
-				// 	updated: false
-				// },
-				// {
-				// 	amplitude: 3,
-				// 	data: [],
-				// 	frequency: 12,
-				// 	id: 1,
-				// 	linked: false,
-				// 	links: [],
-				// 	name: 'Carrier Wave',
-				// 	neededLinks: 0,
-				// 	paused: false,
-				// 	position: {
-				// 		x: 0,
-				// 		y: 400
-				// 	},
-				// 	priority: 1,
-				// 	render: true,
-				// 	requiredLinks: [ 'None' ],
-				// 	type: 'sine',
-				// 	updated: false,
-				// 	description:
-				// 		'A carrier wave, carrier signal, or just carrier, is a waveform (usually sinusoid' +
-				// 		'al) that is modulated (modified) with an input signal for the purpose of conveyi' +
-				// 		'ng information.'
-				// },
-				// {   data: [],   id: 2,   linked: false,   links: [],   name: "BPSK",
-				// neededLinks: 2,   paused: false,   position: { x: 200, y: 120 },   priority:
-				// 2,   requiredLinks: ["Data", "Carrier Wave"],   type: "bpsk",   updated:
-				// false,   description:     "Binary Phase Shift Keying (BPSK) is a two phase
-				// modulation scheme, where the 0’s and 1’s in a binary message are represented
-				// by two different phase states in the carrier signal: θ=0° for binary 1 and
-				// θ=180° for binary 0." },
-			]
+			blocks: []
 		},
 		1: {
 			id: 1,
@@ -109,7 +58,7 @@ export const initialState = {
 	},
 	blocks: [
 		{
-			binary: [ 1, 1, 1, -1, 1, -1 ],
+			binary: [1, 1, 1, -1, 1, -1],
 			data: [],
 			linked: false,
 			links: [],
@@ -117,11 +66,11 @@ export const initialState = {
 			neededLinks: 0,
 			paused: false,
 			position: {
-				x: 200,
-				y: 480
+				x: 0,
+				y: 0
 			},
 			priority: 1,
-			requiredLinks: [ 'None' ],
+			requiredLinks: ['None'],
 			type: 'square',
 			updated: false,
 			render: true
@@ -137,10 +86,10 @@ export const initialState = {
 			paused: false,
 			position: {
 				x: 0,
-				y: 400
+				y: 0
 			},
 			priority: 1,
-			requiredLinks: [ 'None' ],
+			requiredLinks: ['None'],
 			type: 'sine',
 			updated: false,
 			render: true,
@@ -157,11 +106,11 @@ export const initialState = {
 			neededLinks: 2,
 			paused: false,
 			position: {
-				x: 200,
-				y: 120
+				x: 0,
+				y: 0
 			},
 			priority: 2,
-			requiredLinks: [ 'Data', 'Carrier Wave' ],
+			requiredLinks: ['Data', 'Carrier Wave'],
 			type: 'bpsk',
 			updated: false,
 			render: false,
@@ -178,11 +127,11 @@ export const initialState = {
 			neededLinks: 1,
 			paused: false,
 			position: {
-				x: 400,
+				x: 0,
 				y: 0
 			},
 			priority: 3,
-			requiredLinks: [ 'Data' ],
+			requiredLinks: ['Data'],
 			type: 'awgn',
 			updated: false,
 			render: false,
@@ -198,11 +147,11 @@ export const initialState = {
 			neededLinks: 2,
 			paused: false,
 			position: {
-				x: 200,
-				y: 120
+				x: 0,
+				y: 0
 			},
 			priority: 2,
-			requiredLinks: [ 'Data', 'Carrier Wave' ],
+			requiredLinks: ['Data', 'Carrier Wave'],
 			type: 'fsk',
 			updated: false,
 			render: false,
@@ -219,11 +168,11 @@ export const initialState = {
 			neededLinks: 2,
 			paused: false,
 			position: {
-				x: 400,
-				y: 120
+				x: 0,
+				y: 0
 			},
 			priority: 2,
-			requiredLinks: [ 'Data', 'Carrier Wave' ],
+			requiredLinks: ['Data', 'Carrier Wave'],
 			type: 'ask',
 			updated: false,
 			render: false,

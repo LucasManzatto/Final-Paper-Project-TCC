@@ -101,7 +101,7 @@ class ExpandedBlockCard extends React.Component {
             <Col center="xs" style={{ height: "90%", textAlign: "center" }}>
               <div style={{ height: "5%" }} />
               <div style={{ height: "100%", paddingLeft: 16 }}>
-                <BlockCard block={block} key={block.id} />
+                <BlockCard block={block} key={block.id} expanded={true} />
               </div>
             </Col>
           </Paper>
