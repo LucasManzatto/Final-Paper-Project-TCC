@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 
 //Material
 import List from "@material-ui/core/List";
@@ -7,13 +7,15 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import Paper from "@material-ui/core/Paper";
 import Hidden from '@material-ui/core/Hidden';
+import Drawer from '@material-ui/core/Drawer';
+import Button from '@material-ui/core/Button';
 
 import _ from "lodash";
 
 //Redux
 import { connect } from "react-redux";
 import { addBlockToProject } from "../actions";
-
+import useWindowDimensions from '../../../hooks/WindowDimensions'
 //let SelectableList = makeSelectable(List);
 
 // const subHeaderStyle={
@@ -24,7 +26,7 @@ const style = {
   height: "100%"
 };
 
-const flexContainer = {
+let flexContainer = {
   display: 'flex',
   flexDirection: 'row',
   padding: 0,
@@ -32,6 +34,7 @@ const flexContainer = {
 
 
 const SideBar = props => {
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const onClickHandler = block => {
     props.addBlockToProject({ block, idCounter: props.idCounter });
   };
@@ -45,20 +48,35 @@ const SideBar = props => {
     );
   });
 
+  const blocksList =
+    <List component="nav"
+      subheader={
+        <ListSubheader component="div" style={{ position: "inherit" }}>
+          Blocks
+        </ListSubheader>}>
+      {ItemList}
+    </List>
+
   return (
     <Fragment>
-      <Hidden mdUp>
-        <Paper elevation={0} square={true} style={{ height: "100%", width: 600 }}>
-          <List style={flexContainer} component="nav" subheader={<ListSubheader component="div" style={{ position: "inherit" }}>Blocks</ListSubheader>}>
-            {ItemList}
-          </List>
-        </Paper>
+      <Hidden smUp>
+        <Button onClick={() => setDrawerOpen(true)}>New Block</Button>
+        <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+          <div
+            tabIndex={0}
+            role="button"
+            onClick={() => setDrawerOpen(false)}
+            onKeyDown={() => setDrawerOpen(false)}
+          >
+            <div style={{ width: 250 }}>
+              {blocksList}
+            </div>
+          </div>
+        </Drawer>
       </Hidden>
-      <Hidden mdDown>
+      <Hidden xsDown>
         <Paper elevation={0} square={true} style={{ height: "100%" }}>
-          <List component="nav" subheader={<ListSubheader component="div" style={{ position: "inherit" }}>Blocks</ListSubheader>}>
-            {ItemList}
-          </List>
+          {blocksList}
         </Paper>
       </Hidden>
     </Fragment>

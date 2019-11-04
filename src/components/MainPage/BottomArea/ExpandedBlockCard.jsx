@@ -76,11 +76,11 @@ class ExpandedBlockCard extends React.Component {
         </Typography>
       </div>
     ) : (
-      <div />
-    );
+        <div />
+      );
     return (
-      <div style={{display: 'flex', alignItems: 'center',cursor:'pointer'}}>
-        <AspectRatioIcon onClick={this.handleClickOpen}/>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+        <AspectRatioIcon onClick={this.handleClickOpen} />
         <Dialog
           fullScreen
           open={this.state.open}

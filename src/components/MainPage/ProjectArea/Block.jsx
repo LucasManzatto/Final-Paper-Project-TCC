@@ -10,8 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import InfoIcon from '@material-ui/icons/Info';
 import Popover from '@material-ui/core/Popover';
-import Fade from '@material-ui/core/Fade';
-import Paper from '@material-ui/core/Paper';
 
 import { notHidden, valueToBinary } from '../utils';
 import * as selectors from '../selectors';
@@ -106,7 +104,7 @@ class Block extends React.Component {
 		if (this.props.block !== this.props.clickedBlock) {
 			this.props.blockClicked(this.props.block);
 		}
-		if(window.innerWidth < 960) {
+		if (window.innerWidth < 960) {
 			this.setState({
 				anchorEl: event.currentTarget,
 			})

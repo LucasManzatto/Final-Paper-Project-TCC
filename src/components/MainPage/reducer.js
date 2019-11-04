@@ -23,18 +23,18 @@ const reducer = createReducer(initialState, {
 	// ATUALIZA O ARRAY DE BLOCOS QUE VAO SER LINKADOS
 	[actions.blocksToLink]: (state, action) => {
 		state.blocksToLinkArray.push(action.payload.block);
+		// Se o usuário fez o link entre os 2 blocos(clicou na saída e na entrada), adiciona o link no objeto
 		if (state.blocksToLinkArray.length === 2) {
-			let blockToLink1 = state.blocksToLinkArray[0];
-			let blockToLink2 = state.blocksToLinkArray[1];
-			const arrayIndexBlock1 = state.projects[state.currentProject].blocks.findIndex(
-				(prop) => prop.id == blockToLink1.id
-			);
-			let block = state.projects[state.currentProject].blocks[arrayIndexBlock1];
-			block.links.push(blockToLink2.id);
+			const blockToReceiveData = state.blocksToLinkArray[0];
+			const blockToSendData = state.blocksToLinkArray[1];
+			let block = _.find(state.projects[state.currentProject].blocks, { 'id': blockToReceiveData.id })
+			block.links.push(blockToSendData.id);
+			// Checa se o bloco tem links suficientes para mostrar os dados
 			if (block.links.length >= block.neededLinks) {
-				state.projects[state.currentProject].blocks[arrayIndexBlock1].linked = true;
-				state.projects[state.currentProject].blocks[arrayIndexBlock1].render = true;
+				block.linked = true;
+				block.render = true;
 			}
+			// Limpa os blocos que estão sendo linkados
 			state.blocksToLinkArray = [];
 		}
 	},
@@ -42,6 +42,9 @@ const reducer = createReducer(initialState, {
 	[actions.deleteBlock]: (state, action) => {
 		const block = action.payload.block;
 		const blockIndex = findBlockIndex(state.projects[state.currentProject].blocks, block);
+		// Deleta os links e dados de todos os blocos que estão linkados com o bloco deletado 
+		// Ex: Se um bloco AWGN está linkado a um bloco BPSK e o bloco BPSK é deletado, o link e os dados do AWGN
+		// devem ser deletados
 		state.projects[state.currentProject].blocks.map((bl) => {
 			bl.links = bl.links.filter((link) => link !== block.id);
 			if (bl.links.length < bl.neededLinks) {
@@ -71,10 +74,9 @@ const reducer = createReducer(initialState, {
 	},
 	// PAUSA O GRÁFICO DO BLOCO
 	[actions.pauseBlock]: (state, action) => {
-		const { block } = action.payload;
-		const blockIndex = findBlockIndex(state.projects[state.currentProject].blocks, block);
-		const blockToUpdate = state.projects[state.currentProject].blocks[blockIndex];
-		blockToUpdate['paused'] = !blockToUpdate.paused;
+		const blockId = action.payload.block.id;
+		let block = _.find(state.projects[state.currentProject].blocks, { 'id': blockId })
+		block['paused'] = !block.paused;
 	},
 	// ATUALIZA O LINK ATUALMENTE SELECIONADO, PARA PODER DELETA-LO
 	[actions.selectLink]: (state, action) => {
@@ -84,8 +86,7 @@ const reducer = createReducer(initialState, {
 	[actions.updateBlockValue]: (state, action) => {
 		const { block, key, value } = action.payload;
 		const projectBlocks = state.projects[state.currentProject].blocks;
-		const blockIndex = findBlockIndex(state.projects[state.currentProject].blocks, block);
-		let blockToUpdate = projectBlocks[blockIndex];
+		let blockToUpdate = _.find(projectBlocks, { 'id': block.id })
 		blockToUpdate[key] = value;
 	},
 	// ATUALIZA O PROJETO,
@@ -96,7 +97,5 @@ const reducer = createReducer(initialState, {
 });
 
 const findBlockIndex = (blocks, block) => blocks.findIndex((p) => p.id === block.id);
-
-export const updateBlock = (state, block) => {};
 
 export default reducer;

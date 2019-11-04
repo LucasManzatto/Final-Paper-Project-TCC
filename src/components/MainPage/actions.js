@@ -1,7 +1,6 @@
 import * as consts from '../../constants'
-import u from 'updeep'
 import _ from 'lodash'
-import {createAction} from 'redux-starter-kit'
+import { createAction } from 'redux-starter-kit'
 
 
 
@@ -13,7 +12,7 @@ export const blocksToLink = createAction('BLOCKS_TO_LINK')
 
 export const moveBlock = createAction('MOVE_BLOCK')
 
-export const deleteBlock = createAction('DELETE_BLOCK');
+export const deleteBlock = createAction('DELETE_BLOCK')
 
 // Quando um link é deletado, é necessário sempre apagar a data porque quando um
 // link é deletado o bloco num está com todos os links e não deve ter nenhuma

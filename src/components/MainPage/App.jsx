@@ -10,7 +10,7 @@ import ProjectArea from './ProjectArea/ProjectArea';
 import _ from 'lodash';
 import Hidden from '@material-ui/core/Hidden';
 
-import Menu from './menu';
+import Menu from './Menu';
 import SideBar from './SideBar/SideBar';
 import SideBarBlock from './SideBar/SideBarBlock';
 
@@ -64,17 +64,10 @@ const App = (props) => {
 						</Grid>
 					</Grid>
 					<Grid container item xs={12} spacing={16}>
-						<Hidden mdUp>
-							<Grid sm={12} md={2} item style={{overflow:'auto',paddingRight:0,paddingLeft:0, marginRight:8,marginLeft:8}}>
-								<SideBar />
-							</Grid>
-						</Hidden>
-						<Hidden mdDown>
-							<Grid sm={12} md={2} item >
-								<SideBar />
-							</Grid>
-						</Hidden>
-						<Grid xs={12} sm={12} md={8} item>
+						<Grid xs={12} sm={3} md={2} item>
+							<SideBar />
+						</Grid>
+						<Grid xs={12} sm={9} md={8} item>
 							<ProjectArea />
 						</Grid>
 						<Hidden smDown>
