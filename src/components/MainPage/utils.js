@@ -50,9 +50,10 @@ export const findMinMax = (dataArray, resolution) => {
  * @return {Array}       The shifted data.
  */
 export const shiftArray = data => {
-  let item = data.shift()
-  data.push(item)
-  return data
+  const clonedData = _.clone(data)
+  let item = clonedData.shift()
+  clonedData.push(item)
+  return clonedData
 }
 
 /**
@@ -134,3 +135,12 @@ export const notHidden = key => {
 export const valueToBinary = data => {
   return data.map(number => (number === 1 ? 1 : 0))
 }
+
+export const findLink = (linkName, blocks, links) => {
+  return _.clone(
+    _.find(
+      blocks,
+      block => (block.id === links[0] || block.id === links[1]) && block.name === linkName
+    )
+  );
+};

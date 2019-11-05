@@ -7,7 +7,7 @@ import { Axis } from "./axis";
 import { axisRight } from "d3-axis";
 import { updateBlockValue } from "../actions";
 import { Line } from "./line";
-import { shiftArray, createTimeArray, getScales, difference } from "../utils";
+import { shiftArray, createTimeArray, getScales, difference, findLink } from "../utils";
 import * as selectors from "../selectors";
 
 class ASKData extends React.Component {
@@ -19,8 +19,8 @@ class ASKData extends React.Component {
     //Para entrar aqui deve ter os 2 links, data e Carrier
     //os dois podem estar na posicao 0 ou 1, entao deve selecionar o correto
 
-    let blockLinkData = this.findLink("Data", blocks, block.links);
-    let blockLinkCarrier = this.findLink("Carrier Wave", blocks, block.links);
+    let blockLinkData = findLink("Data", blocks, block.links);
+    let blockLinkCarrier = findLink("Carrier Wave", blocks, block.links);
     data = this.createDataArray(blockLinkData.data, resolution, blockLinkCarrier);
     props.updateBlockValue({
       block: props.block,
@@ -34,14 +34,6 @@ class ASKData extends React.Component {
       blockLinkCarrier
     };
   }
-  findLink = (linkName, blocks, links) => {
-    return _.clone(
-      _.find(
-        blocks,
-        block => (block.id === links[0] || block.id === links[1]) && block.name === linkName
-      )
-    );
-  };
 
   createDataArray = (binaryArray, totalTime, blockLinkCarrier) => {
     let data = [];
@@ -73,8 +65,8 @@ class ASKData extends React.Component {
     if (nextProps.block.links < nextProps.block.neededLinks) {
       return;
     }
-    let nextProps_blockLinkData = this.findLink("Data", blocks, block.links);
-    let nextProps_blockLinkCarrier = this.findLink("Carrier Wave", blocks, block.links);
+    let nextProps_blockLinkData = findLink("Data", blocks, block.links);
+    let nextProps_blockLinkCarrier = findLink("Carrier Wave", blocks, block.links);
     if (nextProps_blockLinkCarrier.data !== blockLinkCarrier.data) {
       let data = this.createDataArray(
         nextProps_blockLinkData.data,

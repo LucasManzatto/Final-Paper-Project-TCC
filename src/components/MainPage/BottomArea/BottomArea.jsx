@@ -18,9 +18,9 @@ let style = {
   height: 200
 }
 
-const getHeigth = (width,blocksNum) => {
+const getHeigth = (width, blocksNum) => {
   let style = { height: 200 }
-  if(blocksNum === 0){
+  if (blocksNum === 0) {
     return style
   }
   if (width === 'xs') {
@@ -39,7 +39,7 @@ const getHeigth = (width,blocksNum) => {
 
 const BottomArea = props => {
   const blocksNum = _.filter(props.blocks, block => block.render).length
-  style = getHeigth(props.width,blocksNum)
+  style = getHeigth(props.width, blocksNum)
   // Se o total de links for diferente de 0 e o bloco não estiver linkado ele nao é renderizado
   let renderBlockCards = _.map(props.blocks, block => {
     if (!block.render) {
@@ -50,8 +50,8 @@ const BottomArea = props => {
         {/* Button 1 */}
         <Grid xs={2} container item style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
           {block.paused ?
-            <PlayArrowIcon onClick={event => props.pauseBlock({ block })} /> :
-            <PauseIcon onClick={event => props.pauseBlock({ block })} />
+            <PlayArrowIcon onClick={event => props.pauseBlock({ id: block.id })} /> :
+            <PauseIcon onClick={event => props.pauseBlock({ id: block.id })} />
           }
         </Grid>
         <Grid xs={8} container item >
@@ -64,7 +64,7 @@ const BottomArea = props => {
           <ExpandBlockCard block={block} />
         </Grid>
         {/* BlockCard */}
-        <Grid style={{ height: 180 }} container item xs={12} spacing={16} style={{paddingLeft:16}}>
+        <Grid style={{ height: 180, paddingLeft: 16 }} container item xs={12} spacing={16}>
           <Grid xs={12} item>
             <BlockCard block={block} key={block.id} />
           </Grid>

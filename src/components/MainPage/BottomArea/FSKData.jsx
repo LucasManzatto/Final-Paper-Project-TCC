@@ -7,7 +7,7 @@ import { Axis } from "./axis";
 import { axisRight } from "d3-axis";
 import { updateBlockValue } from "../actions";
 import { Line } from "./line";
-import { shiftArray, createTimeArray, getScales, difference } from "../utils";
+import { shiftArray, createTimeArray, getScales, difference, findLink } from "../utils";
 import * as selectors from "../selectors";
 
 class FSKData extends React.Component {
@@ -16,11 +16,11 @@ class FSKData extends React.Component {
     this.updateData = this.updateData.bind(this);
     const { blocks, block, resolution } = props;
     let data = [];
-    
+
     //Para entrar aqui deve ter os 2 links, data e Carrier
-    let blockLinkData = this.findLink("Data", blocks, block.links);
-    let blockLinkCarrier = this.findLink("Carrier Wave", blocks, block.links);
-    data = this.createDataArray(blockLinkData.data, resolution, blockLinkCarrier);
+    const blockLinkData = findLink("Data", blocks, block.links).data;
+    const blockLinkCarrier = findLink("Carrier Wave", blocks, block.links);
+    data = this.createDataArray(blockLinkData, resolution, blockLinkCarrier.frequency, blockLinkCarrier.amplitude);
     props.updateBlockValue({
       block: props.block,
       key: "data",
@@ -29,34 +29,26 @@ class FSKData extends React.Component {
     });
     this.state = {
       data,
-      blockLinkData,
       blockLinkCarrier
     };
   }
-  findLink = (linkName, blocks, links) => {
-    return _.clone(
-      _.find(
-        blocks,
-        block => (block.id === links[0] || block.id === links[1]) && block.name === linkName
-      )
-    );
-  };
 
-  createDataArray = (binaryArray, totalTime, blockLinkCarrier) => {
+  createDataArray = (binaryArray, totalTime, frequency, amplitude) => {
     let data = [];
-    let f1=blockLinkCarrier.frequency,f2=blockLinkCarrier.frequency * 2,amplitude=blockLinkCarrier.amplitude;
+    let f1 = frequency
+    let f2 = frequency * 2
     let time = createTimeArray(totalTime);
     time.forEach((currentTime, index) => {
-        if(binaryArray[index] === 1){
-          const angularFrequency = 2 * Math.PI * f1;
-          let wt = angularFrequency * currentTime;
-          data.push(amplitude * Math.sin(wt));
-        }
-        else{
-          const angularFrequency = 2 * Math.PI * f2;
-          let wt = angularFrequency * currentTime;
-          data.push(amplitude * Math.sin(wt));
-        }
+      if (binaryArray[index] === 1) {
+        const angularFrequency = 2 * Math.PI * f1;
+        let wt = angularFrequency * currentTime;
+        data.push(amplitude * Math.sin(wt));
+      }
+      else {
+        const angularFrequency = 2 * Math.PI * f2;
+        let wt = angularFrequency * currentTime;
+        data.push(amplitude * Math.sin(wt));
+      }
     });
     return data;
   };
@@ -76,14 +68,15 @@ class FSKData extends React.Component {
     if (nextProps.block.links < nextProps.block.neededLinks) {
       return;
     }
-    let nextProps_blockLinkData = this.findLink("Data", blocks, block.links);
-    let nextProps_blockLinkCarrier = this.findLink("Carrier Wave", blocks, block.links);
+    let nextProps_blockLinkData = findLink("Data", blocks, block.links);
+    let nextProps_blockLinkCarrier = findLink("Carrier Wave", blocks, block.links);
     //If there is differences update the state
     if (nextProps_blockLinkCarrier.data !== blockLinkCarrier.data) {
       let data = this.createDataArray(
         nextProps_blockLinkData.data,
         this.props.resolution,
-        nextProps_blockLinkCarrier
+        nextProps_blockLinkCarrier.frequency,
+        nextProps_blockLinkCarrier.amplitude
       );
       this.props.updateBlockValue({
         block: this.props.block,
@@ -97,14 +90,11 @@ class FSKData extends React.Component {
   updateData() {
     const { block } = this.props;
     const { data } = this.state;
-    let new_data = _.clone(data);
-    if (!block.paused) {
-      new_data = shiftArray(new_data);
-    }
+    let newData = block.paused ? data : shiftArray(data);
     if (this._ismounted) {
       this.setState(
         {
-          data: new_data
+          data: newData
         },
         () => {
           window.requestAnimationFrame(this.updateData);

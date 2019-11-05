@@ -9,41 +9,40 @@ import ASKData from './ASKData'
 import CarrierWaveData from './CarrierWaveData'
 
 const BlockCard = props => {
-  const component = new React.Component(props)
-  component.render = () => {
-    const { block } = component.props
-    let data
-    let width = component.props.containerWidth
-    let height = 164
-    const expandedHeight = 780
-    if(props.expanded){
-      height = expandedHeight
-    }
-    if (block.name === 'Data') {
-      data = <BinaryData dimensions={{ width, height }} resolution={1200} block={block} />
-    }
-    if (block.name === 'Carrier Wave') {
-      data = <CarrierWaveData dimensions={{ width, height }} resolution={1200} block={block} />
-    }
-    if (block.name === 'BPSK' && block.linked) {
+  const { block } = props
+  let data
+  let width = props.containerWidth
+  let height = 164
+  const expandedHeight = 780
+  if (props.expanded) {
+    height = expandedHeight
+  }
+  if (block.name === 'Data') {
+    data = <BinaryData dimensions={{ width, height }} resolution={1200} block={block} />
+  }
+  if (block.name === 'Carrier Wave') {
+    data = <CarrierWaveData dimensions={{ width, height }} resolution={1200} block={block} />
+  }
+  if (block.linked) {
+    if (block.name === 'BPSK') {
       data = <BPSKData dimensions={{ width, height }} resolution={1200} block={block} />
     }
-    if (block.name === 'FSK' && block.linked) {
+    if (block.name === 'FSK') {
       data = <FSKData dimensions={{ width, height }} resolution={1200} block={block} />
     }
-    if (block.name === 'ASK' && block.linked) {
+    if (block.name === 'ASK') {
       data = <ASKData dimensions={{ width, height }} resolution={1200} block={block} />
     }
-    if (block.name === 'AWGN' && block.linked) {
+    if (block.name === 'AWGN') {
       data = <AWGNData dimensions={{ width, height }} resolution={1200} block={block} />
     }
-    return (
-      <svg height={height} width={width}>
-        {data}
-      </svg>
-    )
   }
-  return component
+
+  return (
+    <svg height={height} width={width}>
+      {data}
+    </svg>
+  )
 }
 
 export default Dimensions()(BlockCard)

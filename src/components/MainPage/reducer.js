@@ -74,7 +74,7 @@ const reducer = createReducer(initialState, {
 	},
 	// PAUSA O GRÁFICO DO BLOCO
 	[actions.pauseBlock]: (state, action) => {
-		const blockId = action.payload.block.id;
+		const blockId = action.payload.id
 		let block = _.find(state.projects[state.currentProject].blocks, { 'id': blockId })
 		block['paused'] = !block.paused;
 	},
