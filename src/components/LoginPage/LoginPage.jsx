@@ -12,7 +12,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
+// import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
 // import firebase from 'firebase'
 
 const styles = theme => ({
@@ -33,13 +33,13 @@ const styles = theme => ({
   }
 });
 
-const uiConfig = {
-  // Popup signin flow rather than redirect flow.
-  signInFlow: 'popup',
-  signInSuccessUrl: '/Home',
-  // We will display Google and Facebook as auth providers.
-  // signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID, firebase.auth.GoogleAuthProvider.PROVIDER_ID, firebase.auth.FacebookAuthProvider.PROVIDER_ID, firebase.auth.GithubAuthProvider.PROVIDER_ID]
-}
+// const uiConfig = {
+//   // Popup signin flow rather than redirect flow.
+//   signInFlow: 'popup',
+//   signInSuccessUrl: '/Home',
+//   // We will display Google and Facebook as auth providers.
+//   // signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID, firebase.auth.GoogleAuthProvider.PROVIDER_ID, firebase.auth.FacebookAuthProvider.PROVIDER_ID, firebase.auth.GithubAuthProvider.PROVIDER_ID]
+// }
 class LoginPage extends React.Component {
 
   constructor(props) {

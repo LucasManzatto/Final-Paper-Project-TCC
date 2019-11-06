@@ -4,7 +4,6 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Paper from "@material-ui/core/Paper";
 import _ from "lodash";
-import Dimensions from "react-dimensions";
 import ReactCursorPosition from "react-cursor-position";
 
 //redux
@@ -13,8 +12,6 @@ import { updateCurrentProject } from "../actions";
 import Block from "./Block";
 
 const ProjectArea = props => {
-  let width = props.containerWidth;
-  let height = props.containerHeight;
   return (
     <Fragment>
       <AppBar elevation={1} square={true} position="static">
@@ -23,7 +20,7 @@ const ProjectArea = props => {
         </Tabs>
       </AppBar>
       <ReactCursorPosition>
-        <ProjectTab key="0" blocks={props.project.blocks} dimensions={{ width, height }} />
+        <ProjectTab key="0" blocks={props.project.blocks} />
       </ReactCursorPosition>
     </Fragment>
   );
@@ -41,7 +38,7 @@ const ProjectTab = props => {
         cursorPosition={props.position}
         key={block.id}
         block={block}
-        dimensions={props.dimensions}
+        dimensions={props.elementDimensions}
       />
     );
   });
@@ -62,4 +59,4 @@ const projectArea = connect(
   mapStateToProps,
   { updateCurrentProject }
 )(ProjectArea);
-export default Dimensions()(projectArea);
+export default projectArea;

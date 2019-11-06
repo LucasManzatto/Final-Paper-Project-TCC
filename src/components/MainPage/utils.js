@@ -9,7 +9,7 @@ import { scaleLinear } from 'd3-scale'
  * @return {Object}        Return a new object who represent the diff
  */
 export const difference = (object, base) => {
-  function changes (object, base) {
+  function changes(object, base) {
     return _.transform(object, function (result, value, key) {
       if (!_.isEqual(value, base[key])) {
         result[key] =
@@ -62,12 +62,11 @@ export const shiftArray = data => {
  * @return {Array}            Return the array from 0 to totalTime-1.
  */
 export const createTimeArray = totalTime => {
-  let time = []
-  for (let i = 0; i < totalTime; i++) {
-    time.push(i / totalTime)
-  }
-  return time
+  const totalTimeArray = createTimeArrayWithIndexes(totalTime)
+  return totalTimeArray.map(time => time / totalTime)
 }
+
+export const createTimeArrayWithIndexes = totalTime => Array(totalTime).fill(null).map((x, i) => i)
 
 /**
  * getScales returns the x,y scale based on the data array to fit the graph.
@@ -78,7 +77,7 @@ export const createTimeArray = totalTime => {
  * @param  {number} [amplitude]  Variable to set tickValues.
  * @return {Object}            Return the scales.
  */
-export const getScales = (data, dimensions, block, resolution, amplitude) => {
+export const getScales = (data, dimensions, blockName, resolution, amplitude) => {
   let scale = {
     xLine: 0,
     yLine: 0,
@@ -97,7 +96,7 @@ export const getScales = (data, dimensions, block, resolution, amplitude) => {
     .range([dimensions.height - paddingyAxis, paddingyAxis])
 
   // Binary Block
-  if (block.name === 'Data') {
+  if (blockName === 'Data') {
     scale.yAxis = scaleLinear()
       .domain([0, 1])
       .range([dimensions.height - paddingyAxis, paddingyAxis])
@@ -144,3 +143,9 @@ export const findLink = (linkName, blocks, links) => {
     )
   );
 };
+
+export const blockTypes = {
+  DATA: 'Data',
+  CARRIER_WAVE: 'Carrier Wave',
+  BPSS: 'BPSK'
+}

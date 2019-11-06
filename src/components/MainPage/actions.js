@@ -1,5 +1,4 @@
 import * as consts from '../../constants'
-import _ from 'lodash'
 import { createAction } from 'redux-starter-kit'
 
 
@@ -33,6 +32,8 @@ export const pauseBlock = createAction('PAUSE_BLOCK')
 export const selectLink = createAction('SELECT_LINK')
 
 export const updateBlockValue = createAction('UPDATE_BLOCK_VALUE')
+
+export const updateBlockData = createAction('UPDATE_BLOCK_DATA')
 
 export const updateCurrentProject = createAction('UPDATE_CURRENT_PROJECT')
 

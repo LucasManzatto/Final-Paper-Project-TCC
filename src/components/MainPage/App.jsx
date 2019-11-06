@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import ProjectArea from './ProjectArea/ProjectArea';
 import _ from 'lodash';
 import Hidden from '@material-ui/core/Hidden';
+import Typography from '@material-ui/core/Typography'
 
 import Menu from './Menu';
 import SideBar from './SideBar/SideBar';
@@ -77,6 +78,11 @@ const App = (props) => {
 						</Hidden>
 					</Grid>
 					<Grid container item xs={12} spacing={16}>
+						<Grid xs={12} item style={{ textAlign: 'center' }}>
+							<Typography variant="title" color="inherit">
+								Block Graphs
+          					</Typography>
+						</Grid>
 						<Grid xs={12} item>
 							<BottomArea />
 						</Grid>

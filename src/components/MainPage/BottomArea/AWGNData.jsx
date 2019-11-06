@@ -1,118 +1,75 @@
-import _ from "lodash";
-import { Axis } from "./axis";
-import { axisRight } from "d3-axis";
-import { updateBlockValue } from "../actions";
-import { connect } from "react-redux";
-import { Line } from "./line";
-import { rnorm } from "randgen";
-import { shiftArray, getScales } from "../utils";
-import PropTypes from "prop-types";
-import React from "react";
-import * as selectors from "../selectors";
+import { Axis } from "./axis"
+import { axisRight } from "d3-axis"
+import { updateBlockData } from "../actions"
+import { connect } from "react-redux"
+import { Line } from "./line"
+import { rnorm } from "randgen"
+import { shiftArray, getScales } from "../utils"
+import PropTypes from "prop-types"
+import React, { useRef, useState, useEffect } from "react"
+import * as selectors from "../selectors"
+import usePrevious from '../../../hooks/UsePrevious'
 
-class AWGNData extends React.Component {
-  constructor(props) {
-    super(props);
-    this.updateData = this.updateData.bind(this);
-    const blockLinkData = _.clone(props.linkedBlocks[0]);
-    const data = this.createDataArray(blockLinkData.data);
-    props.updateBlockValue({
-      block: props.block,
-      key: "data",
-      value: data,
-      indexOfBlock: props.indexOfBlock
-    });
-    this.state = {
-      data,
-      blockLinkData
-    };
-  }
 
-  createDataArray = data => {
-    let awgnArray = [];
-    if(!_.isEmpty(data)){
-      data.forEach(item => {
-        awgnArray.push(item + rnorm());
-      });
-    }
-    return awgnArray;
-  };
-  componentDidMount() {
-    this._ismounted = true;
-    this.animationId = window.requestAnimationFrame(this.updateData);
-  }
+const createDataArray = data => data.map(item => item + rnorm())
 
-  componentWillUnmount() {
-    this._ismounted = false;
-    window.cancelAnimationFrame(this.animationId);
-  }
-  
-  componentDidUpdate(prevProps){
-      const blockLinkData = prevProps.linkedBlocks[0];
-      if(blockLinkData.data !== this.state.blockLinkData.data){
-        let data = this.createDataArray(blockLinkData.data);
-        this.props.updateBlockValue({
-          block: this.props.block,
-          key: "data",
-          value: data,
-          indexOfBlock: this.props.indexOfBlock
-        });
-      this.setState({ data, blockLinkData});
-      }
-  }
-  
-  updateData() {
-    const { block } = this.props;
-    const { data } = this.state;
-    let new_data = _.clone(data);
+const AWGNData = props => {
+  const oldProps = usePrevious(props)
+  const { block, resolution, dimensions, linkedBlocks } = props
+  const linkData = linkedBlocks[0].data
+  const amplitude = linkData.amplitude || 1
+  const [data, setData] = useState(createDataArray(linkData))
+  const scale = getScales(data, dimensions, block, resolution, amplitude)
+
+  const requestRef = useRef()
+
+  const animate = () => {
     if (!block.paused) {
-      new_data = shiftArray(new_data);
+      setData(prevData => shiftArray(prevData))
     }
-    if (this._ismounted) {
-      this.setState(
-        {
-          data: new_data
-        },
-        () => {
-          window.requestAnimationFrame(this.updateData);
-        }
-      );
+    requestRef.current = requestAnimationFrame(animate)
+  }
+
+  useEffect(() => {
+    const { block, updateBlockData } = props
+    if (oldProps) {
+      const oldLinkData = oldProps.linkedBlocks[0].data
+      if (oldLinkData !== linkData) {
+        const newData = createDataArray(linkData)
+        setData(newData)
+        updateBlockData({ id: block.id, data: newData })
+      }
     }
-  }
-  render() {
-    const { dimensions, block, blocks, clickedBlock } = this.props;
-    const { data, blockLinkData } = this.state;
-    let amplitude = 1;
-    if ("amplitude" in blockLinkData) amplitude = blockLinkData.amplitude;
-    const scale = getScales(data, dimensions, block, this.props.resolution, amplitude);
-    return (
-      <g>
-        <Line
-          xScale={scale.xLine}
-          yScale={scale.yLine}
-          data={data}
-          //focused={block === clickedBlock ? true : false}
-        />
-        <Axis axis={axisRight} tickValues={scale.tickValues} scale={scale.yAxis} />
-      </g>
-    );
-  }
+    else {
+      updateBlockData({ id: block.id, data })
+    }
+    requestRef.current = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(requestRef.current)
+  })
+
+  return <g>
+    <Line
+      xScale={scale.xLine}
+      yScale={scale.yLine}
+      data={data}
+    />
+    <Axis axis={axisRight} tickValues={scale.tickValues} scale={scale.yAxis} />
+  </g>
 }
+
 AWGNData.propTypes = {
   block: PropTypes.object,
   dimensions: PropTypes.object,
   resolution: PropTypes.number,
-  updateBlockValue: PropTypes.func
-};
+  updateBlockData: PropTypes.func
+}
 const mapStateToProps = (state, props) => {
   return {
     blocks: state.mainPage.present.projects[0].blocks,
-    clickedBlock: state.mainPage.present.clickedBlock,
     linkedBlocks: selectors.linkedBlocksSelector(state, props),
-    indexOfBlock: selectors.getIndexOfBlockSelector(state, props)
-  };
-};
+  }
+}
 export default connect(
   mapStateToProps,
-  { updateBlockValue }
-)(AWGNData);
+  { updateBlockData }
+)(AWGNData)

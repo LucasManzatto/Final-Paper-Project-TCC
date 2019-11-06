@@ -64,7 +64,7 @@ const reducer = createReducer(initialState, {
 		newBlock.data = [];
 		newBlock.render = false;
 		const arrayIndex = state.projects[state.currentProject].blocks.findIndex(
-			(prop) => prop.id == action.payload.block.id
+			(prop) => prop.id === action.payload.block.id
 		);
 		state.projects[state.currentProject].blocks[arrayIndex] = newBlock;
 	},
@@ -88,6 +88,12 @@ const reducer = createReducer(initialState, {
 		const projectBlocks = state.projects[state.currentProject].blocks;
 		let blockToUpdate = _.find(projectBlocks, { 'id': block.id })
 		blockToUpdate[key] = value;
+	},
+	[actions.updateBlockData]: (state, action) => {
+		const { id, data } = action.payload;
+		const projectBlocks = state.projects[state.currentProject].blocks;
+		let blockToUpdate = _.find(projectBlocks, { 'id': id })
+		blockToUpdate.data = data
 	},
 	// ATUALIZA O PROJETO,
 	[actions.updateCurrentProject]: (state, action) => {

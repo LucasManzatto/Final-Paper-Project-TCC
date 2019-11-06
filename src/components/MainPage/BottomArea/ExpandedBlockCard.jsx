@@ -1,26 +1,25 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
-import Slide from "@material-ui/core/Slide";
-import Paper from "@material-ui/core/Paper";
-import AspectRatioIcon from '@material-ui/icons/AspectRatio';
+import React from "react"
+import PropTypes from "prop-types"
+import { withStyles } from "@material-ui/core/styles"
+import Dialog from "@material-ui/core/Dialog"
+import AppBar from "@material-ui/core/AppBar"
+import Toolbar from "@material-ui/core/Toolbar"
+import IconButton from "@material-ui/core/IconButton"
+import Typography from "@material-ui/core/Typography"
+import CloseIcon from "@material-ui/icons/Close"
+import Slide from "@material-ui/core/Slide"
+import Paper from "@material-ui/core/Paper"
+import AspectRatioIcon from '@material-ui/icons/AspectRatio'
 
-import { Col } from "react-flexbox-grid";
+import { Col } from "react-flexbox-grid"
 
-import _ from "lodash";
+import _ from "lodash"
 
-import BlockCard from "./BlockCard";
+import BlockCard from "./BlockCard"
 
 //react redux
-import { connect } from "react-redux";
-import * as actions from "../actions";
+import { connect } from "react-redux"
+import * as actions from "../actions"
 
 const styles = {
   iconStyle: {
@@ -33,34 +32,34 @@ const styles = {
   flex: {
     flex: 1
   }
-};
+}
 
 function Transition(props) {
-  return <Slide direction="up" {...props} />;
+  return <Slide direction="up" {...props} />
 }
 
 class ExpandedBlockCard extends React.Component {
   state = {
     open: false
-  };
+  }
 
   handleClickOpen = () => {
-    this.setState({ open: true });
-  };
+    this.setState({ open: true })
+  }
 
   handleClose = () => {
-    this.setState({ open: false });
-  };
+    this.setState({ open: false })
+  }
   onClickHandler = (block, value, key) => {
-    this.props.updateBlockValue({ value, key, id: block.id });
-    this.props.blockUpdated({ block, updated: true });
-  };
+    this.props.updateBlockValue({ value, key, id: block.id })
+    this.props.blockUpdated({ block, updated: true })
+  }
 
   render() {
-    const { classes, block } = this.props;
-    let haveProperties = false;
+    const { classes, block } = this.props
+    let haveProperties = false
     if (!_.isNil(block.frequency)) {
-      haveProperties = true;
+      haveProperties = true
     }
     const showProperties = haveProperties ? (
       <div className={classes.flex}>
@@ -77,7 +76,7 @@ class ExpandedBlockCard extends React.Component {
       </div>
     ) : (
         <div />
-      );
+      )
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
         <AspectRatioIcon onClick={this.handleClickOpen} />
@@ -107,19 +106,19 @@ class ExpandedBlockCard extends React.Component {
           </Paper>
         </Dialog>
       </div>
-    );
+    )
   }
 }
 
 ExpandedBlockCard.propTypes = {
   classes: PropTypes.object.isRequired
-};
+}
 const mapStateToProps = state => {
-  return { amplitude: state.mainPage.present.amplitude };
-};
+  return { amplitude: state.mainPage.present.amplitude }
+}
 
-let ExpandedBlockCardWithStyles = withStyles(styles)(ExpandedBlockCard);
+let ExpandedBlockCardWithStyles = withStyles(styles)(ExpandedBlockCard)
 export default connect(
   mapStateToProps,
   actions
-)(ExpandedBlockCardWithStyles);
+)(ExpandedBlockCardWithStyles)

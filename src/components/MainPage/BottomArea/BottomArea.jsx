@@ -2,7 +2,6 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 import { pauseBlock } from '../actions'
 import BlockCard from './BlockCard'
-import Button from '@material-ui/core/Button'
 import ExpandBlockCard from './ExpandedBlockCard'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
@@ -10,7 +9,6 @@ import React from 'react'
 import Typography from '@material-ui/core/Typography'
 import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import AspectRatioIcon from '@material-ui/icons/AspectRatio';
 import withWidth from '@material-ui/core/withWidth';
 
 import * as selectors from '../selectors'
@@ -74,7 +72,9 @@ const BottomArea = props => {
   })
   return (
     <Paper elevation={0} square={true} style={style}>
-      <Grid container>{renderBlockCards}</Grid>
+      <Grid container>
+        {renderBlockCards}
+      </Grid>
     </Paper>
   )
 }

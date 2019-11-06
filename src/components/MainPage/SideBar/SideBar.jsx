@@ -15,23 +15,6 @@ import _ from "lodash";
 //Redux
 import { connect } from "react-redux";
 import { addBlockToProject } from "../actions";
-import useWindowDimensions from '../../../hooks/WindowDimensions'
-//let SelectableList = makeSelectable(List);
-
-// const subHeaderStyle={
-//     backgroundColor : blue500,
-//     color : grey50
-// }
-const style = {
-  height: "100%"
-};
-
-let flexContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  padding: 0,
-};
-
 
 const SideBar = props => {
   const [drawerOpen, setDrawerOpen] = useState(false)

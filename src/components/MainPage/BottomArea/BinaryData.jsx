@@ -1,97 +1,72 @@
-import React from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import _ from 'lodash'
-import { updateBlockValue } from '../actions'
+import { updateBlockData } from '../actions'
 import * as selectors from '../selectors'
-
+import usePrevious from '../../../hooks/UsePrevious'
 import { axisRight } from 'd3-axis'
 import { Axis } from './axis'
 import { Line } from './line'
 import { shiftArray, getScales } from '../utils'
 
-class BinaryData extends React.Component {
-  constructor (props) {
-    super(props)
-    this.updateData = this.updateData.bind(this)
-    let data = this.createDataArray()
-    props.updateBlockValue({
-      block: props.block,
-      key: 'data',
-      value: data,
-      indexOfBlock: props.indexOfBlock
-    })
-    this.state = { data }
-  }
+const createDataArray = (resolution, binaryArray) => {
+  const totalTime = resolution
+  const size = totalTime / binaryArray.length
+  let index = 0
+  let binaryAux = []
+  binaryArray.forEach(item => {
+    for (let i = 0; i < size; i++) {
+      binaryAux[index++] = item
+    }
+  })
+  return binaryAux
+}
 
-  updateData () {
-    const { block } = this.props
-    const { data } = this.state
-    let newData = _.clone(data)
+const BinaryData = props => {
+  const oldProps = usePrevious(props)
+  const { resolution, block, dimensions, updateBlockData } = props
+  const binaryData = createDataArray(resolution, block.binary)
+  const scale = getScales(binaryData, dimensions, block.name, resolution)
+
+  const [data, setData] = useState(binaryData)
+
+  const requestRef = useRef()
+
+  const animate = () => {
     if (!block.paused) {
-      newData = shiftArray(newData)
+      setData(prevData => shiftArray(prevData));
     }
-    if (this._ismounted) {
-      this.setState(
-        {
-          data: newData
-        },
-        () => {
-          window.requestAnimationFrame(this.updateData)
-        }
-      )
-    }
+    requestRef.current = requestAnimationFrame(animate)
   }
 
-  createDataArray () {
-    const { resolution, block } = this.props
-    const dataArray = block.binary
-    const totalTime = resolution
-    const size = totalTime / dataArray.length
-    let index = 0
-    let binaryAux = []
-    dataArray.forEach(item => {
-      for (let i = 0; i < size; i++) {
-        binaryAux[index++] = item
+useEffect(() => {
+    if (oldProps) {
+      const oldBinaryData = oldProps.block.binary
+      if (oldBinaryData !== block.binary) {
+        const newData = createDataArray(resolution, block.binary)
+        setData(newData)
+        updateBlockData({ id: block.id, data: newData })
       }
-    })
-    return binaryAux
-  }
+    }
+    else {
+      updateBlockData({ id: block.id, data: binaryData })
+    }
+    requestRef.current = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(requestRef.current)
+  })
 
-  componentDidMount () {
-    this._ismounted = true
-    this.animationId = window.requestAnimationFrame(this.updateData)
-  }
-
-  componentWillUnmount () {
-    this._ismounted = false
-    window.cancelAnimationFrame(this.animationId)
-  }
-  render () {
-    const { dimensions, block, clickedBlock } = this.props
-    const { data } = this.state
-    const scale = getScales(data, dimensions, block, this.props.resolution)
-    return (
-      <g>
-        <Line
-          xScale={scale.xLine}
-          yScale={scale.yLine}
-          data={data}
-          focused={block === clickedBlock}
-        />
-        <Axis
-          style={{ color: 'ffffff' }}
-          axis={axisRight}
-          tickValues={scale.tickValues}
-          scale={scale.yAxis}
-        />
-      </g>
-    )
-  }
+  return <g>
+    <Line
+      xScale={scale.xLine}
+      yScale={scale.yLine}
+      data={data}
+    />
+    <Axis axis={axisRight} tickValues={scale.tickValues} scale={scale.yAxis} />
+  </g>
 }
 BinaryData.propTypes = {
   block: PropTypes.object,
-  updateBlockValue: PropTypes.func,
+  updateBlockData: PropTypes.func,
   dimensions: PropTypes.object,
   resolution: PropTypes.number
 }
@@ -103,5 +78,5 @@ const mapStateToProps = (state, props) => {
 }
 export default connect(
   mapStateToProps,
-  { updateBlockValue }
+  { updateBlockData }
 )(BinaryData)

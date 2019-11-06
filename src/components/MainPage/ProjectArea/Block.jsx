@@ -72,7 +72,7 @@ class Block extends React.Component {
 	componentDidMount = () => {
 		this.props.blockClicked(this.props.block);
 		this.calculateOffset('projectTab');
-	};
+	}
 
 	calculateOffset = (element) => {
 		let projectTabOffset = document.getElementsByClassName(element)[0].getBoundingClientRect();
@@ -274,7 +274,7 @@ class Block extends React.Component {
 		const bounds = this.getBounds();
 		const position = this.getPosition(bounds);
 		const direction = width === 'xs' ? 'row' : 'column'
-		const inputOutputSize = width === 'xs' ? '10' : '1'
+		const inputOutputSize = width === 'xs' ? 10 : 1
 		const inputOutputHeight = width === 'xs' ? { height: 20 } : { height: '100%' }
 		return (
 			<Fragment>
@@ -363,11 +363,9 @@ class Block extends React.Component {
 
 Block.propTypes = {
 	selectLink: PropTypes.func.isRequired,
-	trackLocation: PropTypes.func.isRequired,
 	blockClicked: PropTypes.func.isRequired,
 	block: PropTypes.object.isRequired,
 	dimensions: PropTypes.object.isRequired,
-	createLink: PropTypes.func.isRequired,
 	blocksToLink: PropTypes.func.isRequired,
 	blocksToLinkArray: PropTypes.array.isRequired
 };
