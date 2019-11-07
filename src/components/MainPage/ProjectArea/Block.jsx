@@ -20,10 +20,15 @@ import { connect } from 'react-redux'
 import * as actions from '../actions'
 import SideBarBlock from '../SideBar/SideBarBlock'
 
-const blockHeight = 100
-const blockWidth = 160
-const outputHeight = 20
-const outputWidth = 16
+const BASE_WIDTH = 160
+const BASE_HEIGHT = 108
+const INPUT_OUTPUT_MOBILE_HEIGHT = '10%'
+const INPUT_OUTPUT_DESKTOP_HEIGHT = '100%'
+
+let blockTotalHeight = BASE_HEIGHT
+let blockTotalWidth = BASE_WIDTH
+const outputWidth = blockTotalWidth * 0.1
+const outputHeight = blockTotalHeight * 0.1
 const blockStyle = {
   borderStyle: 'solid',
   borderWidth: '1px 1px 1px 1px',
@@ -70,6 +75,7 @@ class Block extends React.Component {
     }
   }
   componentDidMount = () => {
+    blockTotalWidth = this.props.width === 'xs' ? BASE_WIDTH : BASE_WIDTH + (this.props.block.neededLinks === 0 ? outputWidth : outputWidth * 2)
     this.props.blockClicked(this.props.block)
     this.calculateOffset('projectTab')
   }
@@ -88,8 +94,8 @@ class Block extends React.Component {
   getBounds = () => ({
     left: 0,
     top: 0,
-    right: this.state.projectTabOffset.width - blockWidth - (this.props.block.neededLinks === 0 ? outputWidth : outputWidth * 2),
-    bottom: this.state.projectTabOffset.height - blockHeight
+    right: this.state.projectTabOffset.width - blockTotalWidth,
+    bottom: this.state.projectTabOffset.height - blockTotalHeight
   })
 
   getPosition(bounds) {
@@ -107,7 +113,7 @@ class Block extends React.Component {
     if (this.props.block !== this.props.clickedBlock) {
       this.props.blockClicked(this.props.block)
     }
-    if (this.props.width === '') {
+    if (this.props.width === 'xs' || this.props.width === 'sm') {
       this.setState({
         anchorEl: event.currentTarget,
       })
@@ -169,16 +175,16 @@ class Block extends React.Component {
       let x0, x1, y0, y1
       // No mobile input e output são invertidos
       if (width === 'xs') {
-        x0 = block.position.x + blockWidth / 2 + offsetX
-        y0 = block.position.y + 8 + offsetY
-        x1 = linkBlock.position.x + blockWidth / 2 + offsetX
-        y1 = linkBlock.position.y + offsetY + blockHeight + outputHeight / 2
+        x0 = block.position.x + blockTotalWidth / 2 + offsetX
+        y0 = block.position.y + offsetY + outputHeight / 2
+        x1 = linkBlock.position.x + blockTotalWidth / 2 + offsetX
+        y1 = linkBlock.position.y + offsetY + blockTotalHeight - outputHeight / 2
       }
       else {
         x0 = block.position.x + 8 + offsetX
-        y0 = block.position.y + blockHeight / 2 + offsetY
-        x1 = linkBlock.position.x + offsetX + blockWidth + outputWidth / 2
-        y1 = linkBlock.position.y + blockHeight / 2 + offsetY
+        y0 = block.position.y + blockTotalHeight / 2 + offsetY
+        x1 = linkBlock.position.x + offsetX + blockTotalWidth + outputWidth / 2
+        y1 = linkBlock.position.y + blockTotalHeight / 2 + offsetY
       }
 
       return (
@@ -210,7 +216,7 @@ class Block extends React.Component {
           borderColor="black"
           zIndex={1}
           x0={block.position.x + position + offsetX}
-          y0={block.position.y + blockHeight / 2 + offsetY}
+          y0={block.position.y + blockTotalHeight / 2 + offsetY}
           x1={cursorPosition.x + offsetX}
           y1={cursorPosition.y + offsetY}
         />
@@ -261,9 +267,26 @@ class Block extends React.Component {
     const { block, width } = this.props
     const bounds = this.getBounds()
     const position = this.getPosition(bounds)
-    const direction = width === 'xs' ? 'row' : 'column'
-    const inputOutputSize = width === 'xs' ? 10 : 1
-    const inputOutputHeight = width === 'xs' ? { height: 20 } : { height: '100%' }
+
+    let direction, inputOutputSize, inputOutputHeight, inputOutputWidth, blockWidth, blockHeight
+    if (width === 'xs') {
+      blockTotalWidth = BASE_WIDTH
+      direction = 'row'
+      inputOutputSize = 12
+      blockWidth = 12
+      inputOutputHeight = { height: '10%' }
+      blockHeight = this.hasInput(block) ? '80%' : '100%'
+      inputOutputWidth = 3
+    }
+    else {
+      blockTotalWidth = BASE_WIDTH + (outputWidth * 2)
+      direction = 'column'
+      blockWidth = 10
+      inputOutputSize = 1
+      inputOutputHeight = { height: '100%' }
+      blockHeight = '100%'
+      inputOutputWidth = 4
+    }
     return (
       <Fragment>
         <Draggable
@@ -275,25 +298,23 @@ class Block extends React.Component {
         >
           <Grid
             container
-            style={{ height: 100, width: 192, position: 'absolute', zIndex: 2 }}
+            style={{ height: blockTotalHeight, width: blockTotalWidth, position: 'absolute', zIndex: 2 }}
           >
             {this.hasInput(block) && (
               // INPUT
-              <Grid item container direction={direction} xs={inputOutputSize} style={inputOutputHeight}>
-                <Grid item xs={4} />
+              <Grid item container direction={direction} xs={inputOutputSize} style={inputOutputHeight} justify='center'>
                 <Grid
                   item
-                  xs={4}
+                  xs={inputOutputWidth}
                   style={blockStyleInput}
                   onClick={() => this.linkBlocks(INPUT)}
                 />
-                <Grid item xs={4} />
               </Grid>
             )}
             {/* NAME AND PROPERTIES */}
-            <Grid item container xs={10} style={blockStyle} direction='row'>
+            <Grid item container xs={blockWidth} style={{ ...blockStyle, height: blockHeight }} direction='row'>
               {/* BLOCK INFO */}
-              <Grid item container xs={12} style={{ maxWidth: '100%', height: '30%' }}>
+              <Grid item container xs={12} style={{ height: '30%' }}>
                 <Grid item xs={2} style={blockTopRow}>
                   <InfoIcon style={{ fontSize: 'larger', cursor: 'pointer' }} onClick={this.handleClick} />
                 </Grid>
@@ -307,21 +328,19 @@ class Block extends React.Component {
                   <CloseIcon style={{ fontSize: 'larger', cursor: 'pointer' }} onClick={() => this.props.deleteBlock({ block })} />
                 </Grid>
               </Grid>
-              <Grid item container xs={12} style={{ maxWidth: '100%', height: '70%' }}>
+              <Grid item container xs={12} style={{ height: '70%' }}>
                 {/* BLOCK PROPERTIES */}
                 {this.showProperties(block)}
               </Grid>
             </Grid>
             {/* OUTPUT */}
-            <Grid item container direction={direction} xs={inputOutputSize} style={inputOutputHeight}>
-              <Grid item xs={4} />
+            <Grid item container direction={direction} xs={inputOutputSize} style={inputOutputHeight} justify='center'>
               <Grid
                 item
-                xs={4}
+                xs={inputOutputWidth}
                 style={blockStyleOutput}
                 onClick={() => this.linkBlocks(OUTPUT)}
               />
-              <Grid item xs={4} />
             </Grid>
             <Popover
               id="simple-popper"
@@ -344,7 +363,7 @@ class Block extends React.Component {
         </Draggable>
         {!_.isNil(block.links) ? this.renderLines() : []}
         {this.renderLineToCursor(this.state.position)}
-      </Fragment>
+      </Fragment >
     )
   }
 }
