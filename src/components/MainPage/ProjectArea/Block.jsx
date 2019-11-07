@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import { Line } from 'react-lineto'
 import Draggable from 'react-draggable'
 import Grid from '@material-ui/core/Grid'
 import Left from '@material-ui/icons/ChevronLeft'
@@ -11,6 +10,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import InfoIcon from '@material-ui/icons/Info'
 import Popover from '@material-ui/core/Popover'
 import withWidth from '@material-ui/core/withWidth'
+import { Line } from 'react-lineto'
 
 import { valueToBinary } from '../utils'
 import * as selectors from '../selectors'
@@ -19,6 +19,7 @@ import * as selectors from '../selectors'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
 import SideBarBlock from '../SideBar/SideBarBlock'
+import LinkLine from './LinkLine'
 
 const BASE_WIDTH = 160
 const BASE_HEIGHT = 108
@@ -159,51 +160,6 @@ class Block extends React.Component {
 
   blocksToLinkArrayIsFull = () => this.props.blocksToLinkArray.length >= 2
 
-  renderLines = () => {
-    let { selectLink, block, projects, selectedLink, currentProject, width } = this.props
-    let { offsetX, offsetY } = this.state
-
-    if (block.neededLinks === 0) {
-      return null
-    }
-    return block.links.map((linkPosition) => {
-      let linkBlock = _.find(projects[currentProject].blocks, (block) => block.id === linkPosition)
-      let borderStyle = 'solid'
-      if (selectedLink.id === block.id && selectedLink.linkPosition === linkPosition) {
-        borderStyle = 'dashed'
-      }
-      let x0, x1, y0, y1
-      // No mobile input e output são invertidos
-      if (width === 'xs') {
-        x0 = block.position.x + blockTotalWidth / 2 + offsetX
-        y0 = block.position.y + offsetY + outputHeight / 2
-        x1 = linkBlock.position.x + blockTotalWidth / 2 + offsetX
-        y1 = linkBlock.position.y + offsetY + blockTotalHeight - outputHeight / 2
-      }
-      else {
-        x0 = block.position.x + 8 + offsetX
-        y0 = block.position.y + blockTotalHeight / 2 + offsetY
-        x1 = linkBlock.position.x + offsetX + blockTotalWidth + outputWidth / 2
-        y1 = linkBlock.position.y + blockTotalHeight / 2 + offsetY
-      }
-
-      return (
-        <div key={linkPosition} onClick={(event) => selectLink({ id: block.id, linkPosition })}>
-          <Line
-            borderWidth={3}
-            borderStyle={borderStyle}
-            borderColor="black"
-            zIndex={1}
-            x0={x0}
-            y0={y0}
-            x1={x1}
-            y1={y1}
-          />
-        </div>
-      )
-    })
-  }
-
   renderLineToCursor = (position) => {
     let { block, cursorPosition } = this.props
     let { offsetX, offsetY } = this.state
@@ -264,7 +220,10 @@ class Block extends React.Component {
   }
 
   render = () => {
-    const { block, width } = this.props
+    const { block, width, selectLink, projects, selectedLink, currentProject } = this.props
+    const blocks = projects[currentProject].blocks
+    const lineBlock = { id: block.id, neededLinks: block.neededLinks, position: block.position, links: block.links }
+    const { offsetX, offsetY } = this.state
     const bounds = this.getBounds()
     const position = this.getPosition(bounds)
 
@@ -287,6 +246,8 @@ class Block extends React.Component {
       blockHeight = '100%'
       inputOutputWidth = 4
     }
+
+    const blockDimensions = { blockTotalWidth, blockTotalHeight, outputHeight, outputWidth }
     return (
       <Fragment>
         <Draggable
@@ -361,7 +322,14 @@ class Block extends React.Component {
           </Grid>
 
         </Draggable>
-        {!_.isNil(block.links) ? this.renderLines() : []}
+        {block.links.length > 0 &&
+          <LinkLine block={lineBlock}
+            blocks={blocks}
+            selectedLink={selectedLink}
+            width={width}
+            offsetX={offsetX}
+            offsetY={offsetY}
+            blockDimensions={blockDimensions} />}
         {this.renderLineToCursor(this.state.position)}
       </Fragment >
     )

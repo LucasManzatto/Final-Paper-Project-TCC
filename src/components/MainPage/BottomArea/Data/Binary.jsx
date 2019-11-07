@@ -9,8 +9,7 @@ import { Axis } from '../axis'
 import { Line } from '../line'
 import { shiftArray, getScales } from '../../utils'
 
-const createDataArray = (resolution, binaryArray) => {
-  const totalTime = resolution
+const createDataArray = (totalTime, binaryArray) => {
   const size = totalTime / binaryArray.length
   let index = 0
   let binaryAux = []

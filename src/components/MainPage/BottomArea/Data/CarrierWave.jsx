@@ -1,13 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import { updateBlockValue, updateBlockData } from '../../actions'
-import * as selectors from '../../selectors'
+import React from 'react'
 
-import { axisRight } from 'd3-axis'
-import { Axis } from '../axis'
-import { Line } from '../line'
-import { shiftArray, createTimeArray, getScales } from '../../utils'
+import { createTimeArray, getScales } from '../../utils'
+import useAnimation from '../../../../hooks/UseAnimation'
+import { Graph } from '../Graph'
+
 
 const createDataArray = (totalTime, frequency, amplitude) => {
   let time = createTimeArray(totalTime)
@@ -18,50 +14,15 @@ const createDataArray = (totalTime, frequency, amplitude) => {
   })
 }
 
-const CarrierWaveData = props => {
-  const { resolution, block, dimensions, updateBlockData } = props
+const CarrierWave = ({ resolution, block, dimensions }) => {
   const { frequency, amplitude } = block
-  const [data, setData] = useState([])
+
+  const createDataArrayArgs = [resolution, frequency, amplitude]
+  const updateOnChanges = [resolution, frequency, amplitude]
+  const data = useAnimation(block, createDataArray, createDataArrayArgs, updateOnChanges)
   const scale = getScales(data, dimensions, block.name, resolution, amplitude)
-  const requestRef = useRef()
 
-  const animate = () => {
-    if (!block.paused) {
-      setData(prevData => shiftArray(prevData));
-    }
-    requestRef.current = requestAnimationFrame(animate)
-  }
-
-  useEffect(() => {
-    const newData = createDataArray(resolution, block.frequency, block.amplitude)
-    setData(newData)
-    updateBlockData({ id: block.id, data: newData })
-    requestRef.current = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(requestRef.current)
-  }, [frequency, amplitude])
-
-  return <g>
-    <Line
-      xScale={scale.xLine}
-      yScale={scale.yLine}
-      data={data}
-    />
-    <Axis axis={axisRight} tickValues={scale.tickValues} scale={scale.yAxis} />
-  </g>
+  return <Graph scale={scale} data={data} />
 }
 
-CarrierWaveData.propTypes = {
-  block: PropTypes.object,
-  updateBlockValue: PropTypes.func,
-  dimensions: PropTypes.object,
-  resolution: PropTypes.number
-}
-const mapStateToProps = (state, props) => {
-  return {
-    blocks: selectors.projectBlocksSelector(state),
-  }
-}
-export default connect(
-  mapStateToProps,
-  { updateBlockValue, updateBlockData }
-)(CarrierWaveData)
+export default CarrierWave

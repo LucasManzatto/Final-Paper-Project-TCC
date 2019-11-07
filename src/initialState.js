@@ -1,3 +1,4 @@
+import { createTimeArray } from '../src/components/MainPage/utils'
 export const initialState = {
 	isAuthenticated: true,
 	user: 'Lucas',
@@ -98,7 +99,7 @@ export const initialState = {
 				'A carrier wave, carrier signal, or just carrier, is a waveform (usually sinusoid' +
 				'al) that is modulated (modified) with an input signal for the purpose of conveyi' +
 				'ng information.',
-			keysToShow: ['amplitude', 'frequency']
+			keysToShow: ['amplitude', 'frequency'],
 		},
 		{
 			data: [],

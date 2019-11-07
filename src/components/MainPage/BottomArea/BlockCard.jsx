@@ -1,12 +1,12 @@
 import React from 'react'
 import Dimensions from 'react-dimensions'
 
-import BinaryData from './Data/Binary'
-import BPSKData from './Data/BPSK'
-import FSKData from './Data/FSK'
-import AWGNData from './Data/AWGN'
-import ASKData from './Data/ASK'
-import CarrierWaveData from './Data/CarrierWave'
+import Binary from './Data/Binary'
+import BPSK from './Data/BPSK'
+import FSK from './Data/FSK'
+import AWGN from './Data/AWGN'
+import ASK from './Data/ASK'
+import CarrierWave from './Data/CarrierWave'
 
 
 class BlockCard extends React.Component {
@@ -20,23 +20,23 @@ class BlockCard extends React.Component {
       height = expandedHeight
     }
     if (block.name === 'Data') {
-      data = <BinaryData dimensions={{ width, height }} resolution={1200} block={block} />
+      data = <Binary dimensions={{ width, height }} resolution={1200} block={block} />
     }
     if (block.name === 'Carrier Wave') {
-      data = <CarrierWaveData dimensions={{ width, height }} resolution={1200} block={block} />
+      data = <CarrierWave dimensions={{ width, height }} resolution={1200} block={block} />
     }
     if (block.linked) {
       if (block.name === 'BPSK') {
-        data = <BPSKData dimensions={{ width, height }} resolution={1200} block={block} />
+        data = <BPSK dimensions={{ width, height }} resolution={1200} block={block} />
       }
       if (block.name === 'FSK') {
-        data = <FSKData dimensions={{ width, height }} resolution={1200} block={block} />
+        data = <FSK dimensions={{ width, height }} resolution={1200} block={block} />
       }
       if (block.name === 'ASK') {
-        data = <ASKData dimensions={{ width, height }} resolution={1200} block={block} />
+        data = <ASK dimensions={{ width, height }} resolution={1200} block={block} />
       }
       if (block.name === 'AWGN') {
-        data = <AWGNData dimensions={{ width, height }} resolution={1200} block={block} />
+        data = <AWGN dimensions={{ width, height }} resolution={1200} block={block} />
       }
     }
 
