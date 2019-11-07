@@ -1,24 +1,6 @@
 import _ from 'lodash'
 // AWGN +rnorm();
 import { scaleLinear } from 'd3-scale'
-
-/**
- * Deep diff between two object, using lodash
- * @param  {Object} object Object compared
- * @param  {Object} base   Object to compare with
- * @return {Object}        Return a new object who represent the diff
- */
-export const difference = (object, base) => {
-  function changes(object, base) {
-    return _.transform(object, function (result, value, key) {
-      if (!_.isEqual(value, base[key])) {
-        result[key] =
-          _.isObject(value) && _.isObject(base[key]) ? changes(value, base[key]) : value
-      }
-    })
-  }
-  return changes(object, base)
-}
 /**
  * Find min and max.
  * @param  {Array} dataArray - x axis of array.
@@ -108,21 +90,6 @@ export const getScales = (data, dimensions, blockName, resolution, amplitude) =>
     scale.tickValues = [-amplitude / 2, 0, amplitude / 2]
   }
   return scale
-}
-/**
- * Hide all unwanted properties of the block.
- * @param  {string} key The checked key.
- * @return {boolean}     Return true or false.
- */
-export const notHidden = key => {
-  if (
-    key === 'frequency' ||
-    key === 'amplitude' ||
-    key === 'binary'
-  ) {
-    return true
-  }
-  return false
 }
 
 /**

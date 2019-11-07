@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { updateBlockData } from '../actions'
-import * as selectors from '../selectors'
-import usePrevious from '../../../hooks/UsePrevious'
+import { updateBlockData } from '../../actions'
+import * as selectors from '../../selectors'
+import usePrevious from '../../../../hooks/UsePrevious'
 import { axisRight } from 'd3-axis'
-import { Axis } from './axis'
-import { Line } from './line'
-import { shiftArray, getScales } from '../utils'
+import { Axis } from '../axis'
+import { Line } from '../line'
+import { shiftArray, getScales } from '../../utils'
 
 const createDataArray = (resolution, binaryArray) => {
   const totalTime = resolution
@@ -39,7 +39,7 @@ const BinaryData = props => {
     requestRef.current = requestAnimationFrame(animate)
   }
 
-useEffect(() => {
+  useEffect(() => {
     if (oldProps) {
       const oldBinaryData = oldProps.block.binary
       if (oldBinaryData !== block.binary) {
@@ -53,7 +53,7 @@ useEffect(() => {
     }
     requestRef.current = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(requestRef.current)
-  })
+  }, [block.binary])
 
   return <g>
     <Line

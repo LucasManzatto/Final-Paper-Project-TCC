@@ -2,12 +2,11 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import React, { useState, useRef, useEffect } from "react"
 
-import { Axis } from "./axis"
+import { Axis } from "../axis"
 import { axisRight } from "d3-axis"
-import { updateBlockData } from "../actions"
-import { Line } from "./line"
-import { shiftArray, getScales, findLink, blockTypes } from "../utils"
-import usePrevious from '../../../hooks/UsePrevious'
+import { updateBlockData } from "../../actions"
+import { Line } from "../line"
+import { shiftArray, getScales, findLink, blockTypes } from "../../utils"
 
 const createDataArray = (binaryArray, carrierDataArray) => {
   return carrierDataArray.map((carrierData, position) => carrierData * binaryArray[position] || 0)
@@ -19,14 +18,12 @@ const getData = (blocks, links) => {
 }
 
 const BPSKData = props => {
-  const oldProps = usePrevious(props)
   const { blocks, block, resolution, dimensions } = props
   const { binaryData, carrierData, carrierAmplitude } = getData(blocks, block.links)
 
-  const [data, setData] = useState(createDataArray(binaryData, carrierData))
-  const [amplitude, setAmplitude] = useState(carrierAmplitude)
+  const [data, setData] = useState([])
 
-  const scale = getScales(data, dimensions, block, resolution, amplitude)
+  const scale = getScales(data, dimensions, block, resolution, carrierAmplitude)
 
   const requestRef = useRef()
 
@@ -38,25 +35,13 @@ const BPSKData = props => {
   }
 
   useEffect(() => {
-    const { blocks, block, updateBlockData } = props
-    if (oldProps) {
-      const { blocks: prevBlocks, block: prevBlock } = oldProps
-      const prevCarrierData = findLink(blockTypes.CARRIER_WAVE, prevBlocks, prevBlock.links).data
-      const { binaryData, carrierData, carrierAmplitude } = getData(blocks, block.links)
-
-      if (prevCarrierData !== carrierData) {
-        const newData = createDataArray(binaryData, carrierData)
-        setData(newData)
-        updateBlockData({ id: block.id, data: newData })
-        setAmplitude(carrierAmplitude)
-      }
-    }
-    else {
-      updateBlockData({ id: block.id, data })
-    }
+    const newData = createDataArray(binaryData, carrierData)
+    setData(newData)
+    updateBlockData({ id: block.id, data: newData })
     requestRef.current = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(requestRef.current)
-  })
+  }, [carrierData])
+
 
   return <g>
     <Line

@@ -84,9 +84,9 @@ const reducer = createReducer(initialState, {
 	},
 	// ATUALIZA UMA PROPRIEDADE DO BLOCO
 	[actions.updateBlockValue]: (state, action) => {
-		const { block, key, value } = action.payload;
+		const { blockId, key, value } = action.payload;
 		const projectBlocks = state.projects[state.currentProject].blocks;
-		let blockToUpdate = _.find(projectBlocks, { 'id': block.id })
+		let blockToUpdate = _.find(projectBlocks, { 'id': blockId })
 		blockToUpdate[key] = value;
 	},
 	[actions.updateBlockData]: (state, action) => {

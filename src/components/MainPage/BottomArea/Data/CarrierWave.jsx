@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { updateBlockValue, updateBlockData } from '../actions'
-import * as selectors from '../selectors'
+import { updateBlockValue, updateBlockData } from '../../actions'
+import * as selectors from '../../selectors'
 
 import { axisRight } from 'd3-axis'
-import { Axis } from './axis'
-import { Line } from './line'
-import { shiftArray, createTimeArray, getScales } from '../utils'
-import usePrevious from '../../../hooks/UsePrevious'
+import { Axis } from '../axis'
+import { Line } from '../line'
+import { shiftArray, createTimeArray, getScales } from '../../utils'
 
 const createDataArray = (totalTime, frequency, amplitude) => {
   let time = createTimeArray(totalTime)
@@ -22,10 +21,8 @@ const createDataArray = (totalTime, frequency, amplitude) => {
 const CarrierWaveData = props => {
   const { resolution, block, dimensions, updateBlockData } = props
   const { frequency, amplitude } = block
-  const oldProps = usePrevious(props)
-  const [data, setData] = useState(createDataArray(resolution, frequency, amplitude))
+  const [data, setData] = useState([])
   const scale = getScales(data, dimensions, block.name, resolution, amplitude)
-
   const requestRef = useRef()
 
   const animate = () => {
@@ -36,22 +33,12 @@ const CarrierWaveData = props => {
   }
 
   useEffect(() => {
-    if (oldProps) {
-      const { frequency: oldFrequency, amplitude: oldAmplitude } = oldProps.block
-      const { frequency, amplitude } = block
-      if (oldFrequency !== frequency || oldAmplitude !== amplitude) {
-        const newData = createDataArray(resolution, block.frequency, block.amplitude)
-        setData(newData)
-        updateBlockData({ id: block.id, data: newData })
-      }
-    }
-    else{
-      updateBlockData({ id: block.id, data })
-    }
-
+    const newData = createDataArray(resolution, block.frequency, block.amplitude)
+    setData(newData)
+    updateBlockData({ id: block.id, data: newData })
     requestRef.current = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(requestRef.current)
-  })
+  }, [frequency, amplitude])
 
   return <g>
     <Line

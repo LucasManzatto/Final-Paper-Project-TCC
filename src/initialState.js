@@ -73,7 +73,8 @@ export const initialState = {
 			requiredLinks: ['None'],
 			type: 'square',
 			updated: false,
-			render: true
+			render: true,
+			keysToShow: ['binary']
 		},
 		{
 			amplitude: 3,
@@ -96,7 +97,8 @@ export const initialState = {
 			description:
 				'A carrier wave, carrier signal, or just carrier, is a waveform (usually sinusoid' +
 				'al) that is modulated (modified) with an input signal for the purpose of conveyi' +
-				'ng information.'
+				'ng information.',
+			keysToShow: ['amplitude', 'frequency']
 		},
 		{
 			data: [],
@@ -117,7 +119,8 @@ export const initialState = {
 			description:
 				'Binary Phase Shift Keying (BPSK) is a two phase modulation scheme, where the 0’s' +
 				' and 1’s in a binary message are represented by two different phase states in th' +
-				'e carrier signal: θ=0° for binary 1 and θ=180° for binary 0.'
+				'e carrier signal: θ=0° for binary 1 and θ=180° for binary 0.',
+			keysToShow: []
 		},
 		{
 			data: [],
@@ -137,7 +140,8 @@ export const initialState = {
 			render: false,
 			description:
 				'Additive white Gaussian noise (AWGN) is a basic noise model used in Information ' +
-				'theory to mimic the effect of many random processes that occur in nature.'
+				'theory to mimic the effect of many random processes that occur in nature.',
+			keysToShow: []
 		},
 		{
 			data: [],
@@ -158,7 +162,8 @@ export const initialState = {
 			description:
 				'In Frequency Shify Keying (FSK) the frequency of the Carrier Wave is varied in a' +
 				'ccordance with baseband digital input. Binary 1 and 0 is represented by two diff' +
-				'erent carrier frequencies.'
+				'erent carrier frequencies.',
+			keysToShow: []
 		},
 		{
 			data: [],
@@ -177,7 +182,10 @@ export const initialState = {
 			updated: false,
 			render: false,
 			description:
-				'In an ASK system, the binary symbol 1 is represented by transmitting a fixed-amplitude carrier wave and fixed frequency for a bit duration of T seconds. If the signal value is 1 then the carrier signal will be transmitted; otherwise, a signal value of 0 will be transmitted.'
+				'In an ASK system, the binary symbol 1 is represented by transmitting a fixed-amplitude carrier' +
+				' wave and fixed frequency for a bit duration of T seconds. If the signal value is 1 then the' +
+				'carrier signal will be transmitted; otherwise, a signal value of 0 will be transmitted.',
+			keysToShow: []
 		}
 	]
 };
