@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React, { memo } from 'react'
 import { useDispatch } from 'react-redux'
 import { selectLink } from '../actions'
 import { Line } from 'react-lineto'
@@ -31,7 +31,6 @@ const LinkLine = ({ block, blocks, selectedLink, width, offsetX, offsetY, blockD
       x1 = linkBlock.position.x + offsetX + blockTotalWidth - outputWidth * 2
       y1 = linkBlock.position.y + blockTotalHeight / 2 + offsetY
     }
-
     return (
       <div key={linkPosition} onClick={() => dispatch(selectLink({ id: block.id, linkPosition }))}>
         <Line

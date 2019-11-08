@@ -40,13 +40,13 @@ const reducer = createReducer(initialState, {
 	},
 	// DELETA O BLOCO DO PROJETO
 	[actions.deleteBlock]: (state, action) => {
-		const block = action.payload.block;
-		const blockIndex = findBlockIndex(state.projects[state.currentProject].blocks, block);
+		const blockId = action.payload;
+		const blockIndex = findBlockIndex(state.projects[state.currentProject].blocks, blockId);
 		// Deleta os links e dados de todos os blocos que estão linkados com o bloco deletado 
 		// Ex: Se um bloco AWGN está linkado a um bloco BPSK e o bloco BPSK é deletado, o link e os dados do AWGN
 		// devem ser deletados
 		state.projects[state.currentProject].blocks.map((bl) => {
-			bl.links = bl.links.filter((link) => link !== block.id);
+			bl.links = bl.links.filter((link) => link !== blockId);
 			if (bl.links.length < bl.neededLinks) {
 				bl.linked = false;
 				bl.data = [];
@@ -102,6 +102,6 @@ const reducer = createReducer(initialState, {
 	}
 });
 
-const findBlockIndex = (blocks, block) => blocks.findIndex((p) => p.id === block.id);
+const findBlockIndex = (blocks, blockId) => blocks.findIndex((p) => p.id === blockId);
 
 export default reducer;
