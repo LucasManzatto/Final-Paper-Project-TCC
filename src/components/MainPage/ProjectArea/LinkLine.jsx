@@ -21,9 +21,9 @@ const LinkLine = ({ block, blocks, selectedLink, width, offsetX, offsetY, blockD
     // No mobile input e output são invertidos
     if (width === 'xs') {
       x0 = block.position.x + blockTotalWidth / 2 + offsetX
-      y0 = block.position.y + offsetY + outputHeight / 2
+      y0 = block.position.y + offsetY + outputHeight
       x1 = linkBlock.position.x + blockTotalWidth / 2 + offsetX
-      y1 = linkBlock.position.y + offsetY + blockTotalHeight - outputHeight / 2
+      y1 = linkBlock.position.y + offsetY + blockTotalHeight - outputHeight * 2
     }
     else {
       x0 = block.position.x + offsetX + outputWidth

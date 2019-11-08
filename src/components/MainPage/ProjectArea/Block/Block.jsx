@@ -51,32 +51,6 @@ const Block = ({ width, block, blocks, selectedLink, clickedBlock, blocksToLink,
   const [position, setPosition] = useState()
   const [isMobile, setIsMobile] = useState(false)
 
-
-  // useEffect(() => {
-  //   const newIsMobile = width === 'xs'
-  //   let dimensions
-  //   if (newIsMobile) {
-  //     dimensions = {
-  //       blockTotalWidth: BASE_WIDTH,
-  //       blockTotalHeight: hasInput(block.neededLinks) ? BASE_HEIGHT + (outputHeight * 2) : BASE_HEIGHT + outputHeight,
-  //       blockWidth: 12,
-  //       blockHeight: hasInput(block.neededLinks) ? '80%' : '90%'
-  //     }
-  //   }
-  //   else {
-  //     dimensions = {
-  //       blockTotalWidth: hasInput(block.neededLinks) ? BASE_WIDTH + (outputWidth * 2) : BASE_WIDTH + outputWidth,
-  //       blockTotalHeight: BASE_HEIGHT,
-  //       blockWidth: hasInput(block.neededLinks) ? 10 : 11,
-  //       blockHeight: '100%'
-  //     }
-  //   }
-  //   setIsMobile(newIsMobile)
-  //   setDimensions(prevState => {
-  //     return { ...prevState, ...dimensions }
-  //   })
-  // }, [width])
-
   useEffect(() => {
     let dimensions
     const newIsMobile = width === 'xs'
@@ -124,7 +98,7 @@ const Block = ({ width, block, blocks, selectedLink, clickedBlock, blocksToLink,
         }
       }
     })
-  }, [windowDimensions])
+  }, [width,windowDimensions])
 
 
   useEffect(() => {
