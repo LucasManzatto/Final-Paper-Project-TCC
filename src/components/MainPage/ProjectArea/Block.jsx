@@ -12,7 +12,7 @@ import Popover from '@material-ui/core/Popover'
 import withWidth from '@material-ui/core/withWidth'
 import { Line } from 'react-lineto'
 
-import { valueToBinary } from '../utils'
+import { valueToBinary, calculateOffset } from '../utils'
 import * as selectors from '../selectors'
 
 //redux
@@ -69,26 +69,18 @@ class Block extends React.Component {
       projectTabOffset: 0,
       offsetX: 0,
       offsetY: 0,
-      mouseClicked: false,
       position: INPUT,
-      blockPosition: props.block.position,
       anchorEl: null
     }
   }
   componentDidMount = () => {
     blockTotalWidth = this.props.width === 'xs' ? BASE_WIDTH : BASE_WIDTH + (this.props.block.neededLinks === 0 ? outputWidth : outputWidth * 2)
     this.props.blockClicked(this.props.block)
-    this.calculateOffset('projectTab')
-  }
-
-  calculateOffset = (element) => {
-    let projectTabOffset = document.getElementsByClassName(element)[0].getBoundingClientRect()
-    let offsetX = window.pageXOffset + projectTabOffset.left
-    let offsetY = window.pageYOffset + projectTabOffset.top
+    const offset = calculateOffset('projectTab')
     this.setState({
-      projectTabOffset,
-      offsetX,
-      offsetY
+      projectTabOffset: offset.componentOffset,
+      offsetX: offset.offsetX,
+      offsetY: offset.offsetY
     })
   }
 
@@ -151,33 +143,31 @@ class Block extends React.Component {
       (block.links.length > block.neededLinks && block.neededLinks !== 0)
     ) {
       return
-    } else if (!this.blocksToLinkArrayIsFull() && !_.includes(blocksToLinkArray, this.props.block)) {
+    } else if (!this.blocksToLinkArrayIsFull(this.props.blocksToLinkArray) && !_.includes(blocksToLinkArray, this.props.block)) {
       this.props.blocksToLink({ block })
     }
   }
 
-  hasInput = block => block.neededLinks ? block.neededLinks > 0 : false
+  hasInput = neededLinks => neededLinks > 0
 
-  blocksToLinkArrayIsFull = () => this.props.blocksToLinkArray.length >= 2
+  blocksToLinkArrayIsFull = array => array.length >= 2
 
   renderLineToCursor = (position) => {
     let { block, cursorPosition } = this.props
     let { offsetX, offsetY } = this.state
     //render line only when the block is not fully linked and is not already linking
-    if (this.isLinking(block)) {
-      return (
-        <Line
-          borderWidth={3}
-          borderStyle="solid"
-          borderColor="black"
-          zIndex={1}
-          x0={block.position.x + position + offsetX}
-          y0={block.position.y + blockTotalHeight / 2 + offsetY}
-          x1={cursorPosition.x + offsetX}
-          y1={cursorPosition.y + offsetY}
-        />
-      )
-    } else return null
+    return (
+      <Line
+        borderWidth={3}
+        borderStyle="solid"
+        borderColor="black"
+        zIndex={1}
+        x0={block.position.x + position + offsetX}
+        y0={block.position.y + blockTotalHeight / 2 + offsetY}
+        x1={cursorPosition.x + offsetX}
+        y1={cursorPosition.y + offsetY}
+      />
+    )
   }
 
   isLinking = (block) => _.includes(this.props.blocksToLinkArray, block)
@@ -234,7 +224,7 @@ class Block extends React.Component {
       inputOutputSize = 12
       blockWidth = 12
       inputOutputHeight = { height: '10%' }
-      blockHeight = this.hasInput(block) ? '80%' : '100%'
+      blockHeight = this.hasInput(block.neededLinks) ? '80%' : '100%'
       inputOutputWidth = 3
     }
     else {
@@ -261,7 +251,7 @@ class Block extends React.Component {
             container
             style={{ height: blockTotalHeight, width: blockTotalWidth, position: 'absolute', zIndex: 2 }}
           >
-            {this.hasInput(block) && (
+            {this.hasInput(block.neededLinks) && (
               // INPUT
               <Grid item container direction={direction} xs={inputOutputSize} style={inputOutputHeight} justify='center'>
                 <Grid
@@ -330,7 +320,7 @@ class Block extends React.Component {
             offsetX={offsetX}
             offsetY={offsetY}
             blockDimensions={blockDimensions} />}
-        {this.renderLineToCursor(this.state.position)}
+        {this.isLinking(block) && this.renderLineToCursor(this.state.position)}
       </Fragment >
     )
   }

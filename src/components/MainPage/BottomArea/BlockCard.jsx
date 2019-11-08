@@ -15,7 +15,7 @@ class BlockCard extends React.Component {
     let data
     let width = this.props.containerWidth
     let height = 164
-    const expandedHeight = 780
+    const expandedHeight = window.innerHeight - 90
     if (this.props.expanded) {
       height = expandedHeight
     }

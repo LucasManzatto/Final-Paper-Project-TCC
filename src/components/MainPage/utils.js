@@ -116,3 +116,14 @@ export const blockTypes = {
   CARRIER_WAVE: 'Carrier Wave',
   BPSS: 'BPSK'
 }
+
+export const calculateOffset = (element) => {
+  let componentOffset = document.getElementsByClassName(element)[0].getBoundingClientRect()
+  let offsetX = window.pageXOffset + componentOffset.left
+  let offsetY = window.pageYOffset + componentOffset.top
+  return {
+    componentOffset,
+    offsetX,
+    offsetY
+  }
+}

@@ -7,7 +7,7 @@ import _ from "lodash";
 import ReactCursorPosition from "react-cursor-position";
 
 //redux
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { updateCurrentProject } from "../actions";
 import Block from "./Block";
 
@@ -32,16 +32,14 @@ const projectTabStyle = {
 };
 
 const ProjectTab = props => {
-  const renderBlocks = _.map(props.blocks, block => {
-    return (
-      <Block
-        cursorPosition={props.position}
-        key={block.id}
-        block={block}
-        dimensions={props.elementDimensions}
-      />
-    );
-  });
+  const renderBlocks = _.map(props.blocks, block =>
+    <Block
+      cursorPosition={props.position}
+      key={block.id}
+      block={block}
+      dimensions={props.elementDimensions}
+    />
+  );
   return (
     <Paper square={true} elevation={0} className="projectTab" style={projectTabStyle}>
       {renderBlocks}
@@ -51,7 +49,6 @@ const ProjectTab = props => {
 
 const mapStateToProps = state => {
   return {
-    //projects : projectsSelector(state)
     project: state.mainPage.present.projects[0]
   };
 };
