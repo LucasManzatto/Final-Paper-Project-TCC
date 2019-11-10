@@ -9,7 +9,7 @@ const createDataArray = (binaryArray, carrierData, amplitude) => {
   return carrierData.map((value, index) => (binaryArray[index] === -1 ? value : value * (amplitude * 2)) || 0)
 }
 
-const ASKData = ({ block, resolution, dimensions }) => {
+const ASK = ({ block, resolution, dimensions }) => {
   const blocks = useSelector(state => state.mainPage.present.projects[0].blocks)
   const binaryData = findLink(blockTypes.DATA, blocks, block.links).data
   const { amplitude: carrierAmplitude, data: carrierData } = findLink(blockTypes.CARRIER_WAVE, blocks, block.links)
@@ -23,4 +23,4 @@ const ASKData = ({ block, resolution, dimensions }) => {
   return <Graph scale={scale} data={data} />
 }
 
-export default ASKData
+export default ASK

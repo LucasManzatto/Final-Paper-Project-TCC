@@ -21,7 +21,11 @@ const reducer = {
 	mainPage: undoable(mainPage, { limit: 5 })
 };
 
-const middleware = [ ...getDefaultMiddleware(), logger ];
+let middleware = [...getDefaultMiddleware()]
+
+if (process.env.NODE_ENV !== 'production') {
+	middleware = [...middleware, logger];
+}
 
 const store = configureStore({
 	reducer,

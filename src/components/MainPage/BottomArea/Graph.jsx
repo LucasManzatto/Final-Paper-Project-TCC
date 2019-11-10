@@ -1,6 +1,6 @@
 import React from 'react'
 import { axisRight } from 'd3-axis'
-import { Axis } from './axis'
+import { Axis } from './Axis'
 import { Line } from './line'
 
 export const Graph = ({ scale, data }) => {

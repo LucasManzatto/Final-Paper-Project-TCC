@@ -57,7 +57,6 @@ const InputOutput = ({ isInput, block, blocksToLinkArray, isMobile }) => {
     inputOutputHeight = { height: '100%' }
     inputOutputWidth = 4
   }
-  console.log(isMobile)
 
   return (
     <Grid item container direction={direction} xs={inputOutputSize} style={inputOutputHeight} justify='center'>

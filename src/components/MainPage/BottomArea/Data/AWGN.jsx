@@ -10,7 +10,7 @@ import { rnorm } from "randgen"
 
 const createDataArray = data => data.map(item => item + rnorm())
 
-const AWGNData = ({ block, resolution, dimensions }) => {
+const AWGN = ({ block, resolution, dimensions }) => {
   const linkedBlock = useSelector(state => selectors.linkedBlocksSelector(state, { block }))[0]
   const amplitude = linkedBlock.amplitude || 1
 
@@ -22,4 +22,4 @@ const AWGNData = ({ block, resolution, dimensions }) => {
   return <Graph scale={scale} data={data} />
 }
 
-export default AWGNData
+export default AWGN

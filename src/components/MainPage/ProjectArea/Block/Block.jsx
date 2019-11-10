@@ -98,7 +98,7 @@ const Block = ({ width, block, blocks, selectedLink, clickedBlock, blocksToLink,
         }
       }
     })
-  }, [width,windowDimensions])
+  }, [width, windowDimensions])
 
 
   useEffect(() => {

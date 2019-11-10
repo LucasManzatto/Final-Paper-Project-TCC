@@ -19,7 +19,7 @@ const createDataArray = (binaryArray, carrierData, amplitude, frequency, totalTi
     }
   })
 }
-const FSKData = ({ block, resolution, dimensions }) => {
+const FSK = ({ block, resolution, dimensions }) => {
   const blocks = useSelector(state => state.mainPage.present.projects[0].blocks)
   const binaryData = findLink(blockTypes.DATA, blocks, block.links).data
   const { amplitude: carrierAmplitude, data: carrierData, frequency: carrierFrequency } = findLink(blockTypes.CARRIER_WAVE, blocks, block.links)
@@ -33,5 +33,5 @@ const FSKData = ({ block, resolution, dimensions }) => {
   return <Graph scale={scale} data={data} />
 }
 
-export default FSKData
+export default FSK
 

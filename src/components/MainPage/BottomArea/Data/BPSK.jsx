@@ -10,7 +10,7 @@ const createDataArray = (binaryArray, carrierDataArray) => {
   return carrierDataArray.map((carrierData, position) => carrierData * binaryArray[position] || 0)
 }
 
-const BPSKData = ({ block, resolution, dimensions }) => {
+const BPSK = ({ block, resolution, dimensions }) => {
   const blocks = useSelector(state => state.mainPage.present.projects[0].blocks)
   const binaryData = findLink(blockTypes.DATA, blocks, block.links).data
   const { amplitude: carrierAmplitude, data: carrierData } = findLink(blockTypes.CARRIER_WAVE, blocks, block.links)
@@ -23,4 +23,4 @@ const BPSKData = ({ block, resolution, dimensions }) => {
   return <Graph scale={scale} data={data} />
 }
 
-export default BPSKData
+export default BPSK

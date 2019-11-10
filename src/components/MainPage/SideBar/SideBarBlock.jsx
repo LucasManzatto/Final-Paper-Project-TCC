@@ -21,7 +21,6 @@ const ID = () => {
 
 const SideBarBlock = (props) => {
 	const renderRequiredLinks = _.map(props.clickedBlock.requiredLinks, (link, index) => {
-		console.log(link);
 		return link === 'None' ? (
 			<Typography key={ID()}>{link}</Typography>
 		) : (
