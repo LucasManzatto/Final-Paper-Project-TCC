@@ -26,9 +26,11 @@ const InputOutput = ({ isInput, block, blocksToLinkArray, isMobile }) => {
     //Need to check if a block is already fully linked but other block wants to link with
     //it in the output
     //Nao deixar linkar quando o bloco que voce quer linkar nao esta linkado e nao tem Data
+    const isDataEmpty = block.data && block.data.length === 0
+    const isBlocksToLinkArrayEmpty = blocksToLinkArray && blocksToLinkArray.length === 0
     if (
-      (position === OUTPUT && (blocksToLinkArray.length === 0 || block.data.length === 0)) ||
-      (block.links.length > block.neededLinks && block.neededLinks !== 0)
+      (position === OUTPUT && (isBlocksToLinkArrayEmpty || isDataEmpty)) ||
+      ((block.links && block.links.length) > block.neededLinks && block.neededLinks !== 0)
     ) {
       return
     } else if (!blocksToLinkArrayIsFull(blocksToLinkArray) && !_.includes(blocksToLinkArray, block)) {

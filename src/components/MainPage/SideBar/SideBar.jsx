@@ -68,7 +68,7 @@ const SideBar = props => {
 const mapStateToProps = state => {
   return {
     blocks: state.mainPage.present.blocks,
-    idCounter: state.mainPage.present.idCounter
+    idCounter: state.mainPage.present.userState.idCounter
   };
 };
 export default connect(

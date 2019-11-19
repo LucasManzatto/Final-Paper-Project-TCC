@@ -29,6 +29,8 @@ export const deleteLink = payload => {
 
 export const pauseBlock = createAction('PAUSE_BLOCK')
 
+export const setInitialState = createAction('SET_INITIAL_STATE')
+
 export const selectLink = createAction('SELECT_LINK')
 
 export const updateBlockValue = createAction('UPDATE_BLOCK_VALUE')

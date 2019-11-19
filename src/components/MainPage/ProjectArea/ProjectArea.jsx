@@ -50,7 +50,7 @@ const ProjectTab = props => {
 
 const mapStateToProps = state => {
   return {
-    project: state.mainPage.present.projects[0]
+    project: state.mainPage.present.userState.projects[0]
   }
 }
 const projectArea = connect(

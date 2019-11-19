@@ -1,4 +1,5 @@
 import React from "react";
+import {useSelector} from 'react-redux'
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -7,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import * as selectors from '../../components/MainPage/selectors'
 
 const styles = {
   root: {
@@ -22,7 +24,8 @@ const styles = {
 };
 
 function Menu(props) {
-  const { classes } = props;
+  const { classes } = props
+  const currentUser = useSelector(state => selectors.currentUser(state))
   return (
     //<div className={classes.root}>
       <AppBar elevation={0} square={true} position="static" color="primary">
@@ -33,7 +36,7 @@ function Menu(props) {
           <Typography variant="title" color="inherit" className={classes.flex}>
             TCC
           </Typography>
-          <Button color="inherit">Lucas</Button>
+          <Button color="inherit">{currentUser}</Button>
         </Toolbar>
       </AppBar>
     //	</div>

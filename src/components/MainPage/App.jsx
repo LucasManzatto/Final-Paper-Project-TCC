@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useEffect, use, useState } from 'react';
 // Imports dos components do projeto
 import { Redirect, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
@@ -16,11 +16,13 @@ import SideBar from './SideBar/SideBar';
 import SideBarBlock from './SideBar/SideBarBlock';
 
 import * as selectors from './selectors';
-import { deleteLink, deleteBlock } from './actions';
+import * as actions from './actions';
 import KeyHandler, { KEYPRESS } from 'react-key-handler';
 
 import { ActionCreators } from 'redux-undo';
 import { connect } from 'react-redux';
+import * as firebase from '../../firebase'
+import useInterval from '../../hooks/UseInterval'
 // import { createDb } from 'C:/Users/Lucas/Documents/GitHub/tcc/src/firebase.js';
 const styles = (theme) => ({
 	root: {
@@ -32,9 +34,26 @@ const styles = (theme) => ({
 		color: theme.palette.text.secondary
 	}
 });
-// createDb();
+
 const App = (props) => {
-	if (props.isAuthenticated) {
+	const [isLoading, setIsLoading] = useState(true)
+
+	useEffect(() => {
+		firebase.init()
+		firebase.getUserData()
+			.then(data => {
+				props.setInitialState(data)
+			})
+			.finally(() => {
+				setIsLoading(false)
+			})
+	}, [])
+
+	useInterval(() => {
+		firebase.setUserData(props.userState)
+	}, 5000)
+
+	if (!isLoading) {
 		return (
 			<div
 				style={{
@@ -91,17 +110,21 @@ const App = (props) => {
 			</div>
 		);
 	} else {
-		return <Redirect to="/" />;
+		return <div>Loading...</div>
+		// return <Redirect to="/" />;
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		setInitialState: (payload) => {
+			dispatch(actions.setInitialState(payload))
+		},
 		deleteLink: (payload) => {
-			dispatch(deleteLink(payload));
+			dispatch(actions.deleteLink(payload));
 		},
 		deleteBlock: (clickedBlock) => {
-			dispatch(deleteBlock(clickedBlock));
+			dispatch(actions.deleteBlock(clickedBlock));
 		},
 		undo: () => {
 			dispatch(ActionCreators.undo());
@@ -109,10 +132,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 const mapStateToProps = (state) => {
+	const userState = selectors.userState(state)
 	return {
+		userState,
 		isAuthenticated: state.mainPage.present.isAuthenticated,
-		clickedBlock: state.mainPage.present.clickedBlock,
-		selectedLink: state.mainPage.present.selectedLink,
+		clickedBlock: userState.clickedBlock,
+		selectedLink: userState.selectedLink,
 		blocks: selectors.projectBlocksSelector(state)
 	};
 };

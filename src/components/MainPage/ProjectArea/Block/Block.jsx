@@ -79,7 +79,7 @@ const Block = ({ width, block, blocks, selectedLink, clickedBlock, blocksToLink,
     if (!_.isEqual(newPosition, block.position)) {
       moveBlock({
         value: { x: newPosition.x, y: newPosition.y },
-        indexOfBlock: indexOfBlock
+        blockId: block.id
       })
     }
     setIsMobile(newIsMobile)
@@ -129,7 +129,7 @@ const Block = ({ width, block, blocks, selectedLink, clickedBlock, blocksToLink,
     const { x, y } = ui
     moveBlock({
       value: { x, y },
-      indexOfBlock: indexOfBlock
+    blockId: block.id
     })
   }
 
@@ -186,7 +186,7 @@ const Block = ({ width, block, blocks, selectedLink, clickedBlock, blocksToLink,
         </Grid>
 
       </Draggable>
-      {block.links.length > 0 &&
+      {block.links && block.links.length > 0 &&
         <LinkLine block={block}
           blocks={blocks}
           selectedLink={selectedLink}
@@ -212,14 +212,12 @@ Block.propTypes = {
 }
 
 const mapStateToProps = (state, props) => {
-  const { clickedBlock, projects, selectedLink, currentProject, blocksToLinkArray } = state.mainPage.present
-
+  const { clickedBlock, projects, selectedLink, currentProject, blocksToLinkArray } = selectors.userState(state)
   return {
     clickedBlock,
     blocks: projects[currentProject].blocks,
     blocksToLinkArray,
     selectedLink,
-    linkedBlocks: selectors.linkedBlocksSelector(state, props),
     indexOfBlock: selectors.getIndexOfBlockSelector(state, props)
   }
 }

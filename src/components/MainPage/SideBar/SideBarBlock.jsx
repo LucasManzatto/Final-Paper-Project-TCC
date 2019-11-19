@@ -19,25 +19,27 @@ const ID = () => {
 	return '_' + Math.random().toString(36).substr(2, 9);
 };
 
-const SideBarBlock = (props) => {
-	const renderRequiredLinks = _.map(props.clickedBlock.requiredLinks, (link, index) => {
-		return link === 'None' ? (
-			<Typography key={ID()}>{link}</Typography>
-		) : (
+const renderRequiredLinks = (requiredLinks) => _.map(requiredLinks, (link, index) => {
+	return link === 'None' ? (
+		<Typography key={ID()}>{link}</Typography>
+	) : (
 			<Typography key={ID()}>{link} :</Typography>
 		);
-	});
+});
+
+const SideBarBlock = (props) => {
+	if (props.clickedBlock === undefined) {
+		return <Paper elevation={0} square={true} key={0} style={{ height: '100%', paddingTop: 16 }}>
+			<Typography variant="title" gutterBottom align="center">
+				Block Details
+			</Typography>
+		</Paper>
+	}
 	return (
 		<Paper elevation={0} square={true} key={props.clickedBlock.id} style={{ height: '100%', paddingTop: 16 }}>
-			{_.isEmpty(props.clickedBlock) ? (
-				<Typography variant="title" gutterBottom align="center">
-					Block Details
-				</Typography>
-			) : (
-				<Typography variant="title" gutterBottom align="center">
-					{props.clickedBlock.name}
-				</Typography>
-			)}
+			<Typography variant="title" gutterBottom align="center">
+				{props.clickedBlock ? props.clickedBlock.name : "Block Details"}
+			</Typography>
 			<List>
 				<ListItem>
 					<ListItemText
@@ -51,16 +53,11 @@ const SideBarBlock = (props) => {
 										<b>Required Links</b>
 									</Typography>
 								)}
-								{renderRequiredLinks}
+								{props.clickedBlock && renderRequiredLinks(props.requiredLinks)}
 							</Fragment>
 						}
 					/>
 				</ListItem>
-				{/* <ListItem>
-                    <ListItemText
-                      primary="Formula:"
-                    />
-                </ListItem> */}
 			</List>
 		</Paper>
 	);
@@ -68,7 +65,7 @@ const SideBarBlock = (props) => {
 
 const mapStateToProps = (state) => {
 	return {
-		clickedBlock: state.mainPage.present.clickedBlock
+		clickedBlock: state.mainPage.present.userState.clickedBlock
 	};
 };
 export default connect(mapStateToProps, { updateBlockValue, updateDropDown })(SideBarBlock);

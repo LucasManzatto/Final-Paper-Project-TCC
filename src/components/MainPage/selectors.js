@@ -1,11 +1,20 @@
 import { createSelector } from 'reselect'
 import _ from 'lodash'
 
-export const allBlocksSelector = state => state.mainPage.blocks
+export const allBlocksSelector = state => state.mainPage.present.blocks
 
-export const clickedBlockSelector = state => state.mainPage.present.clickedBlock
+export const userState = state => state.mainPage.present.userState || null
 
-export const projectBlocksSelector = state => state.mainPage.present.projects[state.mainPage.present.currentProject].blocks
+export const currentProjectBlocks = state => {
+  const userState = state.mainPage.present.userState
+  return userState.projects[0].blocks
+}
+
+export const currentUser = state => userState(state).user
+
+export const clickedBlockSelector = state => state.mainPage.present.userState ? state.mainPage.present.userState.clickedBlock : null
+
+export const projectBlocksSelector = state => state.mainPage.present.userState.projects[state.mainPage.present.userState.currentProject].blocks
 
 export const linkedBlocksSelector = createSelector((_, props) => props.block, projectBlocksSelector, (block, blocks) => {
   return block
@@ -17,7 +26,6 @@ export const getIndexOfBlockSelector = (state, props) => {
   return state
     .mainPage
     .present
-    .projects[state.mainPage.present.currentProject]
     .blocks
     .indexOf(props.block)
 };

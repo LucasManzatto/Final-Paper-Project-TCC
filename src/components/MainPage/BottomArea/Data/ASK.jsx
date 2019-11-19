@@ -4,13 +4,14 @@ import React from "react"
 import { getScales, findLink, blockTypes } from "../../utils"
 import useAnimation from '../../../../hooks/UseAnimation'
 import { Graph } from "../Graph"
+import * as selectors from '../../selectors'
 
 const createDataArray = (binaryArray, carrierData, amplitude) => {
   return carrierData.map((value, index) => (binaryArray[index] === -1 ? value : value * (amplitude * 2)) || 0)
 }
 
 const ASK = ({ block, resolution, dimensions }) => {
-  const blocks = useSelector(state => state.mainPage.present.projects[0].blocks)
+  const blocks = useSelector(state => selectors.currentProjectBlocks(state))
   const binaryData = findLink(blockTypes.DATA, blocks, block.links).data
   const { amplitude: carrierAmplitude, data: carrierData } = findLink(blockTypes.CARRIER_WAVE, blocks, block.links)
 
