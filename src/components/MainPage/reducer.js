@@ -58,11 +58,13 @@ const reducer = createReducer(initialState, {
 		// Ex: Se um bloco AWGN está linkado a um bloco BPSK e o bloco BPSK é deletado, o link e os dados do AWGN
 		// devem ser deletados
 		state.userState.projects[state.userState.currentProject].blocks.map((bl) => {
-			bl.links = bl.links.filter((link) => link !== blockId);
-			if (bl.links.length < bl.neededLinks) {
-				bl.linked = false;
-				bl.data = [];
-				bl.render = false;
+			if (bl.links) {
+				bl.links = bl.links.filter((link) => link !== blockId);
+				if (bl.links.length < bl.neededLinks) {
+					bl.linked = false;
+					bl.data = [];
+					bl.render = false;
+				}
 			}
 			return bl;
 		});
