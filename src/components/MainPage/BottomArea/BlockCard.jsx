@@ -11,14 +11,11 @@ import CarrierWave from './Data/CarrierWave'
 
 class BlockCard extends React.Component {
   render() {
-    const { block } = this.props
-    let data
-    let width = this.props.containerWidth
-    let height = 164
+    const { block, containerWidth: width, expanded } = this.props
     const expandedHeight = window.innerHeight - 90
-    if (this.props.expanded) {
-      height = expandedHeight
-    }
+    const height = expanded ? expandedHeight : 164
+
+    let data
     if (block.name === 'Data') {
       data = <Binary dimensions={{ width, height }} resolution={1200} block={block} />
     }

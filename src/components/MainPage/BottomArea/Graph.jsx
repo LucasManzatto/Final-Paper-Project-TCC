@@ -3,8 +3,8 @@ import { axisRight } from 'd3-axis'
 import { Axis } from './Axis'
 import { Line } from './line'
 
-export const Graph = ({ scale, data }) => {
-  return <g>
+export const Graph = ({ scale, data }) =>
+  <g>
     <Line
       xScale={scale.xLine}
       yScale={scale.yLine}
@@ -12,4 +12,3 @@ export const Graph = ({ scale, data }) => {
     />
     <Axis axis={axisRight} tickValues={scale.tickValues} scale={scale.yAxis} />
   </g>
-}

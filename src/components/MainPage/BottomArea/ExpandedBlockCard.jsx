@@ -1,5 +1,4 @@
-import React from "react"
-import PropTypes from "prop-types"
+import React, { useState } from "react"
 import { withStyles } from "@material-ui/core/styles"
 import Dialog from "@material-ui/core/Dialog"
 import AppBar from "@material-ui/core/AppBar"
@@ -11,15 +10,13 @@ import Slide from "@material-ui/core/Slide"
 import Paper from "@material-ui/core/Paper"
 import AspectRatioIcon from '@material-ui/icons/AspectRatio'
 
+import Properties from '../ProjectArea/Block/Properties'
+
 import { Col } from "react-flexbox-grid"
 
 import _ from "lodash"
 
 import BlockCard from "./BlockCard"
-
-//react redux
-import { connect } from "react-redux"
-import * as actions from "../actions"
 
 const styles = {
   iconStyle: {
@@ -38,87 +35,44 @@ function Transition(props) {
   return <Slide direction="up" {...props} />
 }
 
-class ExpandedBlockCard extends React.Component {
-  state = {
-    open: false
-  }
+const ExpandedBlockCard = ({ classes, block }) => {
+  const [isOpen, setIsOpen] = useState(false)
 
-  handleClickOpen = () => {
-    this.setState({ open: true })
-  }
+  const handleClickOpen = () => setIsOpen(true)
 
-  handleClose = () => {
-    this.setState({ open: false })
-  }
-  onClickHandler = (block, value, key) => {
-    this.props.updateBlockValue({ value, key, id: block.id })
-    this.props.blockUpdated({ block, updated: true })
-  }
+  const handleClose = () => setIsOpen(false)
 
-  render() {
-    const { classes, block } = this.props
-    let haveProperties = false
-    if (!_.isNil(block.frequency)) {
-      haveProperties = true
-    }
-    const showProperties = haveProperties ? (
-      <div className={classes.flex}>
-        <Typography color="inherit">
-          {/* <Left onClick={(event,value)=> this.onClickHandler(block,block.frequency - 1,'frequency')} style={styles.iconStyle}/> */}
-          Frequency: {block.frequency}
-          {/* <Right onClick={(event,value)=> this.onClickHandler(block,block.frequency + 1,'frequency')} style={styles.iconStyle}/> */}
-        </Typography>
-        <Typography color="inherit">
-          {/* <Left onClick={(event,value)=> this.onClickHandler(block,block.amplitude - 1,'amplitude')} style={styles.iconStyle}/> */}
-          Amplitude: {block.amplitude}
-          {/* <Right onClick={(event,value)=> this.onClickHandler(block,block.amplitude + 1,'amplitude')} style={styles.iconStyle}/> */}
-        </Typography>
-      </div>
-    ) : (
-        <div />
-      )
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-        <AspectRatioIcon onClick={this.handleClickOpen} />
-        <Dialog
-          fullScreen
-          open={this.state.open}
-          onClose={this.handleClose}
-          TransitionComponent={Transition}>
-          <AppBar className={classes.appBar} color="primary">
-            <Toolbar>
-              <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton>
-              <Typography variant="title" color="inherit" className={classes.flex}>
-                {block.name}
-              </Typography>
-              {showProperties}
-            </Toolbar>
-          </AppBar>
-          <Paper style={{ height: "100%" }}>
-            <Col center="xs" style={{ height: "90%", textAlign: "center" }}>
-              <div style={{ height: "5%" }} />
-              <div style={{ height: "100%", paddingLeft: 16 }}>
-                <BlockCard block={block} key={block.id} expanded={true} />
-              </div>
-            </Col>
-          </Paper>
-        </Dialog>
-      </div>
-    )
-  }
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+      <AspectRatioIcon onClick={handleClickOpen} />
+      <Dialog
+        fullScreen
+        open={isOpen}
+        onClose={handleClose}
+        TransitionComponent={Transition}>
+        <AppBar className={classes.appBar} color="primary">
+          <Toolbar>
+            <IconButton color="inherit" onClick={handleClose} aria-label="Close">
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="title" color="inherit" className={classes.flex}>
+              {block.name}
+            </Typography>
+            <div className={classes.flex}>
+              <Properties block={block} />
+            </div>
+          </Toolbar>
+        </AppBar>
+        <Paper style={{ height: "100%" }}>
+          <Col center="xs" style={{ height: "90%", textAlign: "center" }}>
+            <div style={{ height: "100%", paddingLeft: 16 }}>
+              <BlockCard block={block} key={block.id} expanded={true} />
+            </div>
+          </Col>
+        </Paper>
+      </Dialog>
+    </div>
+  )
 }
 
-ExpandedBlockCard.propTypes = {
-  classes: PropTypes.object.isRequired
-}
-const mapStateToProps = state => {
-  return { amplitude: state.mainPage.present.amplitude }
-}
-
-let ExpandedBlockCardWithStyles = withStyles(styles)(ExpandedBlockCard)
-export default connect(
-  mapStateToProps,
-  actions
-)(ExpandedBlockCardWithStyles)
+export default withStyles(styles)(ExpandedBlockCard)

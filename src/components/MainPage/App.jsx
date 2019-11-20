@@ -18,12 +18,12 @@ import SideBarBlock from './SideBar/SideBarBlock';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import KeyHandler, { KEYPRESS } from 'react-key-handler';
+import LoadingScreen from 'react-loading-screen'
 
 import { ActionCreators } from 'redux-undo';
 import { connect } from 'react-redux';
 import * as firebase from '../../firebase'
 import useInterval from '../../hooks/UseInterval'
-// import { createDb } from 'C:/Users/Lucas/Documents/GitHub/tcc/src/firebase.js';
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1
@@ -110,8 +110,14 @@ const App = (props) => {
 			</div>
 		);
 	} else {
-		return <div>Loading...</div>
-		// return <Redirect to="/" />;
+		return(<LoadingScreen
+			loading={isLoading}
+			bgColor='#d3e3fc'
+			spinnerColor='#77a6f7'
+			textColor='#676767'
+			text='Loading'
+		  > 
+		  </LoadingScreen>)
 	}
 };
 

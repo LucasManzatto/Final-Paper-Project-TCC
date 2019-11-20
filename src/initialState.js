@@ -10,7 +10,7 @@ export const initialState = {
     },
     amplitude: 3,
     blocksToLinkArray: [],
-    clickedBlock: -1,
+    clickedBlock: {},
     projects: {
       0: {
         id: 0,

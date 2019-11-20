@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { updateBlockValue } from '../../actions'
 import { useDispatch } from 'react-redux'
 import _ from 'lodash'
@@ -14,31 +14,28 @@ const iconStyle = {
   cursor: 'pointer'
 }
 
-const Properties = ({block}) => {
+const Properties = ({ block }) => {
   const dispatch = useDispatch()
   return _.map(block.keysToShow, key => {
     const value = block[key]
-    if (key === 'binary') {
-      return (
-        <Typography key={key} variant="body1" style={{ marginLeft: 4 }}>
-          <b>{_.capitalize(key)}:</b>
-          {valueToBinary(value)}
-        </Typography>
-      )
-    }
     const sum = key === 'frequency' ? 6 : 1
     return (
-      <Typography key={key} variant="body1" style={{ marginLeft: 4 }}>
+      <Typography key={key} variant="body1" style={{ marginLeft: 8 }}>
         <b>{_.capitalize(key)}:</b>
-        <Left
-          onClick={() => dispatch(updateBlockValue({ value: value - sum, key, blockId: block.id }))}
-          style={iconStyle}
-        />
-        {value}
-        <Right
-          onClick={() => dispatch(updateBlockValue({ value: value + sum, key, blockId: block.id }))}
-          style={iconStyle}
-        />
+        {key === 'binary' ?
+          valueToBinary(value) :
+          <Fragment>
+            <Left
+              onClick={() => dispatch(updateBlockValue({ value: value - sum, key, blockId: block.id }))}
+              style={iconStyle}
+            />
+            <span>{value}</span>
+            <Right
+              onClick={() => dispatch(updateBlockValue({ value: value + sum, key, blockId: block.id }))}
+              style={iconStyle}
+            />
+          </Fragment>
+        }
       </Typography>
     )
   })
