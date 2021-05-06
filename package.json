@@ -16,7 +16,7 @@
     "flow-bin": "^0.64.0",
     "fourier-transform": "^1.1.2",
     "immutability-helper": "^2.9.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "randgen": "^0.1.0",
     "react": "^16.11.0",
